@@ -92,7 +92,7 @@ def hook(response: Response):
 def web():
     web_app.add_middleware(
         CORSMiddleware,
-        allow_origins=["https://thundergolfer.com","http://localhost:4000"],
+        allow_origins=["https://akisonlyforu.github.io","http://localhost:4000"],
         allow_methods=["*"], allow_headers=["*"],
     )
     return web_app
@@ -116,7 +116,7 @@ But a working webhook is a start!
 
 Most of the complexity in the above snippet comes from needing to support [CORS](https://fastapi.tiangolo.com/tutorial/cors/) and cache the JSON response in the browser for 12 hours (43,200 seconds).
 
-My website is served from the `thundergolfer.com` domain but the webhook is served from a Modal domain (`modal.run`).
+My website is served from the `akisonlyforu.github.io` domain but the webhook is served from a Modal domain (`modal.run`).
 By default the browser will prevent data sharing between different domains because it's a security risk.
 But with the `CORSMiddleware` a web endpoint can communicate that it allows data sharing with my personal domain.
 
@@ -321,7 +321,7 @@ latency on a warm webhook request was about 60ms, rather than 600ms.
 
 ## Add pinch of \<script\>
 
-That's the JSON web endpoint accounted for, but the static HTML page at [thundergolfer.com/about](https://thundergolfer.com) needs to actually _use it_. This happens with a standalone `<script>` in the Markdown page.
+That's the JSON web endpoint accounted for, but the static HTML page at [akisonlyforu.github.io/about](https://akisonlyforu.github.io) needs to actually _use it_. This happens with a standalone `<script>` in the Markdown page.
 
 ```html
 <!-- /about.md -->
