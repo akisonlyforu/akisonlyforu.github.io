@@ -96,7 +96,7 @@ public class DatabaseExample {
 The clear abstraction (Database interface) allows the underlying implementation to change without impacting business logic.
  
 
-3. Evolvability: Adapting to Change
+### **3. Evolvability: Adapting to Change**
  
 Change is constant in any software system’s lifecycle. Whether driven by new features, user demands, or evolving technologies, systems must remain flexible.
 
