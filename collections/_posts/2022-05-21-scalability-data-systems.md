@@ -2,7 +2,7 @@
 layout:     post  
 title:      What is Scalability in Data Systems?  
 date:       2022-09-14  
-summary:    Discussing the essence of scalability in data systems- what it means, why it matters, and how to ensure it as systems grow.  
+summary:    Discussing the essence of scalability in data systems-what it means, why it matters, and how to ensure it as systems grow.  
 categories: tech systems-design  
 ---  
   
@@ -130,13 +130,14 @@ public class CacheExample {
         System.out.println(get("user2")); // Fetch DB  
     }  
 }  
- 
-Run Output:
+``` 
 
+Run Output:
+```
 Fetching from database for: user1  
 Serving from cache for: user1  
 Fetching from database for: user2  
- 
+```
  
 
 Final Thoughts: Scaling is About Trade-offs
