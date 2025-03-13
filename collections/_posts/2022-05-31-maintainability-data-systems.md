@@ -131,9 +131,10 @@ class ExtendedUserProfile extends UserProfile {
     public Map<String, String> getMetadata() {  
         return metadata;  
     }  
-}  
-```  
+}
+
 // Developers can still use the base UserProfile class.  
+```  
  
 This approach allows incremental upgrades while preserving existing functionality.
  
