@@ -1,7 +1,7 @@
 ---  
 layout:     post  
 title:      What is Scalability in Data Systems?  
-date:       2022-09-14  
+date:       2022-05-21  
 summary:    Discussing the essence of scalability in data systems-what it means, why it matters, and how to ensure it as systems grow.  
 categories: tech systems-design  
 ---  
