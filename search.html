@@ -36,8 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       return response.text().then(text => {
+        console.log('Raw response:', text);
         try {
-          return JSON.parse(text);
+          const data = JSON.parse(text);
+          console.log('Parsed data:', data);
+          return data;
         } catch (e) {
           console.error('JSON Parse Error:', e);
           console.error('Raw response:', text);
@@ -51,6 +54,10 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error('Expected array of posts');
       }
       posts = data;
+      if (posts.length === 0) {
+        resultsContainer.innerHTML = '<p>No blog posts found.</p>';
+        return;
+      }
       if (searchInput.value) {
         performSearch(searchInput.value);
       }
@@ -66,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
   function performSearch(searchTerm) {
+    console.log('Performing search for:', searchTerm);
     if (!posts || !Array.isArray(posts)) {
       console.error('Posts data not properly loaded');
       return;
@@ -85,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return titleMatch || contentMatch || excerptMatch;
     });
     
+    console.log('Found posts:', filteredPosts.length);
     displayResults(filteredPosts);
   }
 
