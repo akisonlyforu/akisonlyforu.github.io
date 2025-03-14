@@ -2,7 +2,7 @@
 name = "tooling"
 version = "0.1.0"
 description = "Package containing tooling code."
-authors = ["Jonathon Belotti <jonathon.i.belotti@gmail.com>"]
+authors = ["akisonlyforu <jonathon.i.belotti@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
