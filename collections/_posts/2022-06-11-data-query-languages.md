@@ -7,7 +7,7 @@ categories: data-models databases ddia
 ---
 
 When dealing with data models, query languages play a significant role in how efficiently we can interact with data. They dictate how we retrieve, manipulate, and process the stored information. In this post, we explore two primary categories: **imperative** and **declarative** query languages, along with examples to understand their nuances.
-   
+
 ---  
 
 ### **Imperative vs. Declarative Approaches**

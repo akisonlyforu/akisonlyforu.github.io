@@ -5,7 +5,7 @@ date:       2022-05-16
 summary:    Exploring the keys to building reliable distributed systems - replication, recovery, and fault tolerance.  
 categories: tech software ddia
 ---  
-    
+
 Building reliable systems isn’t just an aspirational goal—it’s a necessity in today’s data-driven and ever-growing digital landscape. Failures can come from anywhere: bad disk drives, unpredictable bugs, or even – let’s be honest – us humans accidentally deploying the wrong version.  
    
 But here’s the good news: failures don’t have to end in disaster. This post explores practical strategies to keep your systems functional, consistent, and fault-tolerant, even when the unexpected happens. Drawn from the principles in Chapter 1 of *Designing Data-Intensive Applications*, let’s dive into what makes a system reliable.  

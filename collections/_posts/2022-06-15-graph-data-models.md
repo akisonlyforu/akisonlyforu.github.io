@@ -7,7 +7,7 @@ categories: data-models databases ddia
 ---
 
 In scenarios where complex many-to-many relationships dominate, graph-like data models provide a natural and highly efficient solution. These models are well-suited to use cases such as social networks, recommendation engines, and road networks. This post explores the fundamentals of graph models, their key implementations, and examples of queries using popular graph query languages.
-   
+
 ---  
 
 ### **Understanding the Basics of Graph Data Models**
