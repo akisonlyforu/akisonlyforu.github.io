@@ -79,7 +79,7 @@ CREATE
   (Lucy)  -[:BORN_IN]-> (Idaho)  
 ```  
 
-##### ASCII Representation:
+##### Representation:
 ```plaintext  
         North America  
              ↑  

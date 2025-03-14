@@ -6,7 +6,7 @@ summary:    A comparative exploration of the relational and document data models
 categories: data-models databases ddia
 ---
 
-In the ever-expanding field of data management, the decision to use either the **Relational Model** or the **Document Model** can have a profound impact on system design and efficiency. This post explores their contrasts, supplemented with examples and ASCII diagrams to make the differences more tangible.
+In the ever-expanding field of data management, the decision to use either the **Relational Model** or the **Document Model** can have a profound impact on system design and efficiency. This post explores their contrasts, supplemented with examples and diagrams to make the differences more tangible.
    
 ---  
 
@@ -147,7 +147,7 @@ However, denormalization may increase redundancy and complexities if jobs are re
    
 ---  
 
-### **ASCII Image Illustrations**
+### **Image Illustrations**
 
 #### Relational Model (Normalized)
 ```plaintext  
