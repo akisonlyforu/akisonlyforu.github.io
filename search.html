@@ -1,0 +1,130 @@
+---
+layout: default
+title: Search
+permalink: /search/
+---
+
+<div class="search-container">
+  <h1>Search Blog Posts</h1>
+  
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="Search blog posts...">
+  </div>
+
+  <div id="search-results">
+    <!-- Results will be dynamically populated here -->
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all blog posts data
+  fetch('/search.json')
+    .then(response => response.json())
+    .then(posts => {
+      const searchInput = document.getElementById('search-input');
+      const resultsContainer = document.getElementById('search-results');
+      
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        if (searchTerm.length < 2) {
+          resultsContainer.innerHTML = '';
+          return;
+        }
+        
+        const filteredPosts = posts.filter(post => {
+          const titleMatch = post.title.toLowerCase().includes(searchTerm);
+          const contentMatch = post.content.toLowerCase().includes(searchTerm);
+          const categoryMatch = post.category && post.category.toLowerCase().includes(searchTerm);
+          return titleMatch || contentMatch || categoryMatch;
+        });
+        
+        displayResults(filteredPosts);
+      });
+      
+      function displayResults(results) {
+        if (results.length === 0) {
+          resultsContainer.innerHTML = '<p>No results found.</p>';
+          return;
+        }
+        
+        const html = results.map(post => `
+          <div class="search-result">
+            <h2><a href="${post.url}">${post.title}</a></h2>
+            <p class="post-meta">
+              ${post.date} 
+              ${post.category ? `<span class="category">${post.category}</span>` : ''}
+            </p>
+            <p class="post-excerpt">${post.excerpt}</p>
+          </div>
+        `).join('');
+        
+        resultsContainer.innerHTML = html;
+      }
+    });
+});
+</script>
+
+<style>
+.search-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.search-box {
+  margin: 2rem 0;
+}
+
+#search-input {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+#search-input:focus {
+  border-color: #333;
+  outline: none;
+}
+
+.search-result {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.search-result h2 {
+  margin-bottom: 0.5rem;
+}
+
+.search-result h2 a {
+  color: #333;
+  text-decoration: none;
+}
+
+.search-result h2 a:hover {
+  text-decoration: underline;
+}
+
+.post-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.category {
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-left: 8px;
+}
+
+.post-excerpt {
+  color: #444;
+  line-height: 1.6;
+}
+</style> 
