@@ -1,6 +1,6 @@
 ---
 layout:     post    
-title:      Beyond MapReduce    
+title:      Advancing Beyond MapReduce- Modern Frameworks for Scalable Data Processing    
 date:       2023-01-17    
 summary:    Explore alternatives to MapReduce, including advanced dataflow engines and their benefits in efficiency, iterative graph processing, and high-level abstractions.    
 categories: ddia batch-processing distributed-systems dataflow
