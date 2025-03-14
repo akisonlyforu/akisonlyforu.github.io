@@ -6,11 +6,16 @@
       <li class="about-anc" style="display: inline">
         <a class="nav-underline home {% if page.url == '/' %}current{% endif %}" href="{{site.url}}">Home</a>
       </li>
-      <li style="display: inline">
+      <li style="display: inline" class="dropdown">
         <a class="nav-underline blog {% if page.url == '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Blog</a>
       </li>
       <li class="about-anc" style="display: inline">
         <a class="nav-underline about {% if page.url == '/about/' %}current{% endif %}" href="{{site.url}}/about">About</a>
+          <ul class="dropdown-menu">
+              <li><a href="/blog/post1">Blog Post 1</a></li>
+              <li><a href="/blog/post2">Blog Post 2</a></li>
+              <li><a href="/blog/post3">Blog Post 3</a></li>
+          </ul>
       </li>
       <!-- <li class="beliefs-anc" style="display: inline">
         <a class="nav-underline open-source {% if page.url == '/projects/' %}current{% endif %}" href="{{site.url}}/projects">Projects & Open Source</a>
