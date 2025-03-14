@@ -1,7 +1,7 @@
 ---
 layout:     post    
 title:      Ensuring Accurate Request Routing in Distributed Databases    
-date:       2023-10-31    
+date:       2022-09-28    
 summary:    Understand the methods and challenges of routing requests to the appropriate nodes in a partitioned and replicated distributed database.    
 categories: ddia partitioning routing distributed-databases
 ---
