@@ -10,7 +10,7 @@ categories: replication distributed-systems databases ddia
 
 Replication lag occurs when follower nodes in a distributed system fall behind the leader node in applying database changes. This gap creates inconsistencies where followers serve outdated data, causing potential issues for applications reliant on fresh and accurate reads. The problem is most prominent in **asynchronous replication**, where updates to followers are not immediately confirmed.
 
-In many cases, replication lag is negligible, lasting just fractions of a second during smooth operations. However, under high load or network strain, the lag can extend to seconds or even minutes, introducing significant challenges for applications<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 1 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 2 </strong></span></sup>.
+In many cases, replication lag is negligible, lasting just fractions of a second during smooth operations. However, under high load or network strain, the lag can extend to seconds or even minutes, introducing significant challenges for applications.
    
 ---  
 
@@ -22,7 +22,7 @@ This issue arises when a user writes data to the leader and subsequently reads f
 ##### Example:
 - A user submits a comment on a forum (saved to the leader node).
 - Immediately after, the user refreshes the page, which fetches data from a follower replica that hasn’t received the update yet.
-- The user doesn't see their comment and may mistakenly believe the submission failed<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 3 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 4 </strong></span></sup>.
+- The user doesn't see their comment and may mistakenly believe the submission failed.
 
 **Solution:**
 - Route reads for modified data to the leader (leader-read consistency).
@@ -37,7 +37,7 @@ When a user queries the system multiple times and sees data seemingly "moving ba
 - Query 1 (fast follower): Returns new data (state after recent write).
 - Query 2 (lagging follower): Returns outdated data (state before the write).
 
-To the user, it looks as though the system is regressing<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 5 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 6 </strong></span></sup>.
+To the user, it looks as though the system is regressing.
 
 **Solution:**
 - Stick to the same replica for a user session. Establishing **replica affinity** using techniques like hashing user IDs to replicas can help.
@@ -50,7 +50,7 @@ This issue concerns causality between related writes. If one write causally depe
 1. **Event A**: A question gets posted on a forum (data updated to leader).
 2. **Event B**: A reply is posted to the question and logged after Event A.
 
-If reads from a lagging replica retrieve Event B before Event A is replicated, the display will appear nonsensical to the user. Readers will see an "answer" without the corresponding "question"<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 7 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 8 </strong></span></sup>.
+If reads from a lagging replica retrieve Event B before Event A is replicated, the display will appear nonsensical to the user. Readers will see an "answer" without the corresponding "question".
 
 **Solution:**    
 Maintain causal dependencies by grouping related writes logically. Systems such as Spanner implement strict global ordering, but they come at the cost of increased complexity.
@@ -69,7 +69,7 @@ Maintain causal dependencies by grouping related writes logically. Systems such 
    Replication lag often worsens under heavy write conditions. Rate limiting or batching high-volume writes can give followers time to catch up.
 
 4. **Monitoring and Alerts**    
-   Continuously monitor replication lag metrics. Alert mechanisms should notify the team when lag surpasses given thresholds, as it may signal system strain or network degradation<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 9 </strong></span></sup>.
+   Continuously monitor replication lag metrics. Alert mechanisms should notify the team when lag surpasses given thresholds, as it may signal system strain or network degradation.
 
 ---  
 
