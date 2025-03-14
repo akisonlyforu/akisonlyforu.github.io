@@ -3,7 +3,7 @@ layout:     post
 title:      "Leaders and Followers - The Core of Replication"    
 date:       2022-07-31
 summary:    Dive into the fundamental model of leader-based replication, exploring how data integrity and availability are managed through leaders and followers.    
-categories: replication databases distributed-systems
+categories: replication databases distributed-systems ddia
 ---
 
 ### **Introduction to Leader and Follower Replication**
