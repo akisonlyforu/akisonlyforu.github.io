@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
           const data = JSON.parse(text);
           console.log('Parsed data:', data);
-          return data;
+          return data.posts || [];
         } catch (e) {
           console.error('JSON Parse Error:', e);
           console.error('Raw response:', text);
@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContainer.innerHTML = '<p>No blog posts found.</p>';
         return;
       }
+      console.log('Number of posts loaded:', posts.length);
       if (searchInput.value) {
         performSearch(searchInput.value);
       }
@@ -103,15 +104,18 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    const html = results.map(post => `
-      <div class="search-result">
-        <h2><a href="${post.url || '#'}">${post.title || 'Untitled'}</a></h2>
-        <p class="post-meta">
-          ${post.date || 'No date'} 
-        </p>
-        <p class="post-excerpt">${post.excerpt || 'No excerpt available'}</p>
-      </div>
-    `).join('');
+    const html = results.map(post => {
+      console.log('Processing post:', post);
+      return `
+        <div class="search-result">
+          <h2><a href="${post.url}" target="_blank">${post.title || 'Untitled'}</a></h2>
+          <p class="post-meta">
+            ${post.date || 'No date'} 
+          </p>
+          <p class="post-excerpt">${post.excerpt || 'No excerpt available'}</p>
+        </div>
+      `;
+    }).join('');
     
     resultsContainer.innerHTML = html;
   }
