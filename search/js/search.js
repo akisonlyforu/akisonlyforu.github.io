@@ -14,6 +14,13 @@ const debugState = {
   lastResults: []
 };
 
+// Search result scoring
+const SEARCH_SCORES = {
+  TITLE_MATCH: 3,
+  SUMMARY_MATCH: 2,
+  BODY_MATCH: 1
+};
+
 document.addEventListener('DOMContentLoaded', function() {
   debugLog('Search script loaded');
   
@@ -91,18 +98,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     searchTerm = searchTerm.toLowerCase();
-    const filteredPosts = debugState.posts.filter(post => {
-      const searchableText = [
-        post.title || '',
-        post.excerpt || '',
-        post.content || ''
-      ].join(' ').toLowerCase();
-      return searchableText.includes(searchTerm);
-    });
+    
+    // Score and filter posts
+    const scoredPosts = debugState.posts
+      .map(post => {
+        const title = (post.title || '').toLowerCase();
+        const summary = (post.excerpt || '').toLowerCase();
+        const body = (post.content || '').toLowerCase();
+        
+        let score = 0;
+        let matchLocation = [];
+        
+        if (title.includes(searchTerm)) {
+          score += SEARCH_SCORES.TITLE_MATCH;
+          matchLocation.push('title');
+        }
+        if (summary.includes(searchTerm)) {
+          score += SEARCH_SCORES.SUMMARY_MATCH;
+          matchLocation.push('summary');
+        }
+        if (body.includes(searchTerm)) {
+          score += SEARCH_SCORES.BODY_MATCH;
+          matchLocation.push('body');
+        }
+        
+        return {
+          ...post,
+          score,
+          matchLocation
+        };
+      })
+      .filter(post => post.score > 0)
+      .sort((a, b) => b.score - a.score); // Sort by score in descending order
 
-    debugState.lastResults = filteredPosts;
-    debugLog('Search results:', filteredPosts.length);
-    displayResults(filteredPosts);
+    debugState.lastResults = scoredPosts;
+    debugLog('Search results:', {
+      total: scoredPosts.length,
+      scores: scoredPosts.map(p => ({ title: p.title, score: p.score, matches: p.matchLocation }))
+    });
+    
+    displayResults(scoredPosts);
   }
 
   function displayResults(results) {
@@ -118,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <h2><a href="${post.url}" target="_blank">${post.title || 'Untitled'}</a></h2>
         <div class="post-meta">
           <span class="date">${post.date || 'No date'}</span>
+          <span class="match-location">Matches in: ${post.matchLocation.join(', ')}</span>
         </div>
         <div class="post-excerpt">${post.excerpt || 'No excerpt available'}</div>
       </article>
