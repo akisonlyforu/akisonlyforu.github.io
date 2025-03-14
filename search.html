@@ -33,23 +33,44 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => {
       console.log('Fetch response:', response.status);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response.json();
+      return response.text().then(text => {
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          console.error('JSON Parse Error:', e);
+          console.error('Raw response:', text);
+          throw new Error('Invalid JSON response');
+        }
+      });
     })
     .then(data => {
-      console.log('Data loaded:', data.length, 'posts');
+      console.log('Data loaded:', data);
+      if (!Array.isArray(data)) {
+        throw new Error('Expected array of posts');
+      }
       posts = data;
       if (searchInput.value) {
         performSearch(searchInput.value);
       }
     })
     .catch(error => {
-      console.error('Error fetching search data:', error);
-      resultsContainer.innerHTML = '<p class="error">Error loading search data. Please try again later.</p>';
+      console.error('Error:', error);
+      resultsContainer.innerHTML = `
+        <p class="error">
+          Error loading search data: ${error.message}<br>
+          Please try again later or contact the site administrator.
+        </p>
+      `;
     });
 
   function performSearch(searchTerm) {
+    if (!posts || !Array.isArray(posts)) {
+      console.error('Posts data not properly loaded');
+      return;
+    }
+
     searchTerm = searchTerm.toLowerCase();
     
     if (searchTerm.length < 2) {
@@ -58,29 +79,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     const filteredPosts = posts.filter(post => {
-      const titleMatch = post.title.toLowerCase().includes(searchTerm);
-      const contentMatch = post.content.toLowerCase().includes(searchTerm);
-      const categoryMatch = post.category && post.category.toLowerCase().includes(searchTerm);
-      return titleMatch || contentMatch || categoryMatch;
+      const titleMatch = post.title && post.title.toLowerCase().includes(searchTerm);
+      const contentMatch = post.content && post.content.toLowerCase().includes(searchTerm);
+      const excerptMatch = post.excerpt && post.excerpt.toLowerCase().includes(searchTerm);
+      return titleMatch || contentMatch || excerptMatch;
     });
     
     displayResults(filteredPosts);
   }
 
   function displayResults(results) {
-    if (results.length === 0) {
+    if (!results || results.length === 0) {
       resultsContainer.innerHTML = '<p>No results found.</p>';
       return;
     }
     
     const html = results.map(post => `
       <div class="search-result">
-        <h2><a href="${post.url}">${post.title}</a></h2>
+        <h2><a href="${post.url || '#'}">${post.title || 'Untitled'}</a></h2>
         <p class="post-meta">
-          ${post.date} 
-          ${post.category ? `<span class="category">${post.category}</span>` : ''}
+          ${post.date || 'No date'} 
         </p>
-        <p class="post-excerpt">${post.excerpt}</p>
+        <p class="post-excerpt">${post.excerpt || 'No excerpt available'}</p>
       </div>
     `).join('');
     
