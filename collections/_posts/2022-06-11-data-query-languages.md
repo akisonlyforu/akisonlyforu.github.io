@@ -127,7 +127,7 @@ A high-level difference between **imperative** and **declarative** models in que
 
 ### **Distributed Querying: Parallelism**
 
-Declarative query languages excel when handling parallel computations. Since they focus on *what* needs to be retrieved rather than *how*, they facilitate the distribution of workloads across multiple cores/machines, unlocking performance on modern hardware architectures<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 1 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 2 </strong></span></sup>.
+Declarative query languages excel when handling parallel computations. Since they focus on *what* needs to be retrieved rather than *how*, they facilitate the distribution of workloads across multiple cores/machines, unlocking performance on modern hardware architectures.
   
 ---  
 
