@@ -46,30 +46,6 @@ nav li {
   }
 }
 
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%; /* Dropdown appears below the parent */
-    left: 0;
-    background-color: #444;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 150px;
-}
-
-.dropdown-menu li {
-    padding: 10px;
-}
-
-.dropdown-menu a {
-    color: white;
-}
-
-.dropdown-menu a:hover {
-    background-color: #555;
-}
-
 nav .nav-underline:before {
   bottom: 0;
   width: 100%;
