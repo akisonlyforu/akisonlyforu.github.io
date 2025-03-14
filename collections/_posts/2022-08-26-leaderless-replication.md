@@ -1,6 +1,6 @@
 ---
 layout:     post    
-title:      "Leaderless Replication: Flexibility for Distributed Databases"    
+title:      Leaderless Replication Flexibility for Distributed Databases    
 date:       2022-08-26    
 summary:    Understanding how leaderless replication operates, its benefits, limitations, and why it suits certain modern distributed systems.    
 categories: replication distributed-databases dynamo-style ddia
