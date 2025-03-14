@@ -1,7 +1,7 @@
 ---
 layout:     post    
 title:      The Backbone of Databases- Data Structures that Power Storage
-date:       2023-10-31    
+date:       2022-06-27    
 summary:    Dive into the essential data structures, including hash indexes, B-trees, and LSM-trees, that enable efficient storage and retrieval in databases.    
 categories: storage data-structures databases ddia
 ---

@@ -1,7 +1,7 @@
 ---
 layout:     post    
 title:      "Understanding Column-Oriented Storage- A Deep Dive into Analytics Optimization"    
-date:       2023-10-31    
+date:       2022-07-08
 summary:    Explore how columnar databases revolutionize analytics with efficient storage, compression, vectorized processing, and more.    
 categories: storage analytics databases ddia
 ---
