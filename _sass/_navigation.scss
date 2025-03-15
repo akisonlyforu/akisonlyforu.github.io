@@ -13,7 +13,8 @@
   height: 40px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
-  pointer-events: all !important;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .menu-toggle:hover {
@@ -96,12 +97,15 @@ nav li {
     justify-content: center;
     align-items: center;
     background-color: var(--header-bg);
-    pointer-events: all !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   }
 
   .site-nav {
-    position: relative;
-    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
   }
 
   #main-menu {
@@ -209,4 +213,15 @@ nav .nav-underline:hover:before {
 
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
