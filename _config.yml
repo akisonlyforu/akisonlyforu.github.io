@@ -73,3 +73,6 @@ collections:
   portfolio:
     output: true
   posts:
+
+# Form settings
+formspree_id: xeoaoopl
