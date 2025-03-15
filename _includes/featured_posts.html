@@ -1,0 +1,27 @@
+<div class="featured-posts">
+  <h2 class="section-title">Featured Posts</h2>
+  <div class="featured-grid">
+    {% for post in site.posts %}
+      {% if post.featured %}
+        <article class="featured-card">
+          {% if post.image %}
+            <div class="card-image">
+              <img src="{{ post.image }}" alt="{{ post.title }}">
+            </div>
+          {% endif %}
+          <div class="card-content">
+            <h3 class="card-title">{{ post.title }}</h3>
+            <p class="card-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+            <div class="card-meta">
+              <span class="post-date">{{ post.date | date: "%B %d, %Y" }}</span>
+              {% if post.categories %}
+                <span class="post-category">{{ post.categories | first }}</span>
+              {% endif %}
+            </div>
+            <a href="{{ post.url }}" class="read-more">Read More →</a>
+          </div>
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div> 
