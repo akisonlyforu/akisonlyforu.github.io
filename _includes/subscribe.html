@@ -201,6 +201,17 @@ document.getElementById('subscribe-form').addEventListener('submit', async funct
       messageEl.textContent = 'Thank you for subscribing!';
       messageEl.className = 'success';
       form.reset();
+      
+      // Fade out the success message after 3 seconds
+      setTimeout(() => {
+        messageEl.style.transition = 'opacity 0.5s ease-out';
+        messageEl.style.opacity = '0';
+        setTimeout(() => {
+          messageEl.textContent = '';
+          messageEl.style.opacity = '1';
+          messageEl.style.transition = '';
+        }, 500);
+      }, 3000);
     } else {
       throw new Error('Something went wrong. Please try again.');
     }
