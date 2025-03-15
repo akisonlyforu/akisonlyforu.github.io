@@ -4,10 +4,11 @@
     textAreaMessage = contactForm.querySelector('[name="content"]'),
     sendButton = contactForm.querySelector('button');
 
-    sendButton.addEventListener('click', function(event){
+    sendButton.addEventListener('submit', function(event){
       event.preventDefault();
 
       sendButton.innerHTML = '{{ site.text.contact.ajax.sending }}';
+      sendButton.disabled = true; // Disable button to prevent multiple clicks
 
       var xhr = new XMLHttpRequest();
       xhr.open('POST', '//formspree.io/{{ site.email }}', true);
@@ -25,6 +26,7 @@
         else {
           sendButton.innerHTML = '{{ site.text.contact.ajax.error }}';
         }
+        sendButton.disabled = false; // Re-enable button
       }
     });
 </script>

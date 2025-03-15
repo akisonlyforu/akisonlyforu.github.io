@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!form) return;
 
   form.addEventListener('submit', async function(e) {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form from submitting normally
     const messageEl = document.getElementById('subscribe-message');
     const button = form.querySelector('input[type="submit"]');
     const originalButtonText = button.value;
@@ -36,17 +36,25 @@ document.addEventListener('DOMContentLoaded', function() {
         headers: {
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
-        }
+        },
+        mode: 'cors', // Enable CORS
+        redirect: 'manual' // Prevent automatic redirects
       });
       
-      if (response.ok) {
+      // Check the specific status code
+      if (response.status === 200) {
         showMessage('Thank you for subscribing!', false);
         form.reset();
+      } else if (response.status === 422) {
+        throw new Error('Please enter a valid email address.');
+      } else if (response.status === 429) {
+        throw new Error('Too many attempts. Please try again later.');
       } else {
-        throw new Error('Sorry, submission failed.');
+        throw new Error('Sorry, submission failed. Status: ' + response.status);
       }
     } catch (error) {
       showMessage(error.message, true);
+      console.error('Subscription error:', error);
     } finally {
       button.value = originalButtonText;
       button.disabled = false;
