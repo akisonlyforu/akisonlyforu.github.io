@@ -3,7 +3,7 @@ layout: default
 tags: home
 ---
 
-# 👋 Hi there, <br/> I'm akisonlyforu.
+# 👋 Hi there, <br/>
 
 ### I'm a software engineer with a focus on data & platform engineering.
 
