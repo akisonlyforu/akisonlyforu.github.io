@@ -2,27 +2,27 @@
   <div class="nav-container">
     <a href="/" class="site-logo">akisonlyforu</a>
     <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
-      <span class="sr-only">Menu</span>
+      <span class="menu-icon"></span>
     </button>
-    <div class="menu-items">
-      <li class="about-anc">
-        <a class="nav-underline home {% if page.url == '/' %}current{% endif %}" href="/">Home</a>
+    <div class="menu-items" id="main-menu">
+      <li class="nav-item">
+        <a class="nav-link {% if page.url == '/' %}current{% endif %}" href="/">Home</a>
       </li>
-      <li class="dropdown">
-        <a class="nav-underline blog {% if page.url == '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Blog</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link {% if page.url == '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Blog</a>
         <div class="dropdown-content">
           <a href="{{site.url}}/blog/technical">Technical</a>
           <a href="{{site.url}}/blog/behavioural">Behavioural</a>
         </div>
       </li>
-      <li class="about-anc">
-        <a class="nav-underline about {% if page.url == '/about/' %}current{% endif %}" href="{{site.url}}/about">About</a>
+      <li class="nav-item">
+        <a class="nav-link {% if page.url == '/about/' %}current{% endif %}" href="{{site.url}}/about">About</a>
       </li>
-      <li class="search-anc">
-        <a class="nav-underline search {% if page.url == '/search/' %}current{% endif %}" href="{{site.url}}/search">Search</a>
+      <li class="nav-item">
+        <a class="nav-link {% if page.url == '/search/' %}current{% endif %}" href="{{site.url}}/search">Search</a>
       </li>
-      <li class="team-anc">
-        <a class="nav-underline library {% if page.url == '/library/' %}current{% endif %}" href="{{site.url}}/library">Library</a>
+      <li class="nav-item">
+        <a class="nav-link {% if page.url == '/library/' %}current{% endif %}" href="{{site.url}}/library">Library</a>
       </li>
     </div>
   </div>
@@ -32,9 +32,11 @@
 .site-nav {
   background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: center;
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .nav-container {
@@ -44,7 +46,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
+  padding: 0.5rem 1rem;
 }
 
 .site-logo {
@@ -54,18 +56,14 @@
   text-decoration: none;
   font-family: monospace;
   letter-spacing: -0.5px;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  height: 24px;
 }
 
 .site-logo:hover {
   color: #000;
-}
-
-#main-menu {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  align-items: center;
 }
 
 .menu-items {
@@ -74,147 +72,239 @@
   align-items: center;
   margin: 0;
   padding: 0;
-}
-
-.menu-items li {
   list-style: none;
 }
 
-.menu-items a {
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
   text-decoration: none;
   color: #666;
   font-size: 0.95rem;
   font-weight: 400;
   transition: color 0.3s ease;
+  padding: 0.5rem 0;
 }
 
-.menu-items a.current {
+.nav-link.current {
   color: #000;
   font-weight: 500;
 }
 
-.menu-items a:hover {
+.nav-link:hover {
+  color: #000;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: #fff;
+  min-width: 160px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 0.5rem 0;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: #666;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.dropdown-content a:hover {
+  background: #f8f9fa;
   color: #000;
 }
 
 .menu-toggle {
   display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+
+.menu-icon {
+  display: block;
+  position: relative;
+  width: 20px;
+  height: 2px;
+  background: #333;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: #333;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before {
+  top: -6px;
+}
+
+.menu-icon::after {
+  bottom: -6px;
+}
+
+.menu-toggle.active .menu-icon {
+  background: transparent;
+}
+
+.menu-toggle.active .menu-icon::before {
+  transform: rotate(45deg);
+  top: 0;
+}
+
+.menu-toggle.active .menu-icon::after {
+  transform: rotate(-45deg);
+  bottom: 0;
 }
 
 @media (max-width: 768px) {
   .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-  }
-
-  .nav-container {
-    flex-wrap: wrap;
-  }
-
-  #main-menu {
-    display: none;
-    width: 100%;
-  }
-
-  #main-menu.active {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2001;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
   }
 
   .menu-items {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ffffff;
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem 0;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 6rem;
+    gap: 1.5rem;
+    z-index: 2000;
+  }
+
+  .menu-items.active {
+    display: flex !important;
+  }
+
+  .nav-item {
+    width: auto;
+    text-align: center;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 0.5rem;
+    width: auto;
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+
+  .nav-link.current {
+    font-weight: 500;
   }
 
   .dropdown-content {
     position: static;
     box-shadow: none;
-    padding-left: 1rem;
+    padding: 0.75rem 0;
+    display: none;
+    text-align: center;
+    background: transparent;
   }
+
+  .dropdown.active .dropdown-content {
+    display: block;
+  }
+
+  .dropdown-content a {
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    color: #666;
+  }
+
+  .menu-icon, 
+  .menu-icon::before,
+  .menu-icon::after {
+    width: 24px;
+    height: 2px;
+  }
+
+  .menu-toggle.active .menu-icon::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+
+  .menu-toggle.active .menu-icon::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+  }
+}
+
+/* Add padding to body to prevent content from hiding under fixed nav */
+body {
+  padding-top: 60px;
 }
 </style>
 
-<script type="text/javascript">
-(function() {
-  // Immediately try to set up the menu
-  function initMenu() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const mainMenu = document.getElementById('main-menu');
-    
-    if (!menuToggle || !mainMenu) {
-      console.error('Required menu elements not found');
-      return;
-    }
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const mainMenu = document.querySelector('.menu-items');
+  const dropdowns = document.querySelectorAll('.dropdown');
 
-    function toggleMenu(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      console.log('Toggle menu clicked');
-      
-      menuToggle.classList.toggle('active');
+  if (menuToggle && mainMenu) {
+    menuToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.classList.toggle('active');
       mainMenu.classList.toggle('active');
-      
-      const isExpanded = menuToggle.classList.contains('active');
-      menuToggle.setAttribute('aria-expanded', isExpanded);
-      
-      // Prevent body scrolling when menu is open
-      document.body.style.overflow = isExpanded ? 'hidden' : '';
-    }
-
-    // Remove any existing listeners first
-    menuToggle.removeEventListener('click', toggleMenu);
-    // Add the click listener
-    menuToggle.addEventListener('click', toggleMenu);
-
-    // Handle link clicks
-    const links = mainMenu.getElementsByTagName('a');
-    Array.from(links).forEach(link => {
-      link.addEventListener('click', () => {
-        menuToggle.classList.remove('active');
-        mainMenu.classList.remove('active');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      });
+      console.log('Menu toggled');
     });
 
-    // Close on outside click
-    document.addEventListener('click', (event) => {
-      const isMenuOpen = mainMenu.classList.contains('active');
-      const clickedOutside = !mainMenu.contains(event.target) && !menuToggle.contains(event.target);
-      
-      if (isMenuOpen && clickedOutside) {
-        menuToggle.classList.remove('active');
-        mainMenu.classList.remove('active');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
+    dropdowns.forEach(dropdown => {
+      const link = dropdown.querySelector('.nav-link');
+      if (link) {
+        link.addEventListener('click', function(e) {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            dropdown.classList.toggle('active');
+          }
+        });
       }
     });
 
-    // Close on escape key
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && mainMenu.classList.contains('active')) {
+    document.addEventListener('click', function(e) {
+      if (!menuToggle.contains(e.target) && !mainMenu.contains(e.target)) {
         menuToggle.classList.remove('active');
         mainMenu.classList.remove('active');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
+        dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
       }
     });
-
-    // Set initial state
-    menuToggle.setAttribute('aria-expanded', 'false');
-    console.log('Menu successfully initialized');
+  } else {
+    console.log('Menu elements not found');
   }
-
-  // Try to init immediately
-  initMenu();
-
-  // Also try on DOMContentLoaded
-  document.addEventListener('DOMContentLoaded', initMenu);
-
-  // Final fallback - try after a slight delay
-  setTimeout(initMenu, 500);
-})();
+});
 </script>
