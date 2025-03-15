@@ -36,67 +36,61 @@
 </nav>
 
 <script>
-(function() {
-  function initMobileMenu() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const mainMenu = document.getElementById('main-menu');
-    
-    if (!menuToggle || !mainMenu) return;
-
-    // Debug log
-    console.log('Mobile menu initialized');
-    
-    function toggleMenu(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      
-      const isActive = menuToggle.classList.contains('active');
-      menuToggle.classList.toggle('active');
-      mainMenu.classList.toggle('active');
-      
-      // Debug log
-      console.log('Menu toggled:', isActive ? 'closed' : 'opened');
-    }
-
-    function closeMenu() {
-      menuToggle.classList.remove('active');
-      mainMenu.classList.remove('active');
-      // Debug log
-      console.log('Menu closed');
-    }
-
-    // Toggle menu on button click
-    menuToggle.addEventListener('click', toggleMenu);
-
-    // Close menu when clicking a link
-    mainMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!mainMenu.contains(e.target) && 
-          !menuToggle.contains(e.target) && 
-          mainMenu.classList.contains('active')) {
-        closeMenu();
-      }
-    });
-
-    // Close menu on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mainMenu.classList.contains('active')) {
-        closeMenu();
-      }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+  // Get menu elements
+  const menuToggle = document.querySelector('.menu-toggle');
+  const mainMenu = document.getElementById('main-menu');
+  
+  if (!menuToggle || !mainMenu) {
+    console.error('Menu elements not found');
+    return;
   }
 
-  // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileMenu);
-  } else {
-    initMobileMenu();
+  // Toggle menu state
+  function toggleMenu(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    menuToggle.classList.toggle('active');
+    mainMenu.classList.toggle('active');
+    
+    // Set aria-expanded for accessibility
+    const isExpanded = menuToggle.classList.contains('active');
+    menuToggle.setAttribute('aria-expanded', isExpanded);
   }
-})();
+
+  // Close menu
+  function closeMenu() {
+    menuToggle.classList.remove('active');
+    mainMenu.classList.remove('active');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  // Event Listeners
+  menuToggle.addEventListener('click', toggleMenu);
+
+  // Close menu when clicking links
+  mainMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (mainMenu.classList.contains('active') && 
+        !mainMenu.contains(e.target) && 
+        !menuToggle.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  // Close menu on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mainMenu.classList.contains('active')) {
+      closeMenu();
+    }
+  });
+
+  // Initialize menu state
+  menuToggle.setAttribute('aria-expanded', 'false');
+});
 </script>

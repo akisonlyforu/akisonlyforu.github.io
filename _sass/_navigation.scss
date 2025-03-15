@@ -12,6 +12,7 @@
   width: 40px;
   height: 40px;
   border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 .menu-toggle:hover {
@@ -19,9 +20,17 @@
 }
 
 .menu-toggle::before {
-  content: "☰";  // Unicode hamburger icon
+  content: "☰";
   font-size: 24px;
   color: var(--header-fg);
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.menu-toggle.active::before {
+  content: "×";
+  font-size: 32px;
+  transform: rotate(180deg);
 }
 
 // Remove the spans since we're using the unicode icon
@@ -59,6 +68,7 @@ nav ul {
   background-color: var(--header-bg);
   text-align: center;
   padding: 0.5rem 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 #main-menu li {
@@ -87,15 +97,6 @@ nav li {
     background-color: var(--header-bg);
   }
 
-  .menu-toggle.active {
-    position: fixed;
-  }
-
-  .menu-toggle.active::before {
-    content: "×";  // Change to X when menu is open
-    font-size: 32px;
-  }
-
   #main-menu {
     display: none;
     position: fixed;
@@ -107,23 +108,21 @@ nav li {
     padding-top: 5rem;
     z-index: 1001;
     overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-20px);
   }
 
   #main-menu.active {
     display: block;
-    animation: fadeIn 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  nav ul,
   .flexbox-parent {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    padding-top: 2rem;
   }
 
   #main-menu li {
