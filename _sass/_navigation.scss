@@ -13,6 +13,7 @@
   height: 40px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+  pointer-events: all !important;
 }
 
 .menu-toggle:hover {
@@ -95,6 +96,12 @@ nav li {
     justify-content: center;
     align-items: center;
     background-color: var(--header-bg);
+    pointer-events: all !important;
+  }
+
+  .site-nav {
+    position: relative;
+    z-index: 1000;
   }
 
   #main-menu {
@@ -107,15 +114,10 @@ nav li {
     background-color: var(--header-bg);
     padding-top: 5rem;
     z-index: 1001;
-    overflow-y: auto;
-    opacity: 0;
-    transform: translateY(-20px);
   }
 
   #main-menu.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
+    display: block !important;
   }
 
   .flexbox-parent {
