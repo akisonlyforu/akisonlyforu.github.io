@@ -75,4 +75,4 @@ collections:
   posts:
 
 # Form settings
-formspree_id: YOUR_FORM_ID  # Replace this with your actual Formspree form ID
+formspree_id: YOUR_FORM_ID  # Get this from formspree.io after creating a form
