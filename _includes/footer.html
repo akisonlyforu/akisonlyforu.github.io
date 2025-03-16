@@ -10,22 +10,8 @@
           Made with <span class="heart">♥</span> in India
         </p>
       </div>
-      <div class="footer-social">
-        {% if site.github_username %}
-        <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer" aria-label="Github">
-          <i class="fab fa-github"></i>
-        </a>
-        {% endif %}
-        {% if site.linkedin_username %}
-        <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <i class="fab fa-linkedin"></i>
-        </a>
-        {% endif %}
-        {% if site.twitter_username %}
-        <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-          <i class="fab fa-twitter"></i>
-        </a>
-        {% endif %}
+      <div class="footer-quote">
+        <p id="daily-thought"></p>
       </div>
     </div>
   </div>
@@ -49,21 +35,31 @@
 .footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
+  align-items: flex-start;
+  gap: 1rem;
   margin: 0 auto;
   max-width: 800px;
 }
 
-.footer-text {
+.footer-text, .footer-quote {
   color: #666;
   font-size: 0.9rem;
   flex: 1;
+  text-align: left;
+  line-height: 1.5;
 }
 
 .footer-center {
   text-align: center;
   flex: 1;
+}
+
+.footer-quote {
+  text-align: right;
+}
+
+#daily-thought {
+  margin: 0;
 }
 
 .made-with-love {
@@ -87,24 +83,6 @@
   70% { transform: scale(1); }
 }
 
-.footer-social {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.footer-social a {
-  color: #666;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-}
-
-.footer-social a:hover {
-  color: #0076df;
-}
-
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
@@ -112,19 +90,16 @@
     gap: 1rem;
   }
 
-  .footer-text, .footer-center, .footer-social {
+  .footer-text, .footer-center, .footer-quote {
     flex: none;
     width: 100%;
-  }
-
-  .footer-social {
-    justify-content: center;
+    text-align: center;
   }
 }
 </style>
 
 <script>
-const jordanPetersonQuotes = [
+const dailyThoughts = [
   "Stand up straight with your shoulders back.",  
   "You're not everything you could be, and you know it.",  
   "Winning at everything might only mean that you're not doing anything new or difficult.",  
@@ -172,18 +147,15 @@ const jordanPetersonQuotes = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Get today's date and use it as a seed for quote selection
   const today = new Date();
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-  const quoteIndex = dayOfYear % jordanPetersonQuotes.length;
+  const quoteIndex = dayOfYear % dailyThoughts.length;
   
-  // Get the quote for today
-  const todaysQuote = jordanPetersonQuotes[quoteIndex];
+  const todaysThought = dailyThoughts[quoteIndex];
   
-  // Display the quote
   const thoughtElement = document.getElementById('daily-thought');
   if (thoughtElement) {
-    thoughtElement.textContent = `"${todaysQuote}"`;
+    thoughtElement.textContent = todaysThought;
   }
 });
 </script>

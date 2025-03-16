@@ -5,7 +5,10 @@ tags: home
 
 # 👋 Hi there <br/>
 
-### I'm a software engineer with a focus on data & platform engineering.
+### I solve problems & build things for Internet. 
+
+By profession, I identify myself as a autonomous Backend engineer with good problem-solving, system-designing and coding skills, knowledge of distributed systems, cloud platforms and has flexibility to learn new things to build products with complete ownership
+
 
 <div class="feature-tiles">
   <a href="{{ site.baseurl }}/blog" class="tile">
