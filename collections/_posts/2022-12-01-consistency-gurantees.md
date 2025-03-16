@@ -10,7 +10,7 @@ categories: ddia distributed-systems consistency fault-tolerance
 
 Consistency in distributed systems revolves around keeping replicas of data synchronized, even under network delays and system faults. Systems achieve varying levels of consistency, ranging from **eventual consistency** to stronger guarantees like **linearizability**. These models impact fault tolerance, performance, and developer experience, making it critical to understand their trade-offs for designing resilient systems.
    
----  
+---
 
 ### **The Weakest Consistency Model: Eventual Consistency**
 
@@ -24,7 +24,7 @@ Consistency in distributed systems revolves around keeping replicas of data sync
 
 Real-world application developers encounter most issues under high concurrency or during fault-induced edge cases, which escape typical testing scenarios.
   
----  
+---
 
 ### **Moving Toward Stronger Guarantees: Linearizability and Beyond**
 
@@ -34,7 +34,7 @@ Distributed databases often aim to provide stronger, predictable guarantees to b
 
 Such models are desirable because they simplify application logic and reduce the likelihood of concurrency bugs, but achieving them comes at the cost of higher coordination overhead and potential fault sensitivity.
   
----  
+---
 
 ### **Application Trade-Offs Between Models**
 
@@ -47,7 +47,7 @@ Such models are desirable because they simplify application logic and reduce the
 3. **Ease of Use for Developers**
     - Strong guarantees are preferable for ensuring correctness without requiring custom application-side logic. Eventual consistency, however, demands heightened awareness of edge cases and careful manual reconciliation efforts.
 
----  
+---
 
 ### **Conclusion**
 

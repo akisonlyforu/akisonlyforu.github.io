@@ -1,10 +1,10 @@
----  
+---
 layout:     post  
 title:      Designing Reliable Data Systems  
 date:       2022-05-16  
 summary:    Exploring the keys to building reliable distributed systems - replication, recovery, and fault tolerance.  
 categories: reliability ddia
----  
+---
 
 Building reliable systems isn’t just an aspirational goal—it’s a necessity in today’s data-driven and ever-growing digital landscape. Failures can come from anywhere: bad disk drives, unpredictable bugs, or even – let’s be honest – us humans accidentally deploying the wrong version.  
    
@@ -18,7 +18,7 @@ At its simplest form, reliability ensures software remains functional and trustw
    
 Failures are inevitable, but the goal of reliable design is to make them insignificant to the user experience.  
    
----  
+---
    
 ## **Three Common Types of Failures**  
    
@@ -35,7 +35,7 @@ Reliability starts with anticipating what can go wrong. Failures generally fall 
    
 Failures can’t always be prevented, but they can certainly be mitigated.  
    
----  
+---
    
 ## **Making Systems Reliable**  
    
@@ -110,7 +110,7 @@ public class ReplicationExample {
 
 **Visual Idea:** Diagram showing a Leader server syncing updates to multiple follower nodes in real-time.
    
----  
+---
 
 ### 2. **Backup Strategies: Prepare for the Unexpected**
 
@@ -161,7 +161,7 @@ public class RetryExample {
 1. The system retries failed operations up to three times before quitting.
 2. Exponential backoff ensures the retries don’t overwhelm the system.
 
----  
+---
 
 ## **Human Errors: Automate Repetitive Actions**
 
@@ -173,7 +173,7 @@ Humans cause unintentional disasters. Configuration mistakes, command misfires, 
 For example:
 - Write deployment scripts with automated checks for branches, ensuring you're not accidentally deploying from development instead of production.
 
----  
+---
 
 ## **Summary: Making Systems Reliable**
 
@@ -187,6 +187,6 @@ When the inevitable happens, reliability ensures your system reacts gracefully. 
 
 **What are your thoughts on reliability? Have you encountered your own disasters or success stories? Let me know in the comments!**
    
----  
+---
 
 This keeps the format human and approachable, while also including actionable code for tech-savvy readers. The section focuses on practical, easy-to-understand reliability techniques for systems inspired by Chapter 1 of "Designing Data-Intensive Applications." Let me know if it needs further tweaking!

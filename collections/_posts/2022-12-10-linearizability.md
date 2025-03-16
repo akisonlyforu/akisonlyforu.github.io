@@ -12,7 +12,7 @@ Linearizability is one of the strongest consistency guarantees a distributed sys
 
 This guarantee ensures that when one client completes a write, all subsequent reads reflect that write, regardless of which replica the client contacts. Linearizability is fundamentally about **recency**—ensuring that the most recent updates are always reflected in the system.
    
----  
+---
 
 ### **Real-World Analogy**
 
@@ -22,7 +22,7 @@ Imagine two people, Alice and Bob, following a sports match online.
 
 This scenario demonstrates a violation of linearizability. While users expect a fresh response (the final score), the lag in replication across database nodes delivers stale data to Bob, breaking the illusion of one unified, up-to-date dataset.
    
----  
+---
 
 ### **Key Features of Linearizability**
 
@@ -35,7 +35,7 @@ This scenario demonstrates a violation of linearizability. While users expect a 
 3. **Applies to Single Operations**    
    Unlike serializability, linearizability applies to operations on an individual data object (e.g., a single key in a key-value store). Operations on multiple objects require additional coordination mechanisms.
 
----  
+---
 
 ### **Trade-offs and Challenges of Linearizability**
 
@@ -50,7 +50,7 @@ Linearizability ensures consistency across distributed systems but comes at a co
 3. **Network Dependence**    
    Linearizability is sensitive to variable network delays. For example, during a network partition, systems have to choose between consistency or availability, as described by the CAP theorem.
 
----  
+---
 
 ### **Practical Uses of Linearizability**
 
@@ -65,7 +65,7 @@ While linearizability is expensive to implement, it is essential in certain scen
 3. **Account Balances and Inventory Management**
     - Banking systems and e-commerce platforms rely on linearizability to ensure users cannot spend the same funds twice or purchase more inventory than is available.
 
----  
+---
 
 ### **Alternatives to Linearizability**
 
@@ -80,7 +80,7 @@ Given the trade-offs of linearizability, many systems choose alternative approac
 3. **Hybrid Approaches**    
    Systems like DynamoDB and Cassandra offer tunable consistency, allowing developers to trade linearizability for higher scalability and performance based on specific workload requirements.
 
----  
+---
 
 ### **Conclusion**
 

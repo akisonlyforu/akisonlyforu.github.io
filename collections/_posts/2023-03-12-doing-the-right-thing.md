@@ -10,7 +10,7 @@ categories: ddia ethics data-systems accountability
 
 As engineers, our work entails more than just building reliable and efficient software systems. Every decision we make in designing data systems carries consequences for individuals, communities, and society as a whole. From predictive analytics to large-scale surveillance, technologies can amplify inequalities or create unintended harm if not carefully designed. This subchapter serves as a call to action for engineers to reflect on these impacts, emphasizing the ethical responsibility to "do the right thing."
   
----  
+---
 
 ### **Predictive Analytics: Power and Pitfalls**
 
@@ -21,7 +21,7 @@ Predictive analytics turns historical data into decisions about the future. Whil
 
 While data-driven insights hold the promise of objectivity, they risk amplifying the biases of the input data. As engineers, our job is to ensure models remain transparent, accountable, and free of discriminatory behavior.
   
----  
+---
 
 ### **Bias and Discrimination in Automated Systems**
 
@@ -35,7 +35,7 @@ For instance:
 
 **Solution**: Proactively audit both training data and model outputs for fairness and enforce anti-discrimination compliance in systems making impactful decisions.
   
----  
+---
 
 ### **Surveillance vs. Privacy**
 
@@ -45,7 +45,7 @@ The ethical challenge is ensuring that data collection respects users’ privacy
 - **Consent Issues**: Users often lack clear knowledge about what data they provide and how it will be used, undermining the concept of informed consent.
 - **Data as Exploitation**: Behavioral data has been described not as a mere byproduct of an interaction but as the "core asset" of modern platforms. Many policies disguise this extraction within dense terms of service agreements, granting companies sweeping rights to exploit user data.
 
----  
+---
 
 ### **Feedback Loops: Harmful Paternalism**
 
@@ -55,7 +55,7 @@ Even seemingly benign systems like recommendation engines warrant closer scrutin
 
 Addressing these issues demands "systems thinking," a holistic understanding of how each component of a system impacts users and society.
   
----  
+---
 
 ### **Key Principles for Ethical Data Engineering**
 
@@ -71,7 +71,7 @@ Addressing these issues demands "systems thinking," a holistic understanding of 
 4. **Fair Practices**
     - Continuously audit algorithms and dataflows to root out entrenched biases. Adopt designs that enable inclusivity by default.
 
----  
+---
 
 ### **Conclusion**
 

@@ -10,7 +10,7 @@ categories: ddia distributed-systems consistency ordering
 
 Consistency models in distributed systems heavily rely on preserving the **order of operations**. Ordering ensures data correctness and impacts everything from causality to distributed consensus. In distributed systems, defining and maintaining order becomes complex due to concurrency, replication, and delays across nodes. This post examines the principles of ordering guarantees, including causality, sequence number ordering, and total order broadcast.
    
----  
+---
 
 ### **Why Does Ordering Matter?**
 
@@ -19,7 +19,7 @@ Preserving order is about honoring the dependencies between events in a system. 
 2. **Consistency**: Ordering allows replicas in a distributed system to remain synchronized, ensuring users see a coherent state regardless of the node accessed.
 3. **Concurrency Control**: Correct ordering helps manage concurrent operations by defining the sequence in which they're applied, minimizing conflicts.
 
----  
+---
 
 ### **Ordering and Causality**
 
@@ -32,7 +32,7 @@ Let’s consider an example:
 
 Causally dependent events would guarantee that a system always shows Event A (the question) before Event B (the answer). Violating this order—showing the answer first—is unintuitive and leads to a broken experience.
   
----  
+---
 
 ### **Sequence Number Ordering**
 
@@ -46,7 +46,7 @@ Using **sequence numbers** or logical timestamps helps track and enforce orderin
 
 **Solution**: Logical clocks (e.g., Lamport timestamps or vector clocks) offer a more reliable method for enforcing ordering in distributed environments.
    
----  
+---
 
 ### **Total Order Broadcast**
 
@@ -63,7 +63,7 @@ Total order broadcast ensures that all nodes in a system process messages (opera
 Example Workflow:
 - A consensus algorithm (e.g., ZooKeeper or etcd) acts as a mediator, broadcasting all messages in a consistent sequence to ensure operations across all participating nodes are synchronized.
 
----  
+---
 
 ### **Challenges in Enforcing Order**
 
@@ -71,7 +71,7 @@ Example Workflow:
 2. **Concurrency Restrictions**: To preserve order, systems may need to serialize concurrent transactions, limiting performance in high-throughput scenarios.
 3. **Partition Dependencies**: Cross-partition operations (e.g., enforcing foreign keys or consistent snapshots) require intricate coordination, amplifying complexity.
 
----  
+---
 
 ### **Conclusion**
 

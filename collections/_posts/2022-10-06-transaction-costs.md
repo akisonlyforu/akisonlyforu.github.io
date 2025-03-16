@@ -12,7 +12,7 @@ At its core, a **transaction** is a logical unit of work in a database that grou
 
 While transactions are indispensable for ensuring reliable data processing in many systems, they are not universally necessary, and sometimes their guarantees can be weakened or even discarded to improve performance and availability.
    
----  
+---
 
 ### **The Purpose of Transactions**
 
@@ -22,7 +22,7 @@ Transactions simplify error handling in applications that depend on databases. W
 
 By leveraging transactions, all reads and writes within an operation are treated as a single atomic unit, making it easier for applications to handle errors and concurrency issues.
    
----  
+---
 
 ### **ACID Guarantees**
 
@@ -35,7 +35,7 @@ The behavior of transactions is governed by the well-known **ACID** properties:
     - Example: A partially updated row won't be readable by other uncommitted transactions.
 4. **Durability**: Once a transaction commits, its effects are permanent, even if hardware or software failures occur.
 
----  
+---
 
 ### **Demystifying the "C" in ACID**
 
@@ -43,7 +43,7 @@ While atomicity, isolation, and durability are clearly database-provided propert
 
 Interestingly, **ACID's consistency** is separate from the "consistency" discussed in **CAP theorem** (which refers to replica consistency in distributed systems).
    
----  
+---
 
 ### **Single-Object vs. Multi-Object Transactions**
 
@@ -62,7 +62,7 @@ Example Scenarios:
 
 Multi-object transactions are harder to implement in distributed systems, but they provide essential guarantees for consistency and allow applications to modify interdependent objects safely.
    
----  
+---
 
 ### **The Cost of Transactions**
 
@@ -72,7 +72,7 @@ Employing transactions comes with trade-offs:
 
 Certain distributed database systems (e.g., NoSQL databases) reduce transaction guarantees in favor of higher scalability and fault tolerance, forcing applications to handle data inconsistencies or partial failures explicitly.
    
----  
+---
 
 ### **Conclusion**
 

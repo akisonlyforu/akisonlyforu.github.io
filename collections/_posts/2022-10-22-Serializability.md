@@ -10,7 +10,7 @@ categories: ddia transactions databases concurrency-control
 
 Serializability is widely acknowledged as the strongest isolation level for transactions. It ensures that even though transactions may execute concurrently, the resulting state of the database is equivalent to a scenario where those transactions were executed serially—one after another. By enforcing this isolation level, the system guarantees that all race conditions and other concurrency anomalies are completely avoided.
    
----  
+---
 
 ### **Why Serializability Matters**
 
@@ -25,7 +25,7 @@ Serializability is widely acknowledged as the strongest isolation level for tran
 
 While highly reliable, strict serializability is computationally expensive, which is why weaker isolation levels are often more commonly implemented.
    
----  
+---
 
 ### **Techniques for Implementing Serializability**
 
@@ -76,7 +76,7 @@ Snapshot isolation (SI) itself is a weaker isolation level but can be extended t
 - Large, long-running transactions tend to cause more conflicts and aborts.
 - Detailed bookkeeping is required to track read-versus-write dependencies, which may impact performance in specific scenarios.
 
----  
+---
 
 ### **Choosing an Approach**
 
@@ -85,7 +85,7 @@ The appropriate technique to enforce serializability depends on application need
 2. **Two-Phase Locking**: Suitable for systems with high demands for consistency but lower concurrency expectations.
 3. **Serializable Snapshot Isolation**: Ideal for read-heavy workloads where low latency is critical.
 
----  
+---
 
 ### **Conclusion**
 

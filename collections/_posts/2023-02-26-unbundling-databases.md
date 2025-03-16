@@ -12,7 +12,7 @@ Databases have traditionally consolidated functionalities, combining features li
 
 The unbundling approach not only increases flexibility but also aligns with the Unix philosophy of modularity—combining small tools with well-defined purposes to create reliable, scalable systems.
    
----  
+---
 
 ### **Why Unbundle Databases?**
 
@@ -26,7 +26,7 @@ The one-size-fits-all database model often falls short when the application requ
 
 This approach retains the flexibility to build pipelines that use multiple components, balancing performance and functionality across specialized systems.
    
----  
+---
 
 ### **Composing Data Storage Technologies**
 
@@ -40,7 +40,7 @@ Unbundling emphasizes breadth—providing broad coverage for multiple workloads�
 Example:     
 Imagine using **distributed blob storage** to hold raw datasets, **a graph database** for social network queries, and **Kafka streams** for log-based synchronization, all integrating seamlessly for specific application needs.
    
----  
+---
 
 ### **Challenges in Unbundled Systems**
 
@@ -49,7 +49,7 @@ While unbundling databases has advantages, challenges arise in orchestrating the
 2. **Write Synchronization**: Ensuring every system participating in unbundling receives writes reliably (e.g., through event logs) is crucial. A single disagreement may lead to data divergence.
 3. **Operational Overhead**: Each piece of infrastructure introduces its own operational quirks (e.g., scaling, fault tolerance), which can increase administrative costs.
 
----  
+---
 
 ### **Designing Applications Around Dataflow**
 
@@ -59,7 +59,7 @@ In an unbundled database world, applications are seen as **derivation functions*
 
 Dataflow-friendly architectures emphasize loose coupling between tools while offering predictable results.
   
----  
+---
 
 ### **Conclusion**
 

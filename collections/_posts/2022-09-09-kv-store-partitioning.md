@@ -10,7 +10,7 @@ categories: ddia partitioning key-value distributed-databases
 
 Partitioning in distributed database systems enables large datasets to be broken into smaller, manageable subsets spread across multiple nodes. But how do we decide which records go on which nodes? Efficient key-value partitioning ensures data and workloads are distributed evenly, avoiding problems like skewed partitions while optimizing performance.
    
----  
+---
 
 ### **Partitioning by Key Range**
 
@@ -25,7 +25,7 @@ Partitioning by **key range** divides the data space into continuous ranges base
 - **Risk of Hot Spots**: Workloads concentrated on a single range (e.g., sequential timestamp writes) overload specific partitions while leaving others idle.
     - **Solution**: Use compound keys (e.g., ‘sensor_ID + timestamp’) to distribute sequential writes more evenly across partitions.
 
----  
+---
 
 ### **Partitioning by Hash of Key**
 
@@ -39,7 +39,7 @@ To avoid the hot spots of key range partitioning, many distributed systems use *
 1. **Lack of Range Queries**: Hashing disrupts natural order, making range queries inefficient as related keys are scattered across partitions.    
    Example: Databases like MongoDB or Cassandra sacrifice efficient sequential scans in hash-based sharding but gain consistency in load handling.
 
----  
+---
 
 ### **Hybrid Approaches**
 
@@ -48,7 +48,7 @@ Some systems combine key-range and hash partitioning techniques to balance advan
 
 Use Case: Efficiently retrieving all user updates sorted by timestamp in a distributed social media platform.
   
----  
+---
 
 ### **Challenges in Partitioning**
 
@@ -60,7 +60,7 @@ Use Case: Efficiently retrieving all user updates sorted by timestamp in a distr
     - Systems like HBase and RethinkDB break oversized partitions (exceeding predefined thresholds) into smaller subpartitions dynamically.
     - For static environments, pre-splitting avoids overloading during early stages of data growth.
 
----  
+---
 
 ### **Conclusion**
 

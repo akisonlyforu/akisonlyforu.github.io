@@ -15,7 +15,7 @@ Encoding is critical for:
 
 This post examines encoding approaches, including **language-specific formats**, **textual formats** (like JSON/XML), and **binary formats** (such as Protocol Buffers, Thrift, and Avro).
    
----  
+---
 
 ### **Language-Specific Formats**
 Languages like Java, Python, and Ruby come with built-in serialization libraries (e.g., `java.io.Serializable`, `pickle`, `Marshal`). These libraries offer quick ways to store and retrieve in-memory objects. However, they have some significant downsides:
@@ -35,7 +35,7 @@ decoded = pickle.loads(encoded)
 print(decoded)  # {'user': 'Alice', 'active': True}  
 ```  
    
----  
+---
 
 ### **Textual Formats: JSON, XML, and CSV**
 Standardized textual formats provide universal support alongside human readability. Despite being widely used, they come with their own set of trade-offs.
@@ -70,7 +70,7 @@ Example binary encoding (MessagePack):
 }  
 ```  
    
----  
+---
 
 ### **Binary Formats: Protocol Buffers, Thrift, and Avro**
 To overcome the limitations of textual representations, **binary formats** utilize schemas to encode data more compactly and efficiently. These formats store field names in schemas rather than data files, saving space and improving parsing speed.
@@ -103,7 +103,7 @@ Schema:
 ```  
 Encoded structures are highly compact but require the schema to parse properly.
    
----  
+---
 
 ### **Choosing the Right Format**
 | **Format Type**          | **Use Case**                                        | **Pros**                    | **Cons**                   |  
@@ -112,7 +112,7 @@ Encoded structures are highly compact but require the schema to parse properly.
 | **Textual (JSON/XML)**    | Web APIs, integration-driven architectures         | Universal support, readable | Large, datatype ambiguity  |  
 | **Binary (Protobuf/Avro)**| Internal analytics and large-scale pipelines       | Compact, fast               | Requires schema management |  
    
----  
+---
 
 ### **Closing Notes on Evolvability**
 In dynamic environments, tools like Protocol Buffers and Avro thrive due to schema evolution support, enabling forward and backward compatibility. They allow for mixed-version compatibility during rolling upgrades, crucial for high-availability systems.

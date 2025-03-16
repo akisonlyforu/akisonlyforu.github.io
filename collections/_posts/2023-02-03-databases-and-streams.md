@@ -10,7 +10,7 @@ categories: ddia stream-processing databases immutability
 
 The relationship between databases and streams goes beyond simple asynchronous updates or messaging: they are deeply interconnected concepts. At the core, databases can be seen as the materialized state derived from an unbounded stream of change events. This subchapter explores how streams sync with databases, the role of **change data capture (CDC)** and **event sourcing**, and the advantages of thinking about state using an immutable event-driven model.
   
----  
+---
 
 ### **Keeping Systems in Sync**
 
@@ -22,7 +22,7 @@ Modern applications use databases alongside systems like caches, search indexes,
 2. **Dual Writes**: Applications update both the database and external systems simultaneously.
     - **Problem**: Race conditions between concurrent update events lead to inconsistencies, as illustrated by interleaving writes reaching systems in different orders.
 
----  
+---
 
 ### **Change Data Capture (CDC)**
 
@@ -37,7 +37,7 @@ Instead of relying on batch snapshots or error-prone dual writes, **CDC** tracks
 
 By ensuring downstream systems apply changes in the same sequence as the primary database, CDC eliminates problems tied to race conditions and update divergence.
    
----  
+---
 
 ### **Event Sourcing**
 
@@ -48,7 +48,7 @@ While CDC tracks changes at the database level, **event sourcing** is an archite
 
 2. Application state becomes a **derived materialized view** of the event stream. If new requirements arise (e.g., showing reservation history), reprocessing the stream suffices without modifying existing state.
 
----  
+---
 
 ### **State, Streams, and Immutability**
 
@@ -61,7 +61,7 @@ Immutability complements both CDC and event sourcing by addressing data consiste
 1. **Database Recovery**: Crash recovery by replaying event logs to rebuild the latest consistent state.
 2. **Debugging and Auditing**: Immutable logs allow complete traceability of all historical actions, preventing silent overwrites of important updates.
 
----  
+---
 
 ### **Conclusion**
 

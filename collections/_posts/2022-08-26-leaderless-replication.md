@@ -16,7 +16,7 @@ Instead of relying on a central leader, clients interacting with a leaderless sy
 
 Both approaches intentionally leave write-ordering to be resolved asynchronously rather than strictly enforced at runtime .
    
----  
+---
 
 ### **Key Characteristics of Leaderless Replication**
 
@@ -38,7 +38,7 @@ Both approaches intentionally leave write-ordering to be resolved asynchronously
 3. **High Availability During Failures**    
    Leaderless systems allow operations to continue even if replicas fail or nodes become unreachable. Writes are accepted as long as a quorum (e.g., two out of three replicas) agrees to store the data .
 
----  
+---
 
 ### **Advantages of Leaderless Replication**
 
@@ -51,7 +51,7 @@ Both approaches intentionally leave write-ordering to be resolved asynchronously
 2. **Geographic Scalability**    
    With flexible write options, leaderless systems are ideal for global distribution. Clients can write to nearby servers without worrying about centralized coordination delays.
 
----  
+---
 
 ### **Handling Concurrent Writes**
 
@@ -67,7 +67,7 @@ Two clients simultaneously update the same key. Due to asynchrony:
 2. **Application-Level Merges**: Never discard conflicting data; instead, return all conflicting versions to the application to merge meaningfully.
 3. **CRDTs**: Leverage Conflict-Free Replicated Data Types, which ensure convergence automatically for certain operations.
 
----  
+---
 
 ### **Limitations of Leaderless Systems**
 
@@ -83,7 +83,7 @@ Despite their benefits, leaderless replication comes with trade-offs:
 3. **Increased Operational Overhead**    
    Effective leaderless setups demand careful configuration of parameters (`w`, `r`, `n`), proactive monitoring of replication lag, and managing dynamic conflict resolution schemes.
 
----  
+---
 
 ### **Applications and Use Cases**
 
@@ -92,7 +92,7 @@ Leaderless replication suits systems prioritizing:
 - **Global Distribution**: E-commerce and social platforms with geographically dispersed operations.
 - **Offline Sync Models**: Mobile apps or collaborative tools requiring frequent data sync without strong serializability .
 
----  
+---
 
 ### **Conclusion**
 

@@ -1,16 +1,16 @@
----  
+---
 layout:     post  
 title:      What is Scalability in Data Systems?  
 date:       2022-05-21  
 summary:    Discussing the essence of scalability in data systems-what it means, why it matters, and how to ensure it as systems grow.  
 categories: scalability ddia
----  
+---
    
 In software design, it's easy to overlook how quickly "enough" can become "not enough." That database handling your app's traffic today might crumble under ten times the load tomorrow. This is where **scalability** becomes critical. But what does scalability mean, and how can we build systems that gracefully handle growth?  
   
 In this post, powered by insights from *Designing Data-Intensive Applications*, let's dive into what scalability is, how it matters, and the strategies engineers use to adapt systems as they grow.  
   
----  
+---
   
 ## **What is Scalability?**  
   
@@ -22,7 +22,7 @@ But the term is nuanced. Saying "X is scalable" or "Y doesn't scale" is overly s
   
 Understanding scalability means understanding your system's trade-offs under stress.  
   
----  
+---
   
 ## **Describing Load and Performance**  
   
@@ -51,7 +51,7 @@ Despite being smaller in volume, writing tweets triggered a fan-out effect—upd
                  |  for Followers  |                                    |  Timelines (Cache/DB)       |
                  +-----------------+                                    +---------------|-------------+
                          |                                                              |
-     --------------------|-----------------                                --------------|--------------
+     --------------------|-----------------                              --------------|--------------
      |                                    |                                |                          |
 +-----------+                      +-----------+                 +----------------+        +----------------+
 | Cache (A) | <-- Heavy Requests   | Cache (B) |                 | FollowerCache1 |        | FollowerCache2 |
@@ -61,7 +61,7 @@ Despite being smaller in volume, writing tweets triggered a fan-out effect—upd
 
 ```
   
----  
+---
   
 ## **Approaches to Scalability**  
   
@@ -75,14 +75,14 @@ This means using a larger, more powerful machine (e.g., more RAM or CPUs). While
 ### **2. Horizontal Scaling (Scale-Out)**  
 This involves distributing the load across multiple machines (nodes). It’s also known as "shared-nothing architecture." Each node runs independently, with software coordination over the network to handle shared workloads.  
   
----  
+---
   
 ### **Example: Stateless vs. Stateful Services**  
   
 - **Stateless Services** like API gateways are easier to distribute since they don't rely on persistent data. Scaling them means adding more instances behind a load balancer.  
 - **Stateful Systems** (e.g., databases) need special care. Adding nodes requires data replication or partitioning, introducing complexity around **consistency**.  
   
----  
+---
   
 ## **Scaling Twitter’s Timeline: Case Studies**  
   
@@ -123,7 +123,7 @@ Ultimately, Twitter moved to **Approach 2**, accepting higher write-time costs f
                                                             experience).
 ```
 
----  
+---
   
 ## **Designed for Elasticity**  
   
@@ -133,7 +133,7 @@ Many systems today are **elastic**, meaning they scale dynamically in response t
   
 Manual scaling is also valid—it’s simpler and avoids unpredictable costs.  
   
----  
+---
   
 ## **Code Example: Scaling Reads Using Caching**  
   

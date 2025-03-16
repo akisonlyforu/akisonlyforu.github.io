@@ -10,7 +10,7 @@ categories: ddia partitioning rebalancing distributed-databases
 
 As a database grows or undergoes changes in its cluster configuration (e.g., adding or removing nodes), it becomes necessary to redistribute data and workloads to ensure balanced performance across the system. This process, known as **rebalancing**, involves moving data and request ownership from one node to another.
    
----  
+---
 
 ### **Why Partition Rebalancing is Necessary**
 
@@ -24,7 +24,7 @@ The rebalancing process must ensure:
 - Continuity of read and write operations during the rebalancing activity.
 - Minimal movement of data across the network to avoid performance degradation.
 
----  
+---
 
 ### **Rebalancing Strategies**
 
@@ -53,7 +53,7 @@ Dynamic rebalancing splits or merges partitions as needed based on their size or
 - The number of partitions scales with the dataset size, allowing flexibility for expanding systems.
 - Ensures balanced partition sizes across nodes and reduces chances of hotspots.
 
----  
+---
 
 ### **Manual vs. Automatic Rebalancing**
 
@@ -65,7 +65,7 @@ Dynamic rebalancing splits or merges partitions as needed based on their size or
     - Automatic rebalancing can be risky if combined with automatic failure detection.
     - Misidentifying a slow node as failed may unnecessarily reassign partitions, leading to cascading failures across the system.
 
----  
+---
 
 ### **Operational Challenges During Rebalancing**
 
@@ -78,7 +78,7 @@ Dynamic rebalancing splits or merges partitions as needed based on their size or
 3. **Overhead**:    
    Systems must ensure that the rebalancing process itself doesn’t degrade query performance for users.
 
----  
+---
 
 ### **Conclusion**
 

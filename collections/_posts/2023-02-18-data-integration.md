@@ -10,7 +10,7 @@ categories: ddia data-integration system-design distributed-systems
 
 As organizations adopt specialized systems to cater to the unique requirements of different applications, integrating them becomes critical. **Data integration** ensures that information flows seamlessly across databases, caches, search indexes, and analytics tools, enabling systems to maintain consistency and correctness. This process involves unifying diverse data models, managing synchronization workflows, and addressing the inherent challenges of distributed updates.
   
----  
+---
 
 ### **The Importance of Data Integration**
 
@@ -22,7 +22,7 @@ In a modern application ecosystem, different services consume data tailored to t
 
 Without centralized integration, these systems risk drifts in correctness, leading to stale data and degraded user experiences.
    
----  
+---
 
 ### **Key Approaches to Data Integration**
 
@@ -43,7 +43,7 @@ Stream-processing frameworks (e.g., Kafka Streams, Flink) produce **low-latency 
 - Requires careful monitoring to handle disconnected or out-of-sync consumers.
 - Debugging errors across multiple systems can become daunting without robust observability tooling.
 
----  
+---
 
 ### **Managing Data Transformation Across Systems**
 
@@ -52,7 +52,7 @@ Data integration often involves format or schema transformations, which unify di
 2. **Key Schema Augmentation**: Ensures indexing or lookups can efficiently access necessary items, particularly for search or analytical workloads.
 3. **Aggregation Pipelines**: Transform raw operational results from logs or OLTP systems into business-relevant summaries, such as order trends or customer demographics.
 
----  
+---
 
 ### **Ensuring Correctness in Data Integration**
 
@@ -62,13 +62,13 @@ Dataflow pipelines must consider failure recovery and ordering guarantees to mai
 
 Real-time systems like **Debezium** (log-based systems) and change propagation frameworks like **Kafka Connect** serve as vital tools here, allowing data integrity amidst continuous updates.
   
----  
+---
 
 ### **Unified Dataflows and Converging Trends**
 
 Combining traditional batch processing and stream processing within a single architecture provides the best of both worlds, as seen in **unified processing systems**. These systems dynamically balance **throughput** (batch) and **latency-sensitive** (real-time) events, ensuring businesses evolve at speed while maintaining high data fidelity.
    
----  
+---
 
 ### **Conclusion**
 

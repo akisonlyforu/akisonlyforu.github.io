@@ -8,7 +8,7 @@ categories: data-models databases ddia
 
 In scenarios where complex many-to-many relationships dominate, graph-like data models provide a natural and highly efficient solution. These models are well-suited to use cases such as social networks, recommendation engines, and road networks. This post explores the fundamentals of graph models, their key implementations, and examples of queries using popular graph query languages.
 
----  
+---
 
 ### **Understanding the Basics of Graph Data Models**
 
@@ -27,7 +27,7 @@ A graph consists of:
 3. **Road Networks:**    
    Vertices = Intersections; Edges = Roads or Rails.
 
----  
+---
 
 ### **The Property Graph Model**
 
@@ -62,7 +62,7 @@ CREATE TABLE edges (
 );  
 ```  
    
----  
+---
 
 ### **Querying Graphs: Cypher Language**
 
@@ -106,7 +106,7 @@ Explanation:
 2. Check if they also have a `LIVES_IN` relationship to a European location.
 3. Return their names.
 
----  
+---
 
 ### **Triple-Stores and SPARQL**
 
@@ -121,7 +121,7 @@ SELECT ?person WHERE {
 }  
 ```  
    
----  
+---
 
 ### **Datalog Approach - Example Query**
 

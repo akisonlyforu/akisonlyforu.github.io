@@ -11,7 +11,7 @@ Multi-leader replication, also known as **master-master replication** or **activ
 
 This architecture facilitates enhanced data availability and improves latency by distributing the load across multiple nodes or geographically distant datacenters.
    
----  
+---
 
 ### **Use Cases for Multi-Leader Replication**
 
@@ -28,7 +28,7 @@ Example: **Google Calendar Sync** .
 #### **3. Real-Time Collaboration**
 In collaborative platforms like Google Docs or Etherpad, multiple users modify data concurrently. Multi-leader replication allows seamless updates while handling conflicts asynchronously .
    
----  
+---
 
 ### **Replication Topologies in Multi-Leader Systems**
 The replication topology describes how write operations from one leader propagate across other replicas. Some common topologies include:
@@ -59,7 +59,7 @@ A central root node serves as the hub, forwarding writes to other leader nodes. 
 ```  
 Each topology has trade-offs in terms of **resilience** and **data propagation delays** .
    
----  
+---
 
 ### **Challenges in Multi-Leader Replication**
 
@@ -76,7 +76,7 @@ Concurrent writes to the same record at multiple leader nodes lead to conflicts.
 2. **Custom Conflict Handlers**: Use application logic to merge conflicting data or prompt user intervention.
 3. **Replication-Free Zones**: Route all writes for a given record to the same leader node, avoiding conflicts altogether .
 
----  
+---
 
 #### **2. Latency-Induced Ordering Issues**
 Replication delays due to asynchronous communication may result in updates being applied in differing sequences at each replica.    
@@ -86,7 +86,7 @@ Example: On Node A, a "row insert" might be followed by a "row update," whereas 
 - Nodes dropping out of the topology can interrupt message propagation in **circular or star topologies.**
 - Adjusting distributed clocks and ensuring convergence in distributed networks demand careful operational strategies .
 
----  
+---
 
 ### **Advantages of Multi-Leader Replication**
 
@@ -104,7 +104,7 @@ Example: On Node A, a "row insert" might be followed by a "row update," whereas 
 | **Complex Debugging**    | Troubleshooting causality bugs or topology issues can be challenging in production systems. |  
 | **Administrative Overhead** | Multi-leader setups need careful topology configurations to prevent unintended behaviors. |  
    
----  
+---
 
 ### **Conclusion**
 

@@ -10,7 +10,7 @@ categories: ddia stream-processing real-time dataflow
 
 Stream processing applies the principles of batch processing to unbounded data streams, enabling real-time or low-latency operations. Unlike batch jobs with static inputs, stream processors handle continuous flows of events, introducing challenges like reasoning about time and ensuring fault tolerance. This post explores the architectures, tasks, and mechanisms of stream processing pipelines, along with advanced topics like joins and recovery techniques.
    
----  
+---
 
 ### **Defining Stream Processing**
 
@@ -23,7 +23,7 @@ Broadly speaking, stream processing frameworks consume continuous data flows, pe
 3. **Materialized Views**:  
    Maintaining up-to-date search indexes or caches synchronized with a source database.
 
----  
+---
 
 ### **Core Stream Processing Tasks**
 
@@ -42,7 +42,7 @@ Broadly speaking, stream processing frameworks consume continuous data flows, pe
     - **Stream-Table Join**: Enriches stream events with lookups against a database or changelog.
     - **Table-Table Join**: Synchronizes two changelog streams to generate a materialized view.
 
----  
+---
 
 ### **Reasoning About Time**
 
@@ -52,7 +52,7 @@ Handling time is a central challenge in stream processing because time appears i
 
 Processing frameworks rely on **watermarks** to mark the progression of event time, ensuring late-arriving events can still be handled within a tolerance period.
   
----  
+---
 
 ### **Fault Tolerance and Exactly-Once Semantics**
 
@@ -67,7 +67,7 @@ Failures in stream processing systems are inevitable, especially as jobs run con
 3. **Idempotency**    
    Writes to an external sink (e.g., a database) are made idempotent, ensuring duplicate events caused by retries do not affect correctness.
 
----  
+---
 
 ### **Conclusion**
 

@@ -10,7 +10,7 @@ categories: ddia distributed-systems fault-tolerance networking
 
 Distributed systems rely heavily on networks for node-to-node communication. However, networks are inherently untrustworthy—messages may be delayed, lost, duplicated, or even delivered out of order. Designing reliable distributed systems requires acknowledging and overcoming these inconsistencies, especially in asynchronous environments where guarantees around timing and delivery don’t exist.
    
----  
+---
 
 ### **Common Network Faults in Practice**
 
@@ -22,7 +22,7 @@ Computer networks have been a focus of optimization for decades, yet they remain
 
 Modern datacenters experience network disruptions regularly. A medium-sized datacenter may report a dozen faults each month, with these faults impacting anything from an individual machine to an entire rack.
    
----  
+---
 
 ### **Handling Unreliable Networks with Protocols**
 
@@ -35,7 +35,7 @@ Techniques like **error-correcting codes** enable networks to recover from minor
 - **TCP (Transmission Control Protocol)**: TCP handles packet retransmissions, duplicate elimination, and reordering, offering a reliable transport layer over an unreliable Internet Protocol (IP). While it solves many problems at the network level, it cannot address high-level concerns like application timeouts or unbounded delays.
 - **UDP (User Datagram Protocol)**: For latency-sensitive applications like video streaming, UDP avoids retransmissions, sacrificing reliability for speed.
 
----  
+---
 
 ### **Challenges of Asynchronous Networks**
 
@@ -53,7 +53,7 @@ Timeouts allow systems to abort ill-fated attempts and retry. However, timeout-b
 
 Adjusting timeout duration requires careful experimentation, factoring in network variability and application needs.
    
----  
+---
 
 ### **Network Congestion and Queueing**
 
@@ -63,7 +63,7 @@ Queueing delays occur when multiple nodes attempt to route traffic through a bot
 
 Effective congestion avoidance strategies include flow control protocols (like TCP’s backpressure mechanism) and resource monitoring systems that evenly distribute workloads.
    
----  
+---
 
 ### **Building a Reliable System from Unreliable Networks**
 
@@ -78,7 +78,7 @@ Engineers can build robust systems atop unreliable networks using the following 
 3. **Monitoring and Failure Simulations**
     - Regular stress tests and tools like **Chaos Monkey** mimic network faults to uncover system weaknesses, ensuring adequate recovery logic is in place.
 
----  
+---
 
 ### **Conclusion**
 

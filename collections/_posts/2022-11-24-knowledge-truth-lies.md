@@ -12,7 +12,7 @@ In distributed systems, absolute truth is elusive. Nodes in a network have no sh
 
 The unreliable mechanisms in distributed systems force us to redefine certainty and truth. As engineers, our task is to build systems that meet user expectations despite frequent and unpredictable faults.
   
----  
+---
 
 ### **The Truth Defined by the Majority**
 
@@ -27,7 +27,7 @@ Quorum-based mechanisms rely on making decisions with votes. For example:
 
 This model is practical because decisions are driven by the collective agreement of nodes rather than relying on individual judgments.
   
----  
+---
 
 ### **Byzantine Faults: When Nodes Lie**
 
@@ -40,7 +40,7 @@ While quorum mechanisms assume nodes to be honest but fallible, real-world syste
 1. **Consensus Algorithms with Supermajority**: Byzantine fault-tolerant (BFT) systems require more than two-thirds of nodes to function correctly to ensure the system’s integrity. Examples include systems used in **blockchains** like Bitcoin or Ethereum.
 2. **Cost of BFT**: Distributed systems in controlled environments (datacenters) avoid Byzantine fault-tolerant algorithms because they are expensive and limit scalability. Instead, hardware or software checks, such as firewalls and access controls, protect against malicious behavior.
 
----  
+---
 
 ### **System Models and Reality**
 
@@ -54,7 +54,7 @@ Similarly, timing behavior is modeled as:
 - **Asynchronous Systems**: No timing assumptions are made; timeouts must be baked into the protocols.
 - **Partially Synchronous Systems**: An unpredictable mix of synchronous and asynchronous behavior, which is often the most practical and widely applicable model for distributed systems.
 
----  
+---
 
 ### **Safety and Liveness Properties**
 
@@ -64,7 +64,7 @@ When designing algorithms for distributed systems, correctness is often specifie
 
 These properties ensure balanced trade-offs between uptime and consistency.
    
----  
+---
 
 ### **Conclusion**
 

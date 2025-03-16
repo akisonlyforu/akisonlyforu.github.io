@@ -8,7 +8,7 @@ categories: dataflow systems messaging ddia
 
 In distributed systems, the mode of dataflow determines how information is exchanged between processes that lack shared memory. This exchange involves encoding data into sequences of bytes (serialization) for transmission just as much as decoding it back (deserialization) on the receiving end. The choice of dataflow mode impacts system performance, reliability, and evolvability.
    
----  
+---
 
 ### **Three Common Modes of Dataflow**
 
@@ -21,7 +21,7 @@ In this mode, processes write to and read from a shared database:
 
 A practical challenge arises when an older version of a process writes an updated record without knowing about the new fields added by a newer version. To avoid unintentionally discarding such fields, developers must carefully encode and decode database records during schema evolution.
    
----  
+---
 
 #### 2. **Dataflow Through Services (REST and RPC)**
 
@@ -42,7 +42,7 @@ Accept: application/json
 
 One challenge with services is ensuring compatibility when the server updates before the clients during deployment. By following backward compatibility on requests and forward compatibility on responses, the two can evolve independently without breaking functionality.
    
----  
+---
 
 #### 3. **Message-Passing Dataflow (Asynchronous Communication)**
 
@@ -60,7 +60,7 @@ Example Workflow with Kafka:
 
 Message brokers, however, typically use opaque payloads that the application layer must parse, meaning evolution depends on backward and forward-compatible encoding formats like Avro or Protocol Buffers.
    
----  
+---
 
 ### **Strategies for Evolvable Dataflow**
 
@@ -68,7 +68,7 @@ Message brokers, however, typically use opaque payloads that the application lay
 2. **Leverage Versioning**: Employ explicit schema versioning for APIs and payloads to gracefully handle compatibility over time.
 3. **Decouple Processing via Queues**: Embrace message brokers to reduce dependency on synchronous systems, ensuring better fault tolerance and ease of scaling independently.
 
----  
+---
 
 ### **Conclusion**
 

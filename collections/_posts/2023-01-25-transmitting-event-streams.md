@@ -10,7 +10,7 @@ categories: ddia stream-processing distributed-systems messaging
 
 Event streams provide a framework for processing and transmitting continuously generated data in distributed systems. Rather than relying on static batch files, streams enable real-time or near-real-time communication between producers and consumers. The challenge lies in efficiently transmitting these streams, ensuring scalability, reliability, and fault tolerance. This subchapter focuses on two key mechanisms: **messaging systems** and **partitioned logs**.
    
----  
+---
 
 ### **Messaging Systems**
 
@@ -21,7 +21,7 @@ A **messaging system** provides the foundation for transmitting events between p
 2. The broker stores these messages temporarily or persistently.
 3. Consumers subscribe to topics, receiving messages either in real-time or when they are ready to process them.
 
----  
+---
 
 #### **Key Features of Messaging Systems**
 
@@ -37,7 +37,7 @@ A **messaging system** provides the foundation for transmitting events between p
 1. **Short-Term Storage**: Traditional brokers are optimized for transient workloads and delete messages after they are acknowledged. Therefore, they are unsuitable for long-term message storage.
 2. **Message Ordering**: Depending on the configuration, messages may arrive out-of-order if brokers redistribute them following consumer failures.
 
----  
+---
 
 ### **Partitioned Logs**
 
@@ -52,7 +52,7 @@ A **log-based message broker** builds on the durable and append-only log structu
 2. **Fan-Out Without Performance Loss**: Multiple consumers can read the same data from partitions without affecting each other, enabling efficient stream processing and replication tasks.
 3. **Efficient Sequential Reads**: Consumers read sequentially from partitions, enabling high throughput.
 
----  
+---
 
 ### **Message Broker vs. Partitioned Log**
 
@@ -63,7 +63,7 @@ A **log-based message broker** builds on the durable and append-only log structu
 | **Message Ordering**      | Limited guarantees, may vary during redelivery. | Strong per-partition ordering guarantees. |    
 | **Scalability**           | Limited by broker processing capacity.  | Horizontal scalability via partitions. |    
   
----  
+---
 
 ### **Challenges in Event Transmission**
 
@@ -79,7 +79,7 @@ Regardless of the mechanism, transmitting event streams presents inherent challe
 3. **Distributed Order Guarantees**
     - Partition-level ordering ensures integrity within each topic. However, maintaining order across partitions adds complexity and is generally avoided unless explicitly needed.
 
----  
+---
 
 ### **Conclusion**
 

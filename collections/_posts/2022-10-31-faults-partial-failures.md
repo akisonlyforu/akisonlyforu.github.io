@@ -12,7 +12,7 @@ Distributed systems, by their nature, span multiple computers communicating over
 
 Faults are especially hard to handle in such systems because they are often **nondeterministic**—that is, failures and delays do not always behave consistently, making symptom diagnosis and programming more complex.
   
----  
+---
 
 ### **What are Partial Failures?**
 
@@ -23,7 +23,7 @@ In a distributed environment, partial failures occur when some nodes or message 
 #### **Real-World Anecdote**
 A hypoglycemic driver crashing into a data center's HVAC system once left entire racks offline while others remained fine—a clear example of distributed systems’ unpredictable failure modes.
   
----  
+---
 
 ### **Why Partial Failures Are Hard**
 
@@ -34,7 +34,7 @@ A hypoglycemic driver crashing into a data center's HVAC system once left entire
 3. **System Recovery Can Be Ambiguous**
     - During partitions or outages, systems may need to make decisions based on incomplete information, raising additional challenges like determining whether a failure requires retries, rollbacks, or leadership changes.
 
----  
+---
 
 ### **Cloud Computing vs. Supercomputing: Contrasting Philosophies**
 
@@ -51,7 +51,7 @@ A hypoglycemic driver crashing into a data center's HVAC system once left entire
 
 Supercomputers’ rigid fault-handling mechanisms contrast with the adaptive, fault-tolerant strategies required in cloud environments, emphasizing the need to build reliable systems from inherently unreliable components.
    
----  
+---
 
 ### **Building Resilient Distributed Systems**
 
@@ -67,7 +67,7 @@ Supercomputers’ rigid fault-handling mechanisms contrast with the adaptive, fa
 
    Example: If a virtual machine underperforms, operators terminate it and start a new instance without affecting ongoing operations.
 
----  
+---
 
 ### **Conclusion**
 
