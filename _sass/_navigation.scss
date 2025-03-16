@@ -122,7 +122,8 @@ nav li {
 
   #main-menu.active {
     display: block !important;
-  }
+    background-color: white;
+    }
 
   .flexbox-parent {
     flex-direction: column;
