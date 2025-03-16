@@ -32,13 +32,13 @@ tags: home
     </div>
   </a>
 
-  <a href="{{ site.baseurl }}/projects" class="tile">
+  <div class="tile disabled" title="Under Construction">
     <div class="tile-content">
       <h3>Projects</h3>
       <p>Open source contributions and personal projects</p>
-      <span class="tile-arrow">→</span>
+      <span class="tile-status">Under Construction</span>
     </div>
-  </a>
+  </div>
 
   <a href="{{ site.baseurl }}/notes" class="tile">
     <div class="tile-content">
@@ -61,7 +61,7 @@ tags: home
 .feature-tiles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
   margin: 3rem auto;
   max-width: 1200px;
   padding: 0 1rem;
@@ -145,5 +145,32 @@ tags: home
 .tile:hover .tile-arrow {
   opacity: 1;
   transform: translateX(0);
+}
+
+.tile.disabled {
+  cursor: not-allowed;
+  background: #f8f8f8;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tile.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.tile.disabled:hover::before {
+  opacity: 0;
+}
+
+.tile.disabled h3,
+.tile.disabled p {
+  color: #999;
+}
+
+.tile-status {
+  font-size: 0.9rem;
+  color: #999;
+  margin-top: 1rem;
+  align-self: flex-end;
 }
 </style>
