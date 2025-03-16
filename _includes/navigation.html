@@ -10,10 +10,6 @@
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link {% if page.url == '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Blog</a>
-        <div class="dropdown-content">
-          <a href="{{site.url}}/blog/technical">Technical</a>
-          <a href="{{site.url}}/blog/behavioural">Behavioural</a>
-        </div>
       </li>
       <li class="nav-item">
         <a class="nav-link {% if page.url == '/about/' %}current{% endif %}" href="{{site.url}}/about">About</a>
@@ -37,7 +33,9 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  margin-top: 0rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
 }
 
 .nav-container {
@@ -47,7 +45,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem;
+  height: 100%;
 }
 
 .site-logo {
@@ -267,9 +266,9 @@
   }
 }
 
-/* Add padding to body to prevent content from hiding under fixed nav */
-body {
-  padding-top: 60px;
+/* Add consistent padding to main content */
+.site-wrap {
+  padding-top: 56px;
 }
 </style>
 
