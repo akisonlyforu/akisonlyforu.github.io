@@ -1,0 +1,93 @@
+<footer class="center">
+  <div class="footer-container">
+    <div class="footer-each">
+      <h5>
+        <a href="https://maps.app.goo.gl/7brEetzGTjWf7FWE7" target="_blank" rel="noopener noreferrer">
+          <span>Brooklyn</span><br><span>New York City</span><br><span>USA</span></span>
+        </a>
+      </h5>
+    </div>
+    <div class="footer-each">
+      <h5><a href="https://www.linkedin.com/in/jonathonbelotti/" target="_blank" rel="noopener noreferrer" alt="LinkedIn"><span>LinkedIn</span></a></h5>
+      <h5><a href="https://github.com/thundergolfer" target="_blank" rel="noopener noreferrer" alt="Github"><span>Github</span></a></h5>
+      <h5><a href="https://twitter.com/jonobelotti_IO" target="_blank" rel="noopener noreferrer" alt="Twitter"><span>Twitter</span></a></h5>
+    </div>
+  </div>
+</footer>
+
+<style>
+
+footer {
+    margin-bottom: 30px;
+    visibility: visible;
+    -webkit-transform: translateY(0) scale(1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
+    transition: transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
+}
+
+footer .footer-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+footer .footer-container .footer-each {
+    float: left;
+    display: block;
+    margin: 0 2%;
+    width: 19em;
+}
+
+footer .footer-each a {
+  text-decoration: none;
+  background-image: none;
+  color: #000;
+  font-weight: 300;
+  word-wrap: normal;
+}
+
+footer .footer-each a:active, footer .footer-each a:hover {
+    outline-width: 0;
+}
+
+.footer-each span, footer, sub, sup {
+    position: relative;
+}
+
+.footer-each span:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 2px solid #000;
+    transition: .4s;
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+}
+
+.footer-each a:hover span:before {
+    content: '';
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+}
+
+@media screen and (max-width: 1000px) {
+  footer h5 {
+    font-size: 1.5em;
+  }
+}
+</style>
+
+{% if site.enable_anchorjs %}<!-- AnchorJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
+<script>
+    anchors.options.visible = 'hover';
+    anchors.options.placement = 'left';
+    anchors.add('article h2, article h3, article h5, article h5, article h6');
+</script>{% endif %}
+<script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>
