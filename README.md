@@ -4,7 +4,7 @@ Just my website. The theme is [thundergolfer/**junior-theme**](https://github.co
 
 ----
 
-### What it looks like
+### What it looks like 
 
 ![homepage preview](homepage-preview.png)
 
