@@ -6,7 +6,7 @@ summary:    I’ve learned the hard way that software systems *will* fail sooner
 categories: software-life lessons  
 ---   
    
----  
+ 
 
 # When Systems Fail: Lessons in Building Reliable Software
 
@@ -16,7 +16,7 @@ I used to panic when things failed—I’d frantically look for solutions with t
 
 In this post, I want to share what I’ve learned about **reliability** in software systems—how we can, and should, design for failure. These are principles and tips from my adventures (and misadventures) with data-intensive applications.
    
----  
+ 
 
 ### # Step 1: Expect Failure and Plan Around It
 
@@ -26,7 +26,7 @@ If you work with large systems or distributed machines, the hardware *will* brea
 
 So…what can we do? Failure isn’t the end of the world—reliable systems are those that make failure boring.
    
----  
+ 
 
 ### # Step 2: Replication: Because Losing Data is Not an Option
 
@@ -99,7 +99,7 @@ What happens here?
 
 > **Visual Idea:** Show an image of a "leader" server syncing with two followers, visualized as arrows passing data. Add a big "X" over one follower with a caption like, “If one fails, no problem—the system still works!”
    
----  
+ 
 
 ### # Step 3: Graceful Recovery with Retries and Backup Plans
 
@@ -149,7 +149,7 @@ public class RetryLogic {
 
 This retry mechanism tries the operation a few times before completely giving up.
    
----  
+ 
 
 ### # Step 4: Human Factors: Automate, Don’t Trust Yourself
 
@@ -158,16 +158,16 @@ Finally, let’s not forget humans are often the weakest link in the chain. I’
 - Use immutable deployment systems (so you can rollback easily).
 - Lock down critical actions like deleting user data behind "Are you really sure?!" checks.
 
----  
+ 
 
 ### Closing Notes: Prepare for the Worst Day
 
 Reliability isn’t about making a perfect system—it’s about being ready for **your worst day**. When things break (and they will), having the right strategies in place means you’re not scrambling—you’re solving.
    
----  
+ 
 
 What are your thoughts on reliability? Share your own horror stories or tips in the comments. Let’s make failure less scary, one step at a time.
    
----  
+ 
 
 By adding personal touches, relatable references like horror stories, and simplifying technical explanations for a general audience, this blog makes for an approachable read on Medium. Let me know if you'd like further tweaks!
