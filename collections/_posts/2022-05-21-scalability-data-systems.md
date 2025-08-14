@@ -79,9 +79,32 @@ Here’s how Twitter approached their scalability challenges for their timelines
 - Cons: Expensive updates (e.g., a single tweet reposted for thousands must update thousands of timeline caches).  
   
 Ultimately, Twitter moved to **Approach 2**, accepting higher write-time costs for faster reads—since users view timelines much more often than they post tweets<sup><span title="undefined assistant-Y8A77chkWCyTxgyQeqBsB5"><strong>5</strong></span></sup><sup><span title="undefined assistant-Y8A77chkWCyTxgyQeqBsB5"><strong>6</strong></span></sup>.  
-  
-> **Visual Suggestion**: Create an image comparing “less work on write, more work on read” vs. “more work on write, less work on read.”  
-  
+
+```
+                       WRITE LIGHT, READ HEAVY                              WRITE HEAVY, READ LIGHT
+
+            +---------------------------+                           +---------------------------+
+            |   [User Posts a Tweet]    |                           |   [User Posts a Tweet]    |
+            +------------|--------------+                           +------------|--------------+
+                         |                                                     |
+        Minimal effort: Store                                        Precompute timelines for all
+               only the tweet itself                                        followers for quick reads
+                         |                                                     |
+                +---------------------------+                     +------------------------+----------------+
+                |           |               |                     |         |             |                |
+        +---------------+   +---------------+             +---------------+ +---------------+ +--------------+
+        | Follower A     |   | Follower B    |             | Cache A       | | Cache B       | | Cache C      |
+        | Dynamic Fetch  |   | Dynamic Fetch |             | Precomputed   | | Precomputed   | | Precomputed  |
+        | (High Latency) |   | (High Latency)|             | Timeline Data | | Timeline Data | | Timeline Data|
+        +---------------+   +---------------+             +---------------+ +---------------+ +--------------+
+                ^                         ^                        |                   |                 |
+                |                         |                        |                   |                 |
+        Reads from primary DB  Reads from primary DB       Fast cached reads to   Fast cached reads to low-
+     (Heavy computation during (e.g., recompute results    follower timelines     latency results (Minimal
+       every user request)         dynamically)             (Efficient user       work on subsequent reads).
+                                                            experience).
+```
+
 ---  
   
 ## **Designed for Elasticity**  
