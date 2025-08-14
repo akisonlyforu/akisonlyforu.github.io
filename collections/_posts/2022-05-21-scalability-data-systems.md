@@ -41,7 +41,27 @@ In 2012, Twitter had two primary load-heavy operations:
   
 Despite being smaller in volume, writing tweets triggered a fan-out effect—updating timelines for followers. For some users with thousands (or millions) of followers, this caused immense stress on backend systems<sup><span title="undefined assistant-Y8A77chkWCyTxgyQeqBsB5"><strong>1</strong></span></sup><sup><span title="undefined assistant-Y8A77chkWCyTxgyQeqBsB5"><strong>2</strong></span></sup>.  
   
-> **Image Suggestion**: A diagram comparing the read-heavy (home timeline) vs. write-heavy (tweet updates) workloads.  
+```
+                      READ-HEAVY (HOME TIMELINE)                         WRITE-HEAVY (TWEET UPDATES)
+
+            +--------------------------+                           +---------------------------+
+            |   [User Views Timeline]  |                           |    [User Posts a Tweet]   |
+            +------------|-------------+                           +-------------|-------------+
+                         |                                                     |
+                 +----------------+                                    +-------------------------------+
+                 |  Fetch Tweets   |                                    |  Update All Follower        |
+                 |  for Followers  |                                    |  Timelines (Cache/DB)       |
+                 +-----------------+                                    +---------------|-------------+
+                         |                                                              |
+     --------------------|-----------------                                --------------|--------------
+     |                                    |                                |                          |
++-----------+                      +-----------+                 +----------------+        +----------------+
+| Cache (A) | <-- Heavy Requests   | Cache (B) |                 | FollowerCache1 |        | FollowerCache2 |
++-----------+                      +-----------+                 +----------------+        +----------------+
+        (Frequent fetches slow down performance)                                   (Heavy computation upfront)
+                                                                             (Fast Reads after updates)
+
+```
   
 ---  
   
