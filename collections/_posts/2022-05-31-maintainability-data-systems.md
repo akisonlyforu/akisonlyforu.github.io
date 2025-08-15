@@ -5,9 +5,7 @@ date:       2022-05-31
 summary:    A discussion on how to ensure maintainability in data systems by focusing on operability, simplicity, and evolvability.  
 categories: tech software  
 ---  
-  
-# Building Maintainable Software Systems: The Key to Long-Term Success  
-  
+   
 Software lifespan doesn’t end at deployment—it begins there. Over time, systems accumulate changes, adapt to new requirements, and scale to meet growing demands. This is why **maintainability**, as described in *Designing Data-Intensive Applications*, is vital for creating systems that engineers can continue to work on productively.  
   
 In this post, we tackle what maintainability truly means, its three foundational pillars, and how to achieve it in large-scale data systems.  
