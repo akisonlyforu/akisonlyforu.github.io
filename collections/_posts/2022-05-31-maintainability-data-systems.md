@@ -3,7 +3,7 @@ layout:     post
 title:      Building Maintainable Software Systems  
 date:       2022-05-31  
 summary:    A discussion on how to ensure maintainability in data systems by focusing on operability, simplicity, and evolvability.  
-categories: tech software  
+categories: tech software ddia
 ---  
    
 Software lifespan doesn’t end at deployment—it begins there. Over time, systems accumulate changes, adapt to new requirements, and scale to meet growing demands. This is why **maintainability**, as described in *Designing Data-Intensive Applications*, is vital for creating systems that engineers can continue to work on productively.  

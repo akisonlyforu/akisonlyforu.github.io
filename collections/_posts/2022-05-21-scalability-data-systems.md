@@ -3,7 +3,7 @@ layout:     post
 title:      What is Scalability in Data Systems?  
 date:       2022-05-21  
 summary:    Discussing the essence of scalability in data systems-what it means, why it matters, and how to ensure it as systems grow.  
-categories: tech systems-design  
+categories: tech systems-design ddia
 ---  
    
 In software design, it's easy to overlook how quickly "enough" can become "not enough." That database handling your app's traffic today might crumble under ten times the load tomorrow. This is where **scalability** becomes critical. But what does scalability mean, and how can we build systems that gracefully handle growth?  
