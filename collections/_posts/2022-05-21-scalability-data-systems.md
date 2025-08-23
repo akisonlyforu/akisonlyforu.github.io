@@ -3,7 +3,7 @@ layout:     post
 title:      What is Scalability in Data Systems?  
 date:       2022-05-21  
 summary:    Discussing the essence of scalability in data systems-what it means, why it matters, and how to ensure it as systems grow.  
-categories: tech systems-design ddia
+categories: scalability ddia
 ---  
    
 In software design, it's easy to overlook how quickly "enough" can become "not enough." That database handling your app's traffic today might crumble under ten times the load tomorrow. This is where **scalability** becomes critical. But what does scalability mean, and how can we build systems that gracefully handle growth?  
@@ -73,7 +73,7 @@ This means using a larger, more powerful machine (e.g., more RAM or CPUs). While
 - Single-node systems are vulnerable to outages.  
   
 ### **2. Horizontal Scaling (Scale-Out)**  
-This involves distributing the load across multiple machines (nodes). It’s also known as "shared-nothing architecture." Each node runs independently, with software coordination over the network to handle shared workloads<sup><span title="undefined assistant-Y8A77chkWCyTxgyQeqBsB5"><strong>3</strong></span></sup><sup><span title="undefined assistant-Y8A77chkWCyTxgyQeqBsB5"><strong>4</strong></span></sup>.  
+This involves distributing the load across multiple machines (nodes). It’s also known as "shared-nothing architecture." Each node runs independently, with software coordination over the network to handle shared workloads.  
   
 ---  
   
