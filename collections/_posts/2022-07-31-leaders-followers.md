@@ -22,7 +22,7 @@ Replication ensures multiple copies of data are stored across different systems 
 
 3. **Resulting Benefits**:
     - Write operations are consistent because only the leader accepts them.
-    - Read operations can be load-balanced by querying follower replicas, improving system scalability<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 1 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 2 </strong></span></sup>.
+    - Read operations can be load-balanced by querying follower replicas, improving system scalability.
 
 ---  
 
@@ -40,7 +40,7 @@ A major aspect of replication architecture is whether it operates in either **sy
 #### 2. **Asynchronous Replication**
 - The leader sends changes to followers, but doesn’t wait for confirmation.
 - **Advantage**: Leader can continue processing writes without waiting for follower replies, making this mode faster and more resilient to follower outages.
-- **Disadvantage**: Followers may lag behind the leader, especially under high workloads or network conditions, leading to temporary inconsistency<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 3 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 4 </strong></span></sup>.
+- **Disadvantage**: Followers may lag behind the leader, especially under high workloads or network conditions, leading to temporary inconsistency.
 
 **Usage Example**: Read-heavy workloads prioritizing availability over strict consistency, such as web applications.
 
@@ -65,7 +65,7 @@ Creating a new follower involves the following steps:
 1. **Snapshot the Leader**: A consistent snapshot of the leader’s database is taken.
 2. **Copy Snapshot**: The snapshot is transferred to the new follower node.
 3. **Replay Replication Log**: The follower replays any data changes that occurred after the snapshot to catch up to the leader.
-4. **Start Update Cycle**: The follower begins consuming live replication updates<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 5 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 6 </strong></span></sup>.
+4. **Start Update Cycle**: The follower begins consuming live replication updates.
 
 ---  
 
@@ -82,7 +82,7 @@ Leader failure requires **promoting a follower to a new leader**, a process know
 
 Challenges in automatic failover include:
 - Handling **"split-brain" scenarios**, where two nodes may simultaneously declare themselves as leaders.
-- Managing data loss if replication is asynchronous and the new leader doesn't have the most recent writes<sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 7 </strong></span></sup><sup><span title="undefined assistant-4XZVpHktbtSH4a7YRueaoR"><strong> 8 </strong></span></sup>.
+- Managing data loss if replication is asynchronous and the new leader doesn't have the most recent writes.
 
 ---  
 
