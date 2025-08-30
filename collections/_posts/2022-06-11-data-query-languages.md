@@ -79,7 +79,7 @@ li.selected > p {
 </xsl:template>  
 ```  
 
-ASCII Illustration of Styling Workflow:
+Illustration of Styling Workflow:
 
 ```plaintext  
 [List Item with "selected" class] -> [Highlight: Applied Styles]  
