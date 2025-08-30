@@ -77,7 +77,7 @@ When you need to sort and store large datasets while maintaining high write spee
 - **Advantages:** Sequential disk writes = blazing fast! Perfect for key-value stores like Cassandra and HBase.
 - **Challenges:** Slower lookups for nonexistent keys without extra data structures (e.g., Bloom filters).
 
-ASCII Representation of an LSM-Tree:
+Representation of an LSM-Tree:
 ```plaintext  
 [memtable in-memory]  
        ↓ Flush  

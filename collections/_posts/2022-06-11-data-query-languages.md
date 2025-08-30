@@ -37,7 +37,7 @@ function getSharks() {
 
 In this case, you iterate through a list, conditionally filter sharks, and explicitly build the resulting list.
 
-ASCII-based Conceptual Flow:
+Conceptual Flow:
 
 ```plaintext  
 [Animal List] --> [Filter: Sharks] --> [Result: [Shark_1, Shark_2 ...]]  
@@ -108,7 +108,7 @@ db.observations.mapReduce(
    
 ---  
 
-### **Comparative ASCII Diagram**
+### **Comparative Diagram**
 A high-level difference between **imperative** and **declarative** models in query optimization:
 
 **Imperative Query Execution Path:**

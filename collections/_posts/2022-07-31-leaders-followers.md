@@ -44,7 +44,7 @@ A major aspect of replication architecture is whether it operates in either **sy
 
 **Usage Example**: Read-heavy workloads prioritizing availability over strict consistency, such as web applications.
 
-ASCII Representation:
+Representation:
 ```plaintext  
 +---------+        Write Request       +----------+  
 |  Client | -------------------------> |  Leader  |  
