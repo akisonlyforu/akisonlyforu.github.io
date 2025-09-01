@@ -1,7 +1,7 @@
 ---
 layout:     post    
 title:      Multi-Leader Replication in Distributed Databases    
-date:       2023-10-31    
+date:       2022-08-20    
 summary:    A closer look at multi-leader replication, exploring its use cases, benefits, topologies, and challenges in modern distributed systems.    
 categories: replication multi-leader distributed-databases ddia
 ---
