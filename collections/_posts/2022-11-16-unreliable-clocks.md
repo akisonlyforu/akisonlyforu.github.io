@@ -1,7 +1,7 @@
 ---
 layout:     post    
 title:      The Challenges of Unreliable Clocks in Distributed Systems    
-date:       2023-10-31    
+date:       2022-11-16    
 summary:    Understand how clock inaccuracies affect distributed systems, explore concepts like monotonic clocks and synchronization pitfalls, and learn strategies for handling time-based operations.    
 categories: ddia distributed-systems clocks synchronization
 ---
