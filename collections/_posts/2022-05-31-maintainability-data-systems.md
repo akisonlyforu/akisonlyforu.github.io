@@ -41,7 +41,7 @@ Effective operability means making life easier for the people managing software 
 - **Automation**: Routine tasks like deployments, scaling, and backups should be automated.  
 - **Isolation from Single Points of Failure**: Distributed systems that tolerate individual machine failures (e.g., by replicating data across multiple machines).  
   
-~~~ascii  
+~~~  
     [Monitoring Tools] -- Metrics --> [Dashboards/Alerts]  
                                                  |  
             [Automated Processes] <---- Feedback Loop ----> [Operations]  

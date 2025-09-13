@@ -1,6 +1,6 @@
 ---
 layout:     post    
-title:      Batch Processing with Unix Tools    
+title:      Leveraging Unix Tools for Efficient Batch Processing    
 date:       2023-01-04    
 summary:    Explore the power of Unix-based batch processing using tools like awk, sort, and grep, and how their design philosophy laid the foundation for modern big data processing.    
 categories: ddia batch-processing unix-tools system-design
