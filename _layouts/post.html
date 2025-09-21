@@ -38,9 +38,10 @@ layout: default
   <span class="post-meta">
     {{ page.date | date: site.date_format }}
     <span class="post-substack-link" style="margin-left: 10px;">
-      <a href="{{ site.substack_home_url }}/p/{{ page.slug }}" target="_blank"
-        >Read this on Substack</a
-      >
+      <a href="{{ site.substack_home_url }}/p/{{ page.slug }}" target="_blank">
+        <img src="/assets/icons/substack.png" alt="Substack" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;">
+        Read this on Substack
+      </a>
     </span>
   </span>
   <br />
