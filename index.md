@@ -22,7 +22,7 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
   <a href="{{ site.baseurl }}/library" class="tile">
     <div class="tile-content">
       <h3>Library</h3>
-      <p>Books I've read, want to read and recommend</p>
+      <p>Books I've read/want to read and recommend</p>
       <span class="tile-arrow">→</span>
     </div>
   </a>
@@ -35,13 +35,13 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
     </div>
   </a>
 
-  <div class="tile disabled" title="Under Construction">
+  <a href="{{ site.baseurl }}/bookmarks" class="tile">
     <div class="tile-content">
-      <h3>Projects</h3>
-      <p>Open source contributions and personal projects</p>
-      <span class="tile-status">Under Construction</span>
+      <h3>Bookmarks</h3>
+      <p>Collection of useful reads and references</p>
+      <span class="tile-arrow">→</span>
     </div>
-  </div>
+  </a>
 
   <a href="{{ site.baseurl }}/notes" class="tile">
     <div class="tile-content">
