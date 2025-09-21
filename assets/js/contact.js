@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const message = form.message.value;
       
       const params = new URLSearchParams({name: name, email: email, subject: subject, message: message});
+      const url = `${form.action}?${params}`;
 
       await fetch(url, {
         method: 'GET',
