@@ -104,10 +104,10 @@
         "year_i_finished_reading": null
     },
     {
-        "title": "Google SRE Work Handbook(Chinese Edition)",
-        "author": "[ MEI ] NI ER [ MEI ] DAI WEI DENG [ MEI ] BEI TE XI",
+        "title": "Elasticsearch - The Definitive Guide",
+        "author": "Clinton Gormley, Zachary Tong",
         "rating": "",
-        "isbn": "9352137590",
+        "isbn": "1449358543",
         "review_path": null,
         "year_i_finished_reading": null
     },
@@ -171,7 +171,7 @@
         "title": "Docker in Action",
         "author": "Jeff Nickoloff",
         "rating": "",
-        "isbn": "1617294764",
+        "isbn": "1633430235",
         "review_path": null,
         "year_i_finished_reading": null
     },
