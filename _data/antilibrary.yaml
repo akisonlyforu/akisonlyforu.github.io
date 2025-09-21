@@ -1,1 +1,258 @@
-[]
+[
+    {
+        "title": "Kubernetes: Up & Running",
+        "author": "Kelsey Hightower",
+        "rating": "",
+        "isbn": "1491935677",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "The Art of Negotiation: How To Get What You Want (Every Time)",
+        "author": "Tim Castle",
+        "rating": "",
+        "isbn": "",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Soft Skills: The Software Developer's Life Manual",
+        "author": "John Z. Sonmez",
+        "rating": "",
+        "isbn": "",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Graph Algorithms: Practical Examples in Apache Spark & Neo4j",
+        "author": "Mark Needham",
+        "rating": "",
+        "isbn": "9781492047681",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Inside the Java Virtual Machine (Java Masters Series)",
+        "author": "Bill Venners",
+        "rating": "",
+        "isbn": "0079132480",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Learning SQL",
+        "author": "Alan Beaulieu",
+        "rating": "",
+        "isbn": "0596007272",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Redis in Action",
+        "author": "Josiah L. Carlson",
+        "rating": "",
+        "isbn": "1617290858",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "The Little Book of Semaphores: The Ins and Outs of Concurrency Control and Common Mistakes",
+        "author": "Allen B. Downey",
+        "rating": "",
+        "isbn": "1441418687",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Learning Domain-Driven Design: Aligning Software Architecture and Business Strategy",
+        "author": "Vladik Khononov",
+        "rating": "",
+        "isbn": "1098100131",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Software Architecture: The Hard Parts: Modern Trade-Off Analyses for Distributed Architectures",
+        "author": "Neal Ford",
+        "rating": "",
+        "isbn": "1492086894",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Fundamentals of Software Architecture: An Engineering Approach",
+        "author": "Mark   Richards",
+        "rating": "",
+        "isbn": "1492043451",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "System Design Interview \u2013 An Insider's Guide: Volume 2",
+        "author": "Alex Xu",
+        "rating": "",
+        "isbn": "1736049119",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "System Design Interview \u2013 An insider's guide",
+        "author": "Alex Xu",
+        "rating": "",
+        "isbn": "",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Google SRE Work Handbook(Chinese Edition)",
+        "author": "[ MEI ] NI ER [ MEI ] DAI WEI DENG [ MEI ] BEI TE XI",
+        "rating": "",
+        "isbn": "7519845850",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Web Scalability for Startup Engineers",
+        "author": "Artur Ejsmont",
+        "rating": "",
+        "isbn": "0071843655",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Graph Databases",
+        "author": "Ian Robinson",
+        "rating": "",
+        "isbn": "1449356265",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Seven Databases in Seven Weeks: A Guide to Modern Databases and the NoSQL Movement",
+        "author": "Eric     Redmond",
+        "rating": "",
+        "isbn": "1934356921",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Database Internals: A deep-dive into how distributed data systems work",
+        "author": "Alex Petrov",
+        "rating": "",
+        "isbn": "1492040347",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "SQL Antipatterns: Avoiding the Pitfalls of Database Programming (Pragmatic Programmers)",
+        "author": "Bill Karwin",
+        "rating": "",
+        "isbn": "1934356557",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "RabbitMQ in Depth",
+        "author": "Gavin M. Roy",
+        "rating": "",
+        "isbn": "1617291005",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "RabbitMQ in Action: Distributed Messaging for Everyone",
+        "author": "Alvaro Videla",
+        "rating": "",
+        "isbn": "1935182978",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Docker in Action",
+        "author": "Jeff Nickoloff",
+        "rating": "",
+        "isbn": "",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Version Control with Git",
+        "author": "Jon Loeliger",
+        "rating": "",
+        "isbn": "0596520123",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Kafka: The Definitive Guide: Real-Time Data and Stream Processing at Scale",
+        "author": "Neha Narkhede",
+        "rating": "",
+        "isbn": "1491936169",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Building Microservices: Designing Fine-Grained Systems",
+        "author": "Sam Newman",
+        "rating": "",
+        "isbn": "1491950358",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Java Concurrency in Practice",
+        "author": "Brian Goetz",
+        "rating": "",
+        "isbn": "0321349601",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Head First Design Patterns",
+        "author": "Eric Freeman",
+        "rating": "",
+        "isbn": "0596007124",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "The Mythical Man-Month: Essays on Software Engineering",
+        "author": "Frederick P. Brooks Jr.",
+        "rating": "",
+        "isbn": "0201835959",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Clean Architecture",
+        "author": "Robert C. Martin",
+        "rating": "",
+        "isbn": "0134494164",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Design Patterns: Elements of Reusable Object-Oriented Software",
+        "author": "Erich Gamma",
+        "rating": "",
+        "isbn": "0201633612",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Designing Data-Intensive Applications",
+        "author": "Martin Kleppmann",
+        "rating": "",
+        "isbn": "9781449373320",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+        "author": "Robert C. Martin",
+        "rating": "",
+        "isbn": "0132350882",
+        "review_path": null,
+        "year_i_finished_reading": null
+    }
+]
