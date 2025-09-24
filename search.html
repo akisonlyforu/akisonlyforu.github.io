@@ -22,16 +22,33 @@ document.addEventListener('DOMContentLoaded', function() {
   const resultsContainer = document.getElementById('search-results');
   let posts = [];
 
-  // Fetch posts data
-  fetch('/search.json')
+  // Get the base URL for the site
+  const baseUrl = window.location.origin;
+  console.log('Base URL:', baseUrl);
+
+  // Fetch posts data using absolute URL
+  fetch(baseUrl + '/search.json')
     .then(response => {
+      console.log('Response status:', response.status);
       if (!response.ok) {
-        throw new Error('Failed to fetch search data');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response.json();
+      return response.text().then(text => {
+        console.log('Raw response:', text);
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          console.error('JSON Parse Error:', e);
+          throw new Error('Invalid JSON response');
+        }
+      });
     })
     .then(data => {
-      posts = data.posts || [];
+      console.log('Parsed data:', data);
+      if (!data || !data.posts) {
+        throw new Error('Invalid data structure');
+      }
+      posts = data.posts;
       if (posts.length === 0) {
         resultsContainer.innerHTML = '<p>No blog posts found.</p>';
         return;
@@ -48,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error:', error);
       resultsContainer.innerHTML = `
         <div class="error">
-          <p>Error loading search data. Please try again later.</p>
+          <p>Error loading search data: ${error.message}</p>
+          <p>Please try again later or contact the site administrator.</p>
         </div>
       `;
     });
@@ -80,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const html = results.map(post => `
       <article class="search-result">
-        <h2><a href="${post.url}">${post.title || 'Untitled'}</a></h2>
+        <h2><a href="${post.url}" target="_blank">${post.title || 'Untitled'}</a></h2>
         <div class="post-meta">
           <span class="date">${post.date || 'No date'}</span>
         </div>
