@@ -7,135 +7,104 @@ permalink: /search/
 <div class="search-container">
   <h1>Search Blog Posts</h1>
   
-  <form class="search-box" onsubmit="return false;">
+  <div class="search-box">
     <input type="text" id="search-input" placeholder="Search blog posts...">
-    <button type="submit" id="search-button">Search</button>
-  </form>
-
-  <div id="search-results">
-    <!-- Results will be dynamically populated here -->
+    <button id="search-button">Search</button>
   </div>
+
+  <div id="search-results"></div>
 </div>
 
 <script>
-console.log('Search script loaded');
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM Content loaded');
   const searchInput = document.getElementById('search-input');
+  const searchButton = document.getElementById('search-button');
   const resultsContainer = document.getElementById('search-results');
   let posts = [];
 
-  // Get all blog posts data
-  const searchJsonUrl = window.location.origin + '/search.json';
-  console.log('Fetching from:', searchJsonUrl);
-  
-  fetch(searchJsonUrl)
+  // Fetch posts data
+  fetch('/search.json')
     .then(response => {
-      console.log('Fetch response:', response.status);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error('Failed to fetch search data');
       }
-      return response.text().then(text => {
-        console.log('Raw response:', text);
-        try {
-          const data = JSON.parse(text);
-          console.log('Parsed data:', data);
-          return data.posts || [];
-        } catch (e) {
-          console.error('JSON Parse Error:', e);
-          console.error('Raw response:', text);
-          throw new Error('Invalid JSON response');
-        }
-      });
+      return response.json();
     })
     .then(data => {
-      console.log('Data loaded:', data);
-      if (!Array.isArray(data)) {
-        throw new Error('Expected array of posts');
-      }
-      posts = data;
+      posts = data.posts || [];
       if (posts.length === 0) {
         resultsContainer.innerHTML = '<p>No blog posts found.</p>';
         return;
       }
-      console.log('Number of posts loaded:', posts.length);
-      if (searchInput.value) {
-        performSearch(searchInput.value);
+      // If there's a search term in the URL, perform the search
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchTerm = urlParams.get('q');
+      if (searchTerm) {
+        searchInput.value = searchTerm;
+        performSearch(searchTerm);
       }
     })
     .catch(error => {
       console.error('Error:', error);
       resultsContainer.innerHTML = `
-        <p class="error">
-          Error loading search data: ${error.message}<br>
-          Please try again later or contact the site administrator.
-        </p>
+        <div class="error">
+          <p>Error loading search data. Please try again later.</p>
+        </div>
       `;
     });
 
   function performSearch(searchTerm) {
-    console.log('Performing search for:', searchTerm);
-    if (!posts || !Array.isArray(posts)) {
-      console.error('Posts data not properly loaded');
+    if (!searchTerm || searchTerm.length < 2) {
+      resultsContainer.innerHTML = '';
       return;
     }
 
     searchTerm = searchTerm.toLowerCase();
-    
-    if (searchTerm.length < 2) {
-      resultsContainer.innerHTML = '';
-      return;
-    }
-    
     const filteredPosts = posts.filter(post => {
-      const titleMatch = post.title && post.title.toLowerCase().includes(searchTerm);
-      const contentMatch = post.content && post.content.toLowerCase().includes(searchTerm);
-      const excerptMatch = post.excerpt && post.excerpt.toLowerCase().includes(searchTerm);
-      return titleMatch || contentMatch || excerptMatch;
+      const searchableText = [
+        post.title || '',
+        post.excerpt || '',
+        post.content || ''
+      ].join(' ').toLowerCase();
+      return searchableText.includes(searchTerm);
     });
-    
-    console.log('Found posts:', filteredPosts.length);
+
     displayResults(filteredPosts);
   }
 
   function displayResults(results) {
-    if (!results || results.length === 0) {
+    if (results.length === 0) {
       resultsContainer.innerHTML = '<p>No results found.</p>';
       return;
     }
-    
-    const html = results.map(post => {
-      console.log('Processing post:', post);
-      return `
-        <div class="search-result">
-          <h2><a href="${post.url}" target="_blank">${post.title || 'Untitled'}</a></h2>
-          <p class="post-meta">
-            ${post.date || 'No date'} 
-          </p>
-          <p class="post-excerpt">${post.excerpt || 'No excerpt available'}</p>
+
+    const html = results.map(post => `
+      <article class="search-result">
+        <h2><a href="${post.url}">${post.title || 'Untitled'}</a></h2>
+        <div class="post-meta">
+          <span class="date">${post.date || 'No date'}</span>
         </div>
-      `;
-    }).join('');
-    
+        <div class="post-excerpt">${post.excerpt || 'No excerpt available'}</div>
+      </article>
+    `).join('');
+
     resultsContainer.innerHTML = html;
   }
 
-  // Handle input changes
+  // Event listeners
   searchInput.addEventListener('input', function() {
     performSearch(this.value);
   });
 
-  // Handle form submission
+  searchButton.addEventListener('click', function() {
+    performSearch(searchInput.value);
+  });
+
   searchInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
       performSearch(this.value);
     }
-  });
-
-  // Handle search button click
-  document.getElementById('search-button').addEventListener('click', function() {
-    performSearch(searchInput.value);
   });
 });
 </script>
@@ -148,9 +117,9 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .search-box {
-  margin: 2rem 0;
   display: flex;
   gap: 10px;
+  margin: 2rem 0;
 }
 
 #search-input {
@@ -189,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .search-result h2 {
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.5rem 0;
 }
 
 .search-result h2 a {
@@ -205,13 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 0.5rem;
-}
-
-.category {
-  background: #f0f0f0;
-  padding: 2px 8px;
-  border-radius: 3px;
-  margin-left: 8px;
 }
 
 .post-excerpt {
