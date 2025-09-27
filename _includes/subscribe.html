@@ -1,7 +1,8 @@
 <!-- Load the CSS and JS files -->
 <style>
   #subscribe-cta {
-    background-color: #f7f7f9;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 1rem;
     padding: 1.5em;
     margin-top: 2.5em;
@@ -9,10 +10,11 @@
 
   #subscribe-cta h3 {
     margin-top: 0.5em;
+    color: var(--text-primary);
   }
 
   #subscribe-cta p {
-    color: #444;
+    color: var(--text-secondary);
   }
 
   #subscribe-form {
@@ -144,7 +146,7 @@
 <section id="subscribe-cta">
   <h3>Want to get blog posts over email?</h3>
   <p>Enter your email address and get notified when there's a new post!</p>
-    <iframe src="https://akisonlyforu.substack.com/embed" width="100%" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+    <iframe src="https://akisonlyforu.substack.com/embed" width="100%" height="320" style="border:1px solid var(--border-color); background: var(--bg-primary);" frameborder="0" scrolling="no"></iframe>
 </section>
 
 <script>
