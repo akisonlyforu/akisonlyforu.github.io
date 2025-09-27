@@ -227,8 +227,7 @@ a {
 }
 
 .dark-mode-toggle:focus {
-  outline: 2px solid var(--link-color);
-  outline-offset: 2px;
+  outline: none;
 }
 
 .dark-mode-toggle .icon {
@@ -291,5 +290,54 @@ a {
 .home {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
+}
+
+// Mobile navigation dark mode overrides
+[data-theme="dark"] {
+  @media (max-width: 768px) {
+  .menu-items {
+    background-color: var(--nav-bg) !important;
+  }
+
+  .nav-link {
+    color: var(--nav-text) !important;
+  }
+
+  .nav-link:hover {
+    color: var(--nav-text-hover) !important;
+  }
+
+  .nav-link.current {
+    color: var(--nav-text-current) !important;
+  }
+
+  .nav-link.disabled {
+    color: var(--text-tertiary) !important;
+  }
+
+  .nav-link.disabled:hover {
+    color: var(--text-tertiary) !important;
+  }
+
+  .nav-link.disabled::after {
+    color: var(--text-tertiary) !important;
+  }
+
+  // Fix mobile menu icon visibility in dark mode
+  .menu-toggle .menu-icon,
+  .menu-toggle .menu-icon::before,
+  .menu-toggle .menu-icon::after {
+    background: #ffffff !important;
+  }
+
+  .menu-toggle.active .menu-icon {
+    background: transparent !important;
+  }
+
+  .menu-toggle.active .menu-icon::before,
+  .menu-toggle.active .menu-icon::after {
+    background: #ffffff !important;
+  }
+  }
 }
 
