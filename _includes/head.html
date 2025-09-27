@@ -30,19 +30,10 @@
     <!-- JQuery (Required for menu, Github Projects Page, and Resume Page for PDF printing) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-    {% if page.categories contains "project" or page.tags contains "portfolio" %}
-    <!-- Page-type specific CSS -->
-    <link rel="stylesheet" href="{{ "/css/960.css" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}" type="text/css">
-    <link rel="stylesheet" href="{{ "/css/portfolio.css" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}" type="text/css">
-    {% endif %}
 
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ "/css/junior.css" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}" type="text/css">
 
-    {% if page.tags contains "projects" %}
-    <link rel="stylesheet" href="{{ "/css/projects.css" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/emojione/3.0.3/extras/css/emojione.min.css"/>
-    {% endif %}
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
