@@ -7,7 +7,7 @@ permalink: /contact/
   <h1>Get in Touch</h1>
   <p class="contact-intro">Have a question or want to discuss something? Feel free to reach out using the form below.</p>
 
-  <form action="https://script.google.com/macros/s/AKfycbxg5vk4drzb36TM3dsZsAkzpRfr7BbdBOYQRy9ffkBXhXRxNxuxNVImte94ijvmQE-vsw/exec" method="GET" class="contact-form">
+  <form action="https://script.google.com/macros/s/AKfycbxluuT1xMYvgYKlyV-gkFHipxGOotCMYymGZROeISw411dS8IfFmDHO1-WV6nA3wqmEMQ/exec" method="GET" class="contact-form">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" id="name" name="name" required>
@@ -30,6 +30,13 @@ permalink: /contact/
 
     <button type="submit" class="submit-button">Send Message</button>
     <p id="form-message" role="status" aria-live="polite"></p>
+
+    <div class="recaptcha-notice">
+      <small>This site is protected by reCAPTCHA and the Google
+        <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and
+        <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+      </small>
+    </div>
   </form>
 </div>
 
@@ -155,6 +162,24 @@ permalink: /contact/
   background-color: #dc3545;
   color: #ffffff;
 }
+
+.recaptcha-notice {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.recaptcha-notice a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.recaptcha-notice a:hover {
+  text-decoration: underline;
+}
 </style>
 
+<!-- Google reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6LdZHtcrAAAAAAJmF3TOHhFZ3pXruQjIqPzXReK-N"></script>
 <script src="/assets/js/contact.js"></script>
