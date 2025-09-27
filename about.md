@@ -3,11 +3,11 @@ layout: about
 permalink: /about/
 title: A little bit about me.
 tags: about
-headshot: /images/headshot.jpg
+# headshot: /images/headshot.jpg
 ---
 
 ### Where I'm from
-
+<!--
 <img src="https://flagcdn.com/w40/in.png" width="40" alt="India Flag" style="width: 19px; height: 12px;">  I was born and raised in the southeast suburbs of Victoria, Australia — a place almost perfecting the ['surbubia as giant nursery'](http://www.paulgraham.com/nerds.html) vision of urban development.
 
 I was raised by a tireless single mother, kept up good grades, and played way too much Call of Duty. I never wanted to program computers, right up until around 23 years old when programming computers became all I wanted to do.
@@ -28,6 +28,8 @@ of ML Platform. The whole way through I grew under the mentorship of [Greg Roodt
 When not doing Data or ML Platform stuff, I spent quite a bit of time working with the [Bazel](https://bazel.build/) build system, and helped maintain the [Python rules](https://github.com/bazelbuild/rules_python) for Bazel. It's the future, get on it.
 
 Previous to Canva I worked at [Zendesk](https://www.zendesk.com/) on their [Answer Bot](https://www.zendesk.com/answer-bot/) machine learning product, and at [Atlassian](https://www.atlassian.com) as an application developer intern in their reliability/monitoring team.
+
+-->
 
 <script>
 /**

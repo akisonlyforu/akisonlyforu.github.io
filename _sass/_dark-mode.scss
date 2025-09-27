@@ -1,0 +1,220 @@
+// Dark Mode Theme System
+// Uses CSS custom properties for seamless theme switching
+
+// Root light theme (default)
+:root {
+  // Background colors
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #ffffff;
+
+  // Text colors
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-inverse: #ffffff;
+
+  // Navigation
+  --nav-bg: #ffffff;
+  --nav-text: #666666;
+  --nav-text-hover: #000000;
+  --nav-text-current: #000000;
+  --nav-border: rgba(0, 0, 0, 0.1);
+  --nav-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  // Interactive elements
+  --tile-bg: #ffffff;
+  --tile-border: rgba(0, 0, 0, 0.1);
+  --tile-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --tile-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.1);
+  --tile-gradient: linear-gradient(45deg, #dcf3ff, #aedbf9);
+
+  // Form elements
+  --input-bg: #ffffff;
+  --input-border: #dddddd;
+  --input-border-focus: #666666;
+  --input-text: #333333;
+
+  // Footer
+  --footer-bg: #ffffff;
+  --footer-text: #666666;
+  --footer-border: rgba(0, 0, 0, 0.1);
+
+  // Buttons
+  --button-bg: #333333;
+  --button-bg-hover: #000000;
+  --button-text: #ffffff;
+
+  // Links
+  --link-color: #0076df;
+  --link-hover: #00369f;
+
+  // Borders and dividers
+  --border-color: rgba(0, 0, 0, 0.1);
+  --divider-color: #eeeeee;
+}
+
+// Dark theme
+[data-theme="dark"] {
+  // Background colors
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2a2a2a;
+  --bg-tertiary: #252525;
+
+  // Text colors
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #888888;
+  --text-inverse: #1a1a1a;
+
+  // Navigation
+  --nav-bg: #252525;
+  --nav-text: #b0b0b0;
+  --nav-text-hover: #ffffff;
+  --nav-text-current: #ffffff;
+  --nav-border: rgba(255, 255, 255, 0.1);
+  --nav-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  // Interactive elements
+  --tile-bg: #2a2a2a;
+  --tile-border: rgba(255, 255, 255, 0.1);
+  --tile-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --tile-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.5);
+  --tile-gradient: linear-gradient(45deg, #1e3a5f, #2c5282);
+
+  // Form elements
+  --input-bg: #2a2a2a;
+  --input-border: #444444;
+  --input-border-focus: #888888;
+  --input-text: #e0e0e0;
+
+  // Footer
+  --footer-bg: #1a1a1a;
+  --footer-text: #b0b0b0;
+  --footer-border: rgba(255, 255, 255, 0.1);
+
+  // Buttons
+  --button-bg: #e0e0e0;
+  --button-bg-hover: #ffffff;
+  --button-text: #1a1a1a;
+
+  // Links
+  --link-color: #4dabf7;
+  --link-hover: #74c0fc;
+
+  // Borders and dividers
+  --border-color: rgba(255, 255, 255, 0.1);
+  --divider-color: #333333;
+}
+
+// Respect system preference when no manual choice is made
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    // Background colors
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2a2a2a;
+    --bg-tertiary: #252525;
+
+    // Text colors
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-tertiary: #888888;
+    --text-inverse: #1a1a1a;
+
+    // Navigation
+    --nav-bg: #252525;
+    --nav-text: #b0b0b0;
+    --nav-text-hover: #ffffff;
+    --nav-text-current: #ffffff;
+    --nav-border: rgba(255, 255, 255, 0.1);
+    --nav-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    // Interactive elements
+    --tile-bg: #2a2a2a;
+    --tile-border: rgba(255, 255, 255, 0.1);
+    --tile-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --tile-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.5);
+    --tile-gradient: linear-gradient(45deg, #1e3a5f, #2c5282);
+
+    // Form elements
+    --input-bg: #2a2a2a;
+    --input-border: #444444;
+    --input-border-focus: #888888;
+    --input-text: #e0e0e0;
+
+    // Footer
+    --footer-bg: #1a1a1a;
+    --footer-text: #b0b0b0;
+    --footer-border: rgba(255, 255, 255, 0.1);
+
+    // Buttons
+    --button-bg: #e0e0e0;
+    --button-bg-hover: #ffffff;
+    --button-text: #1a1a1a;
+
+    // Links
+    --link-color: #4dabf7;
+    --link-hover: #74c0fc;
+
+    // Borders and dividers
+    --border-color: rgba(255, 255, 255, 0.1);
+    --divider-color: #333333;
+  }
+}
+
+// Global theme application
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Dark mode toggle button styles
+.dark-mode-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin: 0 0.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: var(--nav-text);
+  font-size: 1.2rem;
+
+  &:hover {
+    background-color: var(--bg-secondary);
+    color: var(--nav-text-hover);
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+  }
+
+  .icon {
+    transition: transform 0.3s ease;
+  }
+
+  &.rotating .icon {
+    transform: rotate(180deg);
+  }
+}
+
+// Theme transition for all elements
+* {
+  transition: background-color 0.3s ease,
+              border-color 0.3s ease,
+              color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+// Disable transitions during theme change for better performance
+.theme-transitioning * {
+  transition: none !important;
+}

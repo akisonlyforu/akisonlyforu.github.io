@@ -4,6 +4,9 @@
     <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
       <span class="menu-icon"></span>
     </button>
+    <button class="dark-mode-toggle" aria-label="Switch to dark mode" type="button">
+      <span class="icon">🌙</span>
+    </button>
     <ul class="menu-items" id="main-menu">
       <li class="nav-item">
         <a class="nav-link {% if page.url == '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Blog</a>
@@ -26,8 +29,8 @@
 
 <style>
 .site-nav {
-  background: #fff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
   position: fixed;
   top: 0;
   left: 0;
@@ -53,7 +56,7 @@
 .site-logo {
   font-size: 1.2rem;
   font-weight: 500;
-  color: #333;
+  color: var(--nav-text);
   text-decoration: none;
   font-family: monospace;
   letter-spacing: -0.5px;
@@ -66,7 +69,7 @@
 }
 
 .site-logo:hover {
-  color: #000;
+  color: var(--nav-text-hover);
 }
 
 .menu-items {
@@ -85,7 +88,7 @@
 
 .nav-link {
   text-decoration: none;
-  color: #666;
+  color: var(--nav-text);
   font-size: 0.95rem;
   font-weight: 400;
   transition: color 0.3s ease;
@@ -93,12 +96,12 @@
 }
 
 .nav-link.current {
-  color: #000;
+  color: var(--nav-text-current);
   font-weight: 500;
 }
 
 .nav-link:hover {
-  color: #000;
+  color: var(--nav-text-hover);
 }
 
 .nav-link.disabled {
@@ -136,9 +139,9 @@
 .dropdown-content {
   display: none;
   position: absolute;
-  background: #fff;
+  background: var(--nav-bg);
   min-width: 160px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: var(--nav-shadow);
   border-radius: 4px;
   padding: 0.5rem 0;
   z-index: 1;

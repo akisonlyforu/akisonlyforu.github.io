@@ -31,11 +31,11 @@ $viewport-small: 32em;
 $viewport-medium: 48em;
 $viewport-large: 64em;
 
-// Header Colors
-$header-bg: white !default;
-$header-fg: black !default;
+// Header Colors (theme-aware)
+$header-bg: var(--nav-bg);
+$header-fg: var(--nav-text);
 
-// Colors
+// Colors (theme-aware)
 $blue: #0076df !default;
 $red: #f95020 !default;
 $green: #00cf26 !default;
@@ -56,9 +56,9 @@ $darken-2: rgba(#000,.125) !default;
 $darken-3: rgba(#000,.25) !default;
 $darken-4: rgba(#000,.5) !default;
 
-// Links
-$link-color: $blue;
-$link-hover-color: darken($blue, 40%);
+// Theme-aware color functions
+$link-color: var(--link-color);
+$link-hover-color: var(--link-hover);
 
 // Breakpoints
 $breakpoint-md: '(min-width: 52em)';
@@ -84,8 +84,8 @@ $form-field-height: 2.25rem !default;
 $form-field-padding-y: .5rem !default;
 $form-field-padding-x: .5rem !default;
 
-// Borders
-$border-color: $light-gray !default;
+// Borders (theme-aware)
+$border-color: var(--border-color);
 $border-width: 1px !default;
 $border-radius: 3px !default;
 
@@ -116,9 +116,9 @@ $hljs-addition: $light-green;
 $hljs-change: $dark-blue;
 $hljs-chunk: $light-gray;
 
-// Footer
+// Footer (theme-aware)
 $footer-padding: $space-3;
-$footer-color: #000;
-$footer-bg-color: #fff;
+$footer-color: var(--footer-text);
+$footer-bg-color: var(--footer-bg);
 $footer-font-weight: 300;
 $footer-font-size: .75rem;
