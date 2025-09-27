@@ -4,54 +4,21 @@ title: Bookmarks
 permalink: /bookmarks/
 ---
 
-{% assign bookmarks_count = site.bookmarks | size %}
-
 <h1>Bookmarks</h1>
 <p class="bookmarks-intro">A curated collection of useful links, tools, and resources I've found interesting.</p>
 
 <div class="bookmarks-page">
-  {% if bookmarks_count > 0 %}
-    <!-- Bookmarks Grid -->
-    <div class="bookmarks-grid">
-      {% assign sorted_bookmarks = site.bookmarks | sort: 'date' | reverse %}
-      {% for bookmark in sorted_bookmarks %}
-      <article class="bookmark-card">
-        <div class="bookmark-card-header">
-          <h3 class="bookmark-card-title">
-            <a href="{{ bookmark.url | prepend: site.baseurl }}">
-              {{ bookmark.title }}
-              <span class="bookmark-arrow">→</span>
-            </a>
-          </h3>
+  <div id="bookmarks-list" class="bookmarks-list">
+  </div>
 
-          <div class="bookmark-card-meta">
-            <time class="bookmark-card-date">{{ bookmark.date | date: site.date_format }}</time>
-          </div>
-        </div>
-
-        {% if bookmark.description %}
-        <p class="bookmark-card-description">{{ bookmark.description }}</p>
-        {% endif %}
-      </article>
-      {% endfor %}
-    </div>
-
-    <!-- Stats -->
-    <div class="bookmarks-stats">
-      <p>{{ bookmarks_count }} bookmark{% unless bookmarks_count == 1 %}s{% endunless %} collected</p>
-    </div>
-
-  {% else %}
-    <div class="bookmarks-empty">
-      <h2>No bookmarks yet</h2>
-      <p>I haven't added any bookmarks yet. Check back soon!</p>
-    </div>
-  {% endif %}
+  <div class="bookmarks-count">
+    <p id="bookmark-count"></p>
+  </div>
 </div>
 
 <style>
 .bookmarks-page {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -63,116 +30,199 @@ permalink: /bookmarks/
   text-align: center;
 }
 
-
-.bookmarks-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+.loading {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+  font-style: italic;
 }
 
-.bookmark-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+.bookmarks-list {
+  margin-bottom: 2rem;
 }
 
-.bookmark-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--primary-color);
+.bookmarks-count {
+  text-align: center;
+  padding: 1rem 0;
+  border-top: 1px solid var(--divider-color);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
-
-.bookmark-card-header {
-  margin-bottom: 1rem;
+.bookmark-item {
+  border-bottom: 1px solid var(--divider-color);
+  padding: 1.5rem 0;
+  transition: all 0.2s ease;
 }
 
-.bookmark-card-title {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.2rem;
+.bookmark-item:last-child {
+  border-bottom: none;
+}
+
+.bookmark-item:hover {
+  background: var(--bg-secondary);
+  margin: 0 -1rem;
+  padding: 1.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.bookmark-main {
+  width: 100%;
+}
+
+.bookmark-title {
+  font-size: 1.1rem;
   font-weight: 600;
+  margin: 0 0 0.5rem 0;
   line-height: 1.3;
 }
 
-.bookmark-card-title a {
-  color: var(--text-primary);
+.bookmark-link {
+  color: var(--link-color);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-.bookmark-card-title a:hover {
-  color: var(--primary-color);
+.bookmark-link:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
 }
 
-.bookmark-arrow {
-  opacity: 0.6;
-  margin-left: 0.5rem;
-  font-size: 0.9em;
-  transition: all 0.2s ease;
+.bookmark-category {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
-.bookmark-card-title a:hover .bookmark-arrow {
-  opacity: 1;
-  transform: translateX(3px);
+.bookmark-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
 }
 
-.bookmark-card-meta {
+.bookmark-actions {
   display: flex;
-  flex-direction: column;
   gap: 0.5rem;
 }
 
-.bookmark-card-date {
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-}
-
-.bookmark-card-description {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 1.25rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-
-.bookmarks-stats {
-  text-align: center;
-  padding: 2rem 0;
-  border-top: 1px solid var(--divider-color);
-  color: var(--text-secondary);
-}
-
-.bookmarks-empty {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: var(--text-secondary);
-}
-
-.bookmarks-empty h2 {
+.action-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
+
+.action-btn:hover {
+  background: var(--link-color);
+  color: white;
+  border-color: var(--link-color);
+}
+
+.action-btn.copied {
+  background: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .bookmarks-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .bookmarks-page {
+    padding: 0 0.5rem;
   }
 
+  .bookmark-item:hover {
+    margin: 0 -0.5rem;
+    padding: 1.5rem 0.5rem;
+  }
 
-  .bookmark-card {
-    padding: 1.25rem;
+  .bookmark-actions {
+    gap: 0.4rem;
+  }
+
+  .action-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
   }
 }
 </style>
+
+<script>
+var bookmarks = [
+  {
+    "id": "ddia-book",
+    "name": "Designing Data-Intensive Applications",
+    "url": "https://dataintensive.net/",
+    "description": "The definitive guide to building reliable, scalable, and maintainable systems. Essential reading for backend engineers.",
+    "category": "books"
+  },
+  {
+    "id": "github-copilot",
+    "name": "GitHub Copilot",
+    "url": "https://github.com/features/copilot",
+    "description": "AI-powered code completion that significantly improves development workflow and productivity.",
+    "category": "tools"
+  },
+  {
+    "id": "excalidraw",
+    "name": "Excalidraw",
+    "url": "https://excalidraw.com/",
+    "description": "Simple, beautiful drawing tool perfect for technical diagrams and system architecture sketches.",
+    "category": "tools"
+  },
+  {
+    "id": "hacker-news",
+    "name": "Hacker News",
+    "url": "https://news.ycombinator.com/",
+    "description": "Tech news and discussions from the startup and developer community.",
+    "category": "news"
+  },
+  {
+    "id": "regex101",
+    "name": "Regex101",
+    "url": "https://regex101.com/",
+    "description": "Online regex tester and debugger with detailed explanations and examples.",
+    "category": "tools"
+  },
+  {
+    "id": "cloudflare-radar",
+    "name": "Cloudflare Radar",
+    "url": "https://radar.cloudflare.com/",
+    "description": "Real-time insights into internet traffic patterns, attacks, and technology adoption.",
+    "category": "analytics"
+  }
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+  var bookmarksList = document.getElementById('bookmarks-list');
+  var bookmarkCount = document.getElementById('bookmark-count');
+
+  var html = '';
+  for (var i = 0; i < bookmarks.length; i++) {
+    var bookmark = bookmarks[i];
+    html += '<div class="bookmark-item">';
+    html += '<div class="bookmark-main">';
+    html += '<h3 class="bookmark-title">';
+    html += '<a href="' + bookmark.url + '" target="_blank">' + bookmark.name + '</a>';
+    html += '</h3>';
+    html += '<div class="bookmark-category">' + bookmark.category + '</div>';
+    html += '<p class="bookmark-description">' + bookmark.description + '</p>';
+    html += '</div>';
+    html += '</div>';
+  }
+
+  bookmarksList.innerHTML = html;
+  bookmarkCount.textContent = bookmarks.length + ' bookmarks';
+});
+</script>
 
