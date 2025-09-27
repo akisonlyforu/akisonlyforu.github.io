@@ -1,13 +1,14 @@
 <nav class="site-nav">
   <div class="nav-container">
     <a href="/" class="site-logo">akisonlyforu</a>
-    <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
-      <span class="menu-icon"></span>
-    </button>
-    <button class="dark-mode-toggle" aria-label="Switch to dark mode" type="button">
-      <span class="icon">🌙</span>
-    </button>
-    <ul class="menu-items" id="main-menu">
+    <div class="nav-right">
+      <button class="dark-mode-toggle" aria-label="Switch to dark mode" type="button">
+        <span class="icon">🌙</span>
+      </button>
+      <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
+        <span class="menu-icon"></span>
+      </button>
+      <ul class="menu-items" id="main-menu">
       <li class="nav-item">
         <a class="nav-link {% if page.url == '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Blog</a>
       </li>
@@ -23,7 +24,8 @@
       <li class="nav-item">
         <a class="nav-link {% if page.url == '/search/' %}current{% endif %}" href="{{site.url}}/search">Search</a>
       </li>
-    </ul>
+      </ul>
+    </div>
   </div>
 </nav>
 
@@ -48,9 +50,15 @@
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 0 1rem;
   height: 100%;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .site-logo {
@@ -79,7 +87,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  margin-left: auto;
 }
 
 .nav-item {
@@ -152,7 +159,7 @@
 }
 
 .dropdown-content a {
-  color: #666;
+  color: var(--nav-text);
   padding: 0.5rem 1rem;
   text-decoration: none;
   display: block;
@@ -160,8 +167,8 @@
 }
 
 .dropdown-content a:hover {
-  background: #f8f9fa;
-  color: #000;
+  background: var(--bg-secondary);
+  color: var(--nav-text-hover);
 }
 
 .menu-toggle {
@@ -181,7 +188,7 @@
   position: relative;
   width: 20px;
   height: 2px;
-  background: #333;
+  background: var(--nav-text);
   transition: all 0.3s ease;
 }
 
@@ -191,7 +198,7 @@
   position: absolute;
   width: 20px;
   height: 2px;
-  background: #333;
+  background: var(--nav-text);
   transition: all 0.3s ease;
 }
 
@@ -218,14 +225,22 @@
 }
 
 @media (max-width: 768px) {
+  .nav-right {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2001;
+    display: flex;
+    gap: 0.5rem;
+  }
+
   .menu-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2001;
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
+    position: relative;
+    top: auto;
+    right: auto;
   }
 
   .menu-items {
@@ -235,7 +250,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ffffff;
+    background-color: var(--nav-bg);
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
