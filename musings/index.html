@@ -1,17 +1,17 @@
 ---
 layout: default
-tags: blog
+tags: musings
 ---
 
 {% assign posts_count = site.posts | size %}
 
-<h1>Blog</h1>
+<h1>Musings</h1>
 
 <div class="home">
   {% if posts_count > 0 %}
   <div class="posts">
     {% for post in paginator.posts %}
-    {% if post.categories contains 'ddia' %}
+    {% unless post.categories contains 'technical' %}
     <div class="post py3">
       <p class="post-meta">
         <span>{{ post.date | date: site.date_format }}</span>
@@ -31,7 +31,7 @@ tags: blog
         </span>
 
     </div>
-    {% endif %}
+    {% endunless %}
     {% endfor %}
   </div>
   {% include pagination.html %} {% if site.show_subscribe_cta %} {% include
