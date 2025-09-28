@@ -10,6 +10,37 @@
           Made with <span class="heart">♥</span> in India
         </p>
       </div> -->
+      <div class="footer-social">
+        <div class="social-links">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/{{ site.github_username }}"
+            title="Follow me on GitHub"
+            aria-label="GitHub"
+          >
+            <i class="fab fa-github"></i>
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://twitter.com/{{ site.twitter_username }}"
+            title="Follow me on Twitter"
+            aria-label="Twitter"
+          >
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://linkedin.com/in/{{ site.linkedin_username }}"
+            title="Connect with me on LinkedIn"
+            aria-label="LinkedIn"
+          >
+            <i class="fab fa-linkedin"></i>
+          </a>
+        </div>
+      </div>
       <div class="footer-quote">
         <p id="daily-thought" style="font-size: 14.4px;"></p>
       </div>
@@ -34,9 +65,9 @@
 
 .footer-content {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
   margin: 0 auto;
   max-width: 800px;
 }
@@ -44,9 +75,36 @@
 .footer-text, .footer-quote {
   color: var(--footer-text);
   font-size: 14.4px;
-  flex: 1;
-  text-align: left;
+  text-align: center;
   line-height: 1.5;
+}
+
+.footer-social {
+  order: -1;
+}
+
+.footer-social .social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.footer-social .social-links a {
+  color: #000000;
+  font-size: 1.5rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+}
+
+.footer-social .social-links a:hover {
+  color: #333333;
+  transform: translateY(-2px);
+}
+
+.footer-social .social-links a:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .footer-center {
@@ -85,15 +143,15 @@
 
 @media (max-width: 768px) {
   .footer-content {
-    flex-direction: column;
-    text-align: center;
     gap: 1rem;
   }
 
-  .footer-text, .footer-center, .footer-quote {
-    flex: none;
-    width: 100%;
-    text-align: center;
+  .footer-social .social-links {
+    gap: 1rem;
+  }
+
+  .footer-social .social-links a {
+    font-size: 1.25rem;
   }
 }
 </style>
