@@ -18,7 +18,6 @@ bing_verification:
 
 # Optional features
 show_related_posts: True
-show_post_footers: True
 show_subscribe_cta: True
 show_social_icons: true
 extended_fonts: false
