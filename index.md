@@ -22,7 +22,7 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
   
   <a href="{{ site.baseurl }}/thoughts" class="tile">
     <div class="tile-content">
-      <h3>Opinions</h3>
+      <h3>Thoughts</h3>
       <p>My journey, work, and interests</p>
       <span class="tile-arrow">→</span>
     </div>
