@@ -84,4 +84,9 @@
 
     <!-- Dark Mode Script (load early to prevent FOUC) -->
     <script src="{{ "/assets/js/dark-mode.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
+
+    {% if site.google_analytics %}
+    <!-- Enhanced Analytics Tracking -->
+    <script src="{{ "/assets/js/analytics.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
+    {% endif %}
 </head>
