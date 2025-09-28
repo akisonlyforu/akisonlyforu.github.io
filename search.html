@@ -6,10 +6,10 @@ permalink: /search/
 
 
 <div class="search-container">
-  <h1>Search Blog Posts</h1>
-  
+  <h1>Search</h1>
+
   <div class="search-box">
-    <input type="text" id="search-input" placeholder="Search blog posts...">
+    <input type="text" id="search-input" placeholder="Search posts and musings...">
     <button id="search-button">Search</button>
   </div>
 
@@ -101,6 +101,37 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 
 .search-result h2 a:hover {
   text-decoration: underline;
+}
+
+.content-type-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  margin-left: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-post {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge-thought {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+[data-theme="dark"] .badge-post {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .badge-thought {
+  background-color: #581c87;
+  color: #ddd6fe;
 }
 
 .post-meta {

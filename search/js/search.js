@@ -9,7 +9,7 @@ function debugLog(message, data = null) {
 
 // Debug state
 const debugState = {
-  posts: [],
+  content: [],
   lastSearchTerm: '',
   lastResults: []
 };
@@ -60,15 +60,24 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(data => {
       debugLog('Parsed data:', data);
-      if (!data || !data.posts) {
+      if (!data || (!data.posts && !data.thoughts)) {
         throw new Error('Invalid data structure');
       }
-      debugState.posts = data.posts;
-      if (debugState.posts.length === 0) {
-        resultsContainer.innerHTML = '<p>No blog posts found.</p>';
+
+      // Combine posts and thoughts into single searchable array
+      const posts = data.posts || [];
+      const thoughts = data.thoughts || [];
+      debugState.content = [...posts, ...thoughts];
+
+      if (debugState.content.length === 0) {
+        resultsContainer.innerHTML = '<p>No content found.</p>';
         return;
       }
-      debugLog('Posts loaded:', debugState.posts.length);
+      debugLog('Content loaded:', {
+        posts: posts.length,
+        thoughts: thoughts.length,
+        total: debugState.content.length
+      });
       
       // If there's a search term in the URL, perform the search
       const urlParams = new URLSearchParams(window.location.search);
@@ -99,8 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchTerm = searchTerm.toLowerCase();
     
-    // Score and filter posts
-    const scoredPosts = debugState.posts
+    // Score and filter content
+    const scoredContent = debugState.content
       .map(post => {
         const title = (post.title || '').toLowerCase();
         const summary = (post.excerpt || '').toLowerCase();
@@ -128,16 +137,16 @@ document.addEventListener('DOMContentLoaded', function() {
           matchLocation
         };
       })
-      .filter(post => post.score > 0)
+      .filter(item => item.score > 0)
       .sort((a, b) => b.score - a.score); // Sort by score in descending order
 
-    debugState.lastResults = scoredPosts;
+    debugState.lastResults = scoredContent;
     debugLog('Search results:', {
-      total: scoredPosts.length,
-      scores: scoredPosts.map(p => ({ title: p.title, score: p.score, matches: p.matchLocation }))
+      total: scoredContent.length,
+      scores: scoredContent.map(p => ({ title: p.title, type: p.type, score: p.score, matches: p.matchLocation }))
     });
-    
-    displayResults(scoredPosts);
+
+    displayResults(scoredContent);
   }
 
   function displayResults(results) {
@@ -148,16 +157,24 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    const html = results.map(post => `
-      <article class="search-result">
-        <h2><a href="${post.url}" target="_blank">${post.title || 'Untitled'}</a></h2>
-        <div class="post-meta">
-          <span class="date">${post.date || 'No date'}</span>
-          <span class="match-location">Matches in: ${post.matchLocation.join(', ')}</span>
-        </div>
-        <div class="post-excerpt">${post.excerpt || 'No excerpt available'}</div>
-      </article>
-    `).join('');
+    const html = results.map(item => {
+      const contentType = item.type === 'thought' ? 'Musing' : 'Post';
+      const badgeClass = item.type === 'thought' ? 'badge-thought' : 'badge-post';
+
+      return `
+        <article class="search-result">
+          <h2>
+            <a href="${item.url}" target="_blank">${item.title || 'Untitled'}</a>
+            <span class="content-type-badge ${badgeClass}">${contentType}</span>
+          </h2>
+          <div class="post-meta">
+            <span class="date">${item.date || 'No date'}</span>
+            <span class="match-location">Matches in: ${item.matchLocation.join(', ')}</span>
+          </div>
+          <div class="post-excerpt">${item.excerpt || 'No excerpt available'}</div>
+        </article>
+      `;
+    }).join('');
 
     resultsContainer.innerHTML = html;
   }
