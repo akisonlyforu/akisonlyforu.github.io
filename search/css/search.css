@@ -62,6 +62,17 @@
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.match-location {
+  background-color: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #495057;
 }
 
 .post-excerpt {
