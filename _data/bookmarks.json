@@ -3,20 +3,20 @@
     {
       "id": "dynamodb-whitepaper",
       "name": "DynamoDB Whitepaper",
-      "url": "https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf",
+      "url": "https://assets.amazon.science/ac/1d/eb50c4064c538c8ac440ce6a1d91/dynamo-amazons-highly-available-key-value-store.pdf",
       "description": "In-depth technical paper on Amazon DynamoDB, a fully managed NoSQL database service."
     },
     {
-      "id": "ddia-book",
-      "name": "Designing Data-Intensive Applications",
-      "url": "https://dataintensive.net/",
-      "description": "The definitive guide to building reliable, scalable, and maintainable systems. Essential reading for backend engineers."
+      "id": "brendan-gregg-use-method",
+      "name": "Brendan Gregg's USE Method",
+      "url": "https://www.brendangregg.com/usemethod.html",
+      "description": "Systematic performance analysis methodology examining system resources for Utilization, Saturation, and Errors to quickly identify bottlenecks."
     },
     {
-      "id": "excalidraw",
-      "name": "Excalidraw",
-      "url": "https://excalidraw.com/",
-      "description": "Simple, beautiful drawing tool perfect for technical diagrams and system architecture sketches."
+      "id": "kafka-communication-protocol",
+      "name": "Kafka Communication Protocol",
+      "url": "https://snehasishroy.com/understanding-the-kafka-communication-protocol-in-detail",
+      "description": "In-depth exploration of the Kafka communication protocol, including its architecture and design principles."
     },
     {
       "id": "hacker-news",
