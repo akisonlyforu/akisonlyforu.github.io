@@ -1,0 +1,201 @@
+case,worker,status,error
+without,0,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,1,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,2,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,3,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,4,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,5,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,6,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,7,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,8,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,9,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,10,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,11,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,12,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,13,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,14,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,15,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,16,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,17,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,18,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,19,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,20,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,21,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,22,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,23,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,24,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,25,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,26,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,27,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,28,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,29,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,30,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,31,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,32,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,33,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,34,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,35,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,36,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,37,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,38,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,39,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,40,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,41,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,42,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,43,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,44,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,45,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,46,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,47,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,48,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,49,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,50,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,51,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,52,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,53,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,54,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,55,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,56,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,57,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,58,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,59,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,60,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,61,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,62,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,63,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,64,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,65,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,66,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,67,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,68,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,69,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,70,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,71,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,72,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,73,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,74,fail,"connection to server at ""127.0.0.1"", port 55432 failed: FATAL:  sorry, too many clients already"
+without,75,ok,
+without,76,ok,
+without,77,ok,
+without,78,ok,
+without,79,ok,
+without,80,ok,
+without,81,ok,
+without,82,ok,
+without,83,ok,
+without,84,ok,
+without,85,ok,
+without,86,ok,
+without,87,ok,
+without,88,ok,
+without,89,ok,
+without,90,ok,
+without,91,ok,
+without,92,ok,
+without,93,ok,
+without,94,ok,
+without,95,ok,
+without,96,ok,
+without,97,ok,
+without,98,ok,
+without,99,ok,
+with,0,ok,
+with,1,ok,
+with,2,ok,
+with,3,ok,
+with,4,ok,
+with,5,ok,
+with,6,ok,
+with,7,ok,
+with,8,ok,
+with,9,ok,
+with,10,ok,
+with,11,ok,
+with,12,ok,
+with,13,ok,
+with,14,ok,
+with,15,ok,
+with,16,ok,
+with,17,ok,
+with,18,ok,
+with,19,ok,
+with,20,ok,
+with,21,ok,
+with,22,ok,
+with,23,ok,
+with,24,ok,
+with,25,ok,
+with,26,ok,
+with,27,ok,
+with,28,ok,
+with,29,ok,
+with,30,ok,
+with,31,ok,
+with,32,ok,
+with,33,ok,
+with,34,ok,
+with,35,ok,
+with,36,ok,
+with,37,ok,
+with,38,ok,
+with,39,ok,
+with,40,ok,
+with,41,ok,
+with,42,ok,
+with,43,ok,
+with,44,ok,
+with,45,ok,
+with,46,ok,
+with,47,ok,
+with,48,ok,
+with,49,ok,
+with,50,ok,
+with,51,ok,
+with,52,ok,
+with,53,ok,
+with,54,ok,
+with,55,ok,
+with,56,ok,
+with,57,ok,
+with,58,ok,
+with,59,ok,
+with,60,ok,
+with,61,ok,
+with,62,ok,
+with,63,ok,
+with,64,ok,
+with,65,ok,
+with,66,ok,
+with,67,ok,
+with,68,ok,
+with,69,ok,
+with,70,ok,
+with,71,ok,
+with,72,ok,
+with,73,ok,
+with,74,ok,
+with,75,ok,
+with,76,ok,
+with,77,ok,
+with,78,ok,
+with,79,ok,
+with,80,ok,
+with,81,ok,
+with,82,ok,
+with,83,ok,
+with,84,ok,
+with,85,ok,
+with,86,ok,
+with,87,ok,
+with,88,ok,
+with,89,ok,
+with,90,ok,
+with,91,ok,
+with,92,ok,
+with,93,ok,
+with,94,ok,
+with,95,ok,
+with,96,ok,
+with,97,ok,
+with,98,ok,
+with,99,ok,

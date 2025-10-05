@@ -1,0 +1,27 @@
+==============================================================
+EXPERIMENT A  short-lived connection latency & throughput
+==============================================================
+  5000 units (connect -> 1 query -> close), 15 workers
+                 thru/s      mean      p50      p95      p99
+  without          1590     9.40m    9.00m   13.62m   17.01m
+  with             3289     4.54m    4.23m    6.18m    9.37m
+  => pooler throughput is 2.1x direct, p99 17.01ms -> 9.37ms
+
+==============================================================
+EXPERIMENT B  connection exhaustion under a burst
+==============================================================
+  100 simultaneous clients vs max_connections=25
+  without    success=  25  fail=  75  error_rate= 75.0%
+             error: connection to server at "127.0.0.1", port 55432 failed: FATAL:  sorry, too many clients already
+  with       success= 100  fail=   0  error_rate=  0.0%
+
+==============================================================
+EXPERIMENT C  backend process count & memory footprint
+==============================================================
+  holding 20 clients doing brief active work, sampled mid-window
+              client backends   backend RSS (KB)
+  without                  20              36573
+  with                     10              36453
+  => direct spawns ~20 backends; pooled stays near default_pool_size (10)
+
+  postgres 16.14 | pgbouncer 1.25.2 | artifacts in results/

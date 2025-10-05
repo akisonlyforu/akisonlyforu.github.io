@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:16-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777
+    container_name: pgbouncer_bench_postgres
+    environment:
+      POSTGRES_USER: bench
+      POSTGRES_PASSWORD: bench
+      POSTGRES_DB: bench
+      # Trust auth keeps the harness simple and reproducible; the pooler and the
+      # direct client both connect without a password. Do not do this in prod.
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command:
+      - postgres
+      # LOW on purpose: 25 total, minus 3 superuser-reserved, leaves ~22 for
+      # normal clients. This is what makes connection exhaustion reproducible on
+      # a laptop in experiment B.
+      - "-c"
+      - "max_connections=25"
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bench -d bench -h 127.0.0.1"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  pgbouncer:
+    image: edoburu/pgbouncer:latest@sha256:4c1ca296ef525f108f5d3552cc337c0c09587cf8dae7f0067fd93349e47dc1cd
+    container_name: pgbouncer_bench_pgbouncer
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Mount an explicit config so nothing is inferred from env vars. When this
+      # file exists the edoburu entrypoint skips its auto-generation.
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    ports:
+      - "127.0.0.1:56432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
