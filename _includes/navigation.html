@@ -1,10 +1,6 @@
 <nav class="site-nav">
-  <button class="menu-toggle" aria-label="Toggle navigation menu">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-  <ul id="main-menu" data-nav-showing="false">
+  <button class="menu-toggle" aria-label="Toggle navigation menu" type="button"></button>
+  <ul id="main-menu">
     <!-- <li class="nav-jr home-anc"><h4><a href="#home"><br></a></h4></li> -->
     {% assign current = page.url | downcase | split: '/' %}
     <div class="flexbox-parent">
@@ -40,35 +36,67 @@
 </nav>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const menuToggle = document.querySelector('.menu-toggle');
-  const mainMenu = document.getElementById('main-menu');
-  
-  if (menuToggle && mainMenu) {
-    menuToggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.classList.toggle('active');
+(function() {
+  function initMobileMenu() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainMenu = document.getElementById('main-menu');
+    
+    if (!menuToggle || !mainMenu) return;
+
+    // Debug log
+    console.log('Mobile menu initialized');
+    
+    function toggleMenu(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      const isActive = menuToggle.classList.contains('active');
+      menuToggle.classList.toggle('active');
       mainMenu.classList.toggle('active');
-    });
+      
+      // Debug log
+      console.log('Menu toggled:', isActive ? 'closed' : 'opened');
+    }
+
+    function closeMenu() {
+      menuToggle.classList.remove('active');
+      mainMenu.classList.remove('active');
+      // Debug log
+      console.log('Menu closed');
+    }
+
+    // Toggle menu on button click
+    menuToggle.addEventListener('click', toggleMenu);
 
     // Close menu when clicking a link
     mainMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        menuToggle.classList.remove('active');
-        mainMenu.classList.remove('active');
-      });
+      link.addEventListener('click', closeMenu);
     });
 
     // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', (e) => {
       if (!mainMenu.contains(e.target) && 
           !menuToggle.contains(e.target) && 
           mainMenu.classList.contains('active')) {
-        menuToggle.classList.remove('active');
-        mainMenu.classList.remove('active');
+        closeMenu();
+      }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mainMenu.classList.contains('active')) {
+        closeMenu();
       }
     });
   }
-});
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+})();
 </script>
