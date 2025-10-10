@@ -37,7 +37,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Get menu elements
   const menuToggle = document.querySelector('.menu-toggle');
   const mainMenu = document.getElementById('main-menu');
   
@@ -46,32 +45,23 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  // Toggle menu state
-  function toggleMenu(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    
+  // Direct click handler instead of onclick attribute
+  menuToggle.addEventListener('click', function(e) {
+    e.stopPropagation(); // Stop event from bubbling
+    console.log('Menu toggle clicked'); // Debug log
     menuToggle.classList.toggle('active');
     mainMenu.classList.toggle('active');
-    
-    // Set aria-expanded for accessibility
-    const isExpanded = menuToggle.classList.contains('active');
-    menuToggle.setAttribute('aria-expanded', isExpanded);
-  }
-
-  // Close menu
-  function closeMenu() {
-    menuToggle.classList.remove('active');
-    mainMenu.classList.remove('active');
-    menuToggle.setAttribute('aria-expanded', 'false');
-  }
-
-  // Event Listeners
-  menuToggle.addEventListener('click', toggleMenu);
+    menuToggle.setAttribute('aria-expanded', menuToggle.classList.contains('active'));
+  });
 
   // Close menu when clicking links
   mainMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', closeMenu);
+    link.addEventListener('click', (e) => {
+      console.log('Link clicked'); // Debug log
+      menuToggle.classList.remove('active');
+      mainMenu.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
   });
 
   // Close menu when clicking outside
@@ -79,18 +69,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mainMenu.classList.contains('active') && 
         !mainMenu.contains(e.target) && 
         !menuToggle.contains(e.target)) {
-      closeMenu();
-    }
-  });
-
-  // Close menu on escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && mainMenu.classList.contains('active')) {
-      closeMenu();
+      console.log('Outside click detected'); // Debug log
+      menuToggle.classList.remove('active');
+      mainMenu.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
     }
   });
 
   // Initialize menu state
   menuToggle.setAttribute('aria-expanded', 'false');
+  console.log('Menu initialized'); // Debug log
 });
 </script>
