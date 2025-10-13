@@ -1,5 +1,7 @@
 <nav class="site-nav">
-  <button class="menu-toggle" aria-label="Toggle navigation menu" type="button"></button>
+  <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
+    <span class="sr-only">Menu</span>
+  </button>
   <ul id="main-menu">
     <!-- <li class="nav-jr home-anc"><h4><a href="#home"><br></a></h4></li> -->
     {% assign current = page.url | downcase | split: '/' %}
@@ -35,49 +37,84 @@
   </ul>
 </nav>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const menuToggle = document.querySelector('.menu-toggle');
-  const mainMenu = document.getElementById('main-menu');
-  
-  if (!menuToggle || !mainMenu) {
-    console.error('Menu elements not found');
-    return;
+<script type="text/javascript">
+(function() {
+  // Immediately try to set up the menu
+  function initMenu() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainMenu = document.getElementById('main-menu');
+    
+    if (!menuToggle || !mainMenu) {
+      console.error('Required menu elements not found');
+      return;
+    }
+
+    function toggleMenu(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      console.log('Toggle menu clicked');
+      
+      menuToggle.classList.toggle('active');
+      mainMenu.classList.toggle('active');
+      
+      const isExpanded = menuToggle.classList.contains('active');
+      menuToggle.setAttribute('aria-expanded', isExpanded);
+      
+      // Prevent body scrolling when menu is open
+      document.body.style.overflow = isExpanded ? 'hidden' : '';
+    }
+
+    // Remove any existing listeners first
+    menuToggle.removeEventListener('click', toggleMenu);
+    // Add the click listener
+    menuToggle.addEventListener('click', toggleMenu);
+
+    // Handle link clicks
+    const links = mainMenu.getElementsByTagName('a');
+    Array.from(links).forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        mainMenu.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (event) => {
+      const isMenuOpen = mainMenu.classList.contains('active');
+      const clickedOutside = !mainMenu.contains(event.target) && !menuToggle.contains(event.target);
+      
+      if (isMenuOpen && clickedOutside) {
+        menuToggle.classList.remove('active');
+        mainMenu.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && mainMenu.classList.contains('active')) {
+        menuToggle.classList.remove('active');
+        mainMenu.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Set initial state
+    menuToggle.setAttribute('aria-expanded', 'false');
+    console.log('Menu successfully initialized');
   }
 
-  // Direct click handler instead of onclick attribute
-  menuToggle.addEventListener('click', function(e) {
-    e.stopPropagation(); // Stop event from bubbling
-    console.log('Menu toggle clicked'); // Debug log
-    menuToggle.classList.toggle('active');
-    mainMenu.classList.toggle('active');
-    menuToggle.setAttribute('aria-expanded', menuToggle.classList.contains('active'));
-  });
+  // Try to init immediately
+  initMenu();
 
-  // Close menu when clicking links
-  mainMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      console.log('Link clicked'); // Debug log
-      menuToggle.classList.remove('active');
-      mainMenu.classList.remove('active');
-      menuToggle.setAttribute('aria-expanded', 'false');
-    });
-  });
+  // Also try on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', initMenu);
 
-  // Close menu when clicking outside
-  document.addEventListener('click', (e) => {
-    if (mainMenu.classList.contains('active') && 
-        !mainMenu.contains(e.target) && 
-        !menuToggle.contains(e.target)) {
-      console.log('Outside click detected'); // Debug log
-      menuToggle.classList.remove('active');
-      mainMenu.classList.remove('active');
-      menuToggle.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  // Initialize menu state
-  menuToggle.setAttribute('aria-expanded', 'false');
-  console.log('Menu initialized'); // Debug log
-});
+  // Final fallback - try after a slight delay
+  setTimeout(initMenu, 500);
+})();
 </script>
