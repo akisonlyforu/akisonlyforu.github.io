@@ -1,49 +1,38 @@
-<footer class="site-footer">
-  <div class="footer-content">
-    <div class="footer-section">
-      <h3>Connect With Me</h3>
+<footer>
+  <div class="footer-container">
+    <div class="footer-each">
       <div class="social-links">
         {% if site.github_username %}
-        <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener" aria-label="GitHub">
-          <i class="fab fa-github"></i>
-        </a>
+        <h5>
+          <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">
+            <span>GitHub</span>
+          </a>
+        </h5>
         {% endif %}
         
         {% if site.twitter_username %}
-        <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener" aria-label="Twitter">
-          <i class="fab fa-twitter"></i>
-        </a>
+        <h5>
+          <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener noreferrer">
+            <span>Twitter</span>
+          </a>
+        </h5>
         {% endif %}
         
         {% if site.linkedin_username %}
-        <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <i class="fab fa-linkedin"></i>
-        </a>
+        <h5>
+          <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener noreferrer">
+            <span>LinkedIn</span>
+          </a>
+        </h5>
         {% endif %}
       </div>
     </div>
-    
-    <div class="footer-section">
-      <h3>Quick Links</h3>
-      <ul class="footer-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/blog">Blog</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/search">Search</a></li>
-      </ul>
+
+    <div class="footer-each">
+      <h5>
+        <span>Made with <span class="heart">❤</span> from India</span>
+      </h5>
     </div>
-    
-    <div class="footer-section">
-      <h3>Newsletter</h3>
-      <form class="footer-newsletter" action="/subscribe" method="POST">
-        <input type="email" name="email" placeholder="Enter your email" required>
-        <button type="submit">Subscribe</button>
-      </form>
-    </div>
-  </div>
-  
-  <div class="footer-bottom">
-    <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. Made with <span class="heart">❤</span> from India</p>
   </div>
 </footer>
 
@@ -63,14 +52,14 @@
 }
 
 footer {
-    margin-bottom: 30px;
-    visibility: visible;
-    -webkit-transform: translateY(0) scale(1);
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    opacity: 1;
-    -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
-    transition: transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
+  margin-bottom: 30px;
+  visibility: visible;
+  -webkit-transform: translateY(0) scale(1);
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
+  transition: transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
 }
 
 footer .footer-container {
@@ -78,13 +67,11 @@ footer .footer-container {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 4rem;
 }
 
 footer .footer-container .footer-each {
-    float: left;
-    display: block;
-    margin: 0 2%;
-    width: 19em;
+  text-align: center;
 }
 
 footer .footer-each a {
@@ -95,44 +82,60 @@ footer .footer-each a {
   word-wrap: normal;
 }
 
-footer .footer-each a:active, footer .footer-each a:hover {
-    outline-width: 0;
+footer .footer-each h5 {
+  margin: 0.5rem 0;
 }
 
-.footer-each span, footer, sub, sup {
-    position: relative;
+footer .footer-each a:active, 
+footer .footer-each a:hover {
+  outline-width: 0;
+}
+
+.footer-each span {
+  position: relative;
 }
 
 .footer-each span:before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    border-bottom: 2px solid #000;
-    transition: .4s;
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1);
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 2px solid #000;
+  transition: .4s;
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
 }
 
 .footer-each a:hover span:before {
-    content: '';
-    -webkit-transform: scaleX(0);
-    transform: scaleX(0);
+  content: '';
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
 }
 
-@media screen and (max-width: 1000px) {
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  footer .footer-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
   footer h5 {
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
 }
 </style>
 
-{% if site.enable_anchorjs %}<!-- AnchorJS -->
+{% if site.enable_anchorjs %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
 <script>
     anchors.options.visible = 'hover';
     anchors.options.placement = 'left';
     anchors.add('article h2, article h3, article h5, article h5, article h6');
-</script>{% endif %}
-<script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>
+</script>
+{% endif %}
