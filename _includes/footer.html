@@ -2,7 +2,7 @@
   <div class="footer-container">
     <div class="footer-each">
       <h5>
-        <span>Made with <span class="heart">❤</span> from India</span>
+        <span>Made with </span><span class="heart">❤</span><span> from India</span>
       </h5>
     </div>
     <div class="footer-each">
@@ -24,6 +24,11 @@
   color: #e25555;
   display: inline-block;
   animation: heartbeat 1.4s ease infinite;
+  position: relative;
+}
+
+.heart:before {
+  display: none !important;
 }
 
 @keyframes heartbeat {
