@@ -12,14 +12,13 @@
 <!--  </form>-->
 <!--</section>-->
 
-<div class="subscribe-container">
-  <form id="subscribe-form" class="subscribe-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
-    <h3>Subscribe to my newsletter</h3>
+<div class="subscribe-container measure">
+  <form id="subscribe-form" action="https://formspree.io/f/{{ site.formspree_id }}" method="POST">
     <div class="input-group">
       <input type="email" name="email" id="subscribe-email" placeholder="Enter your email" required>
-      <button type="submit">Subscribe</button>
+      <button type="submit" class="subscribe-button">Subscribe</button>
     </div>
-    <p class="subscribe-message"></p>
+    <p id="subscribe-message"></p>
   </form>
 </div>
 
@@ -125,11 +124,10 @@
 
   #subscribe-email {
     flex: 1;
-    padding: 0.75rem;
+    padding: 0.5rem;
+    font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
   }
 
   #subscribe-email:focus {
@@ -137,199 +135,85 @@
     border-color: #000;
   }
 
-  .subscribe-form button {
-    padding: 0.75rem 1.5rem;
+  .subscribe-button {
     background: #000;
     color: #fff;
     border: none;
+    padding: 0.5rem 1rem;
+    font-size: 16px;
     border-radius: 4px;
-    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
 
-  .subscribe-form button:hover {
+  .subscribe-button:hover {
     background: #333;
   }
 
-  .subscribe-message {
-    margin: 0;
-    text-align: center;
+  #subscribe-message {
+    margin: 0.5rem 0 0;
     font-size: 0.9rem;
+    text-align: center;
+    min-height: 1.2em;
   }
 
-  .subscribe-message.success {
+  #subscribe-message.success {
     color: #2ecc71;
   }
 
-  .subscribe-message.error {
+  #subscribe-message.error {
     color: #e74c3c;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     .input-group {
       flex-direction: column;
     }
     
-    .subscribe-form button {
+    .subscribe-button {
       width: 100%;
     }
   }
 </style>
 
 <script>
-  /**
-   * @param {String} HTML representing a single element
-   * @return {Element}
-   */
-  const htmlToElement = (html) => {
-    var template = document.createElement("template");
-    /* Never return a text node of whitespace as the result */
-    html = html.trim();
-    template.innerHTML = html;
-    return template.content.firstChild;
-  };
-
-  let subscriptionSignupForm = (
-    elemSelector,
-    subscriptionCreateEndpoint,
-    wakeEndpoint
-  ) => {
-    let state = {
-      loading: true,
-      woke: false,
-      success: false,
-    };
-
-    let $form = document.querySelector(elemSelector);
-    const $submitButton = $form.querySelector("input[type=submit]");
-    const errorMessageId = "subscription-signup-error";
-
-    const clearError = () => {
-      $submitButton.classList.remove("error");
-      let errMsg = document.getElementById(errorMessageId);
-      if (errMsg !== null) errMsg.outerHTML = "";
-    };
-
-    const showError = (err) => {
-      $submitButton.classList.add("error");
-      const errorParaStyle =
-        "color: #f70f1c; display: flex; align-items: center; margin-top: 1em;";
-      $form.appendChild(
-        htmlToElement(`
-            <p id="${errorMessageId}" style="${errorParaStyle}">${err}</p>
-        `)
-      );
-    };
-
-    const render = () => {
-      if (state.loading) {
-        $submitButton.classList.add("pulse");
-        $submitButton.innerText = "Wait…";
-        clearError();
-      } else if (state.success) {
-        clearError();
-        $submitButton.classList.remove("pulse");
-        $submitButton.innerText = "Done!";
-        $submitButton.disabled = true;
-        const successParaStyle =
-          "color: rgb(21 128 61); display: flex; align-items: center; margin-top: 1em;";
-        const successSvgStyle = "height: 20px; padding-right: 4px";
-        $form.appendChild(
-          htmlToElement(`
-                    <p style="${successParaStyle}">
-                        <svg style="${successSvgStyle}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mr-2 h-4 w-4"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        Hooray! You're now on the list.
-                    </p>
-                `)
-        );
-      } else if (state.error) {
-        $submitButton.classList.remove("pulse");
-        $submitButton.disabled = false;
-        showError(state.error);
-      } else {
-        $submitButton.classList.remove("pulse");
-        $submitButton.innerText = "Submit";
-      }
-    };
-
-    $form.addEventListener("mouseover", (event) => {
-      if (state.woke) return;
-
-      state.woke = true;
-      fetch(wakeEndpoint).then((response) => {
-        if (!response.ok) {
-          console.log("Failed to wake serverless endpoint.");
-        }
-      });
-    });
-
-    $form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      const formProps = Object.fromEntries(formData);
-      console.log("Form submitted!");
-      console.log(formProps);
-      state.loading = true;
-
-      render();
-
-      fetch(`${subscriptionCreateEndpoint}?email=${formProps.useremail}`)
-        .then((response) => {
-          state.loading = false;
-          if (!response.ok) {
-            state.error = `HTTP error! Apologies for the poor service (status: ${response.status}).`;
-            render();
-            throw new Error(state.error);
-          } else {
-            state.error = null;
-          }
-          return response.json();
-        })
-        .then((data) => {
-          state.success = true;
-          render();
-        });
-    });
-  };
-
-  const endpointRootURL =
-    "https://thundergolfer--thundergolferdotcom-email-subs-web.modal.run";
-  const subscribeEndpoint = `${endpointRootURL}/subscribe`;
-  const wakeEndpoint = `${endpointRootURL}/wake`;
-  subscriptionSignupForm("#subscribe-cta", subscribeEndpoint, wakeEndpoint);
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('subscribe-form');
-    const message = form.querySelector('.subscribe-message');
-
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const email = form.querySelector('#subscribe-email').value;
-      
-      try {
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: JSON.stringify({ email: email }),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-          message.textContent = 'Thank you for subscribing!';
-          message.className = 'subscribe-message success';
-          form.reset();
-        } else {
-          throw new Error(data.error || 'Something went wrong. Please try again.');
-        }
-      } catch (error) {
-        message.textContent = error.message;
-        message.className = 'subscribe-message error';
+document.getElementById('subscribe-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const form = this;
+  const messageEl = document.getElementById('subscribe-message');
+  const button = form.querySelector('button');
+  const originalButtonText = button.textContent;
+  
+  try {
+    button.textContent = 'Subscribing...';
+    button.disabled = true;
+    
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: form.email.value
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       }
     });
-  });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      messageEl.textContent = 'Thank you for subscribing!';
+      messageEl.className = 'success';
+      form.reset();
+    } else {
+      throw new Error(data.error || 'Something went wrong. Please try again.');
+    }
+  } catch (error) {
+    messageEl.textContent = error.message;
+    messageEl.className = 'error';
+  } finally {
+    button.textContent = originalButtonText;
+    button.disabled = false;
+  }
+});
 </script>
