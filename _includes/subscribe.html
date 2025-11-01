@@ -2,15 +2,17 @@
   <h3>Want to get blog posts over email?</h3>
   <p>Enter your email address and get notified when there's a new post!</p>
   <form id="subscribe-form" action="https://formspree.io/f/{{ site.formspree_id }}" method="POST">
-    <input
-      type="email"
-      id="subscribe-email"
-      name="email"
-      placeholder="helmholtzwatson@gmail.com"
-      required
-    />
-    <input type="submit" value="Subscribe" />
-    <p id="subscribe-message"></p>
+    <div class="form-inputs">
+      <input
+        type="email"
+        id="subscribe-email"
+        name="email"
+        placeholder="helmholtzwatson@gmail.com"
+        required
+      />
+      <input type="submit" value="Subscribe" />
+    </div>
+    <p id="subscribe-message" style="display: none;"></p>
   </form>
 </section>
 
@@ -32,9 +34,16 @@
 
   form {
     display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .form-inputs {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 1rem;
   }
 
   input[type="email"] {
@@ -57,13 +66,11 @@
 
   input[type="submit"]:hover {
     cursor: pointer;
-    /* TODO: This is $blue. Incorporate this style into site's scss. */
     background-color: #0076df;
   }
 
   input[type="submit"]:disabled {
     cursor: not-allowed;
-    /* TODO: This is $blue. Incorporate this style into site's scss. */
     background-color: #444;
   }
 
@@ -86,24 +93,24 @@
     }
   }
 
-  .error {
-    background-color: red !important;
-  }
-
   #subscribe-message {
     margin: 0.5rem 0 0;
     font-size: 0.9rem;
     text-align: center;
     min-height: 1.2em;
-    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: opacity 0.5s ease-out;
   }
 
   #subscribe-message.success {
-    color: #2ecc71;
+    background-color: #dcf5e3;
+    color: #166534;
   }
 
   #subscribe-message.error {
-    color: #e74c3c;
+    background-color: #fde7e7;
+    color: #b91c1c;
   }
 </style>
 
@@ -115,6 +122,23 @@ document.getElementById('subscribe-form').addEventListener('submit', async funct
   const button = form.querySelector('input[type="submit"]');
   const originalButtonText = button.value;
   
+  // Show message with fade in
+  const showMessage = (message, isError) => {
+    messageEl.textContent = message;
+    messageEl.className = isError ? 'error' : 'success';
+    messageEl.style.display = 'block';
+    messageEl.style.opacity = '1';
+    
+    // Fade out after 3 seconds
+    setTimeout(() => {
+      messageEl.style.opacity = '0';
+      setTimeout(() => {
+        messageEl.style.display = 'none';
+        messageEl.textContent = '';
+      }, 500);
+    }, 3000);
+  };
+  
   try {
     button.value = 'Subscribing...';
     button.disabled = true;
@@ -124,34 +148,29 @@ document.getElementById('subscribe-form').addEventListener('submit', async funct
       method: 'POST',
       body: formData,
       headers: {
-        'Accept': 'application/json'
-      }
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: formData.get('email')
+      })
     });
     
+    const data = await response.json();
+    
     if (response.ok) {
-      messageEl.textContent = 'Thank you for subscribing!';
-      messageEl.className = 'success';
+      showMessage('✓ Thank you for subscribing!', false);
       form.reset();
-      
-      // Fade out the success message after 3 seconds
-      setTimeout(() => {
-        messageEl.style.transition = 'opacity 0.5s ease-out';
-        messageEl.style.opacity = '0';
-        setTimeout(() => {
-          messageEl.textContent = '';
-          messageEl.style.opacity = '1';
-          messageEl.style.transition = '';
-        }, 500);
-      }, 3000);
     } else {
-      throw new Error('Something went wrong. Please try again.');
+      throw new Error(data.error || 'Oops! Something went wrong. Please try again.');
     }
   } catch (error) {
-    messageEl.textContent = error.message;
-    messageEl.className = 'error';
+    showMessage(error.message, true);
   } finally {
     button.value = originalButtonText;
     button.disabled = false;
   }
+  
+  return false;
 });
 </script>
