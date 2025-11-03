@@ -148,21 +148,15 @@ document.getElementById('subscribe-form').addEventListener('submit', async funct
       method: 'POST',
       body: formData,
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: formData.get('email')
-      })
+        'Accept': 'application/json'
+      }
     });
-    
-    const data = await response.json();
     
     if (response.ok) {
       showMessage('✓ Thank you for subscribing!', false);
       form.reset();
     } else {
-      throw new Error(data.error || 'Oops! Something went wrong. Please try again.');
+      throw new Error('Oops! Something went wrong. Please try again.');
     }
   } catch (error) {
     showMessage(error.message, true);
@@ -170,7 +164,5 @@ document.getElementById('subscribe-form').addEventListener('submit', async funct
     button.value = originalButtonText;
     button.disabled = false;
   }
-  
-  return false;
 });
 </script>
