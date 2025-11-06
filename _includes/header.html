@@ -1,5 +1,27 @@
 <header class="site-header px-responsive">
   <div class="mt2 wrap">
-        {% include navigation.html %}
+    <div class="mobile-brand">akisonlyforu</div>
+    {% include navigation.html %}
   </div>
 </header>
+
+<style>
+  .mobile-brand {
+    display: none;
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 0;
+    margin-left: 1rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .mobile-brand {
+      display: block;
+      position: absolute;
+      top: 1rem;
+      left: 0;
+    }
+  }
+</style>
