@@ -7,17 +7,39 @@ layout: compress
 <body class="site">
   {% include header.html %}
   <div class="site-wrap">
-
     <div class="post p2 p-responsive wrap" role="main">
       <div class="measure">
         {{ content }}
       </div>
     </div>
-    
-    {% include footer.html %}
   </div>
+  
+  {% include footer.html %}
 
   <!-- Font Awesome for social icons -->
   <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
 </body>
 </html>
+
+<style>
+.site {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site-wrap {
+  flex: 1 0 auto;
+}
+
+.post {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.measure {
+  margin: 0 auto;
+  max-width: 800px;
+}
+</style>
