@@ -1,11 +1,10 @@
 <nav class="site-nav">
-  <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
-    <span class="sr-only">Menu</span>
-  </button>
-  <ul id="main-menu">
-    <!-- <li class="nav-jr home-anc"><h4><a href="#home"><br></a></h4></li> -->
-    {% assign current = page.url | downcase | split: '/' %}
-    <div class="flexbox-parent">
+  <div class="nav-container">
+    <a href="/" class="site-logo">akisonlyforu</a>
+    <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
+      <span class="sr-only">Menu</span>
+    </button>
+    <div class="menu-items">
       <li class="about-anc">
         <a class="nav-underline home {% if page.url == '/' %}current{% endif %}" href="/">Home</a>
       </li>
@@ -22,15 +21,121 @@
       <li class="search-anc">
         <a class="nav-underline search {% if page.url == '/search/' %}current{% endif %}" href="{{site.url}}/search">Search</a>
       </li>
-      <!-- <li class="beliefs-anc" style="display: inline">
-        <a class="nav-underline open-source {% if page.url == '/projects/' %}current{% endif %}" href="{{site.url}}/projects">Projects & Open Source</a>
-      </li> -->
       <li class="team-anc">
         <a class="nav-underline library {% if page.url == '/library/' %}current{% endif %}" href="{{site.url}}/library">Library</a>
       </li>
     </div>
-  </ul>
+  </div>
 </nav>
+
+<style>
+.site-nav {
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.nav-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.site-logo {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  font-family: monospace;
+  letter-spacing: -0.5px;
+}
+
+.site-logo:hover {
+  color: #000;
+}
+
+#main-menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.menu-items {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-items li {
+  list-style: none;
+}
+
+.menu-items a {
+  text-decoration: none;
+  color: #666;
+  font-size: 0.95rem;
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+.menu-items a.current {
+  color: #000;
+  font-weight: 500;
+}
+
+.menu-items a:hover {
+  color: #000;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .nav-container {
+    flex-wrap: wrap;
+  }
+
+  #main-menu {
+    display: none;
+    width: 100%;
+  }
+
+  #main-menu.active {
+    display: block;
+  }
+
+  .menu-items {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .dropdown-content {
+    position: static;
+    box-shadow: none;
+    padding-left: 1rem;
+  }
+}
+</style>
 
 <script type="text/javascript">
 (function() {
