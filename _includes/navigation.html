@@ -4,7 +4,7 @@
     <button class="menu-toggle" aria-label="Toggle navigation menu" type="button">
       <span class="menu-icon"></span>
     </button>
-    <div class="menu-items" id="main-menu">
+    <ul class="menu-items" id="main-menu">
       <li class="nav-item">
         <a class="nav-link {% if page.url == '/' %}current{% endif %}" href="/">Home</a>
       </li>
@@ -24,7 +24,7 @@
       <li class="nav-item">
         <a class="nav-link {% if page.url == '/library/' %}current{% endif %}" href="{{site.url}}/library">Library</a>
       </li>
-    </div>
+    </ul>
   </div>
 </nav>
 
@@ -201,8 +201,10 @@
     justify-content: flex-start;
     align-items: center;
     padding-top: 6rem;
-    gap: 1.5rem;
+    gap: 2rem;
     z-index: 2000;
+    margin: 0;
+    padding-left: 0;
   }
 
   .menu-items.active {
@@ -212,6 +214,7 @@
   .nav-item {
     width: auto;
     text-align: center;
+    list-style: none;
   }
 
   .nav-link {
