@@ -1,126 +1,100 @@
 <footer class="site-footer">
-  <div class="footer-container">
-    <div class="footer-content">
-      <div class="footer-text">
-        Building distributed systems, one commit at a time.
-      </div>
-      <div class="footer-center">
-        <p class="made-with-love">
-          Made with <span class="heart">♥</span> in India
-        </p>
-      </div>
-      <div class="footer-social">
-        {% if site.github_username %}
-        <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer" aria-label="Github">
-          <i class="fab fa-github"></i>
-        </a>
-        {% endif %}
-        {% if site.linkedin_username %}
-        <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <i class="fab fa-linkedin"></i>
-        </a>
-        {% endif %}
-        {% if site.twitter_username %}
-        <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-          <i class="fab fa-twitter"></i>
-        </a>
-        {% endif %}
-      </div>
-    </div>
+  <div class="footer-content">
+    <p>Building distributed systems, one commit at a time.</p>
+    <p>Made with ❤ in India</p>
+    <p id="daily-thought" class="thought"></p>
   </div>
 </footer>
 
 <style>
 .site-footer {
   padding: 2rem 0;
-  margin-top: auto;
-  background-color: #ffffff;
+  text-align: center;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  width: 100%;
 }
 
-.footer-container {
-  max-width: 1200px;
+.footer-content {
+  max-width: 800px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-  margin: 0 auto;
-  max-width: 800px;
-}
-
-.footer-text {
+.footer-content p {
+  margin: 0.5rem 0;
   color: #666;
   font-size: 0.9rem;
-  flex: 1;
 }
 
-.footer-center {
-  text-align: center;
-  flex: 1;
-}
-
-.made-with-love {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #666;
-  white-space: nowrap;
-}
-
-.heart {
-  color: #ff4136;
-  display: inline-block;
-  animation: heartbeat 1.4s ease infinite;
-}
-
-@keyframes heartbeat {
-  0% { transform: scale(1); }
-  14% { transform: scale(1.3); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.3); }
-  70% { transform: scale(1); }
-}
-
-.footer-social {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.footer-social a {
-  color: #666;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-}
-
-.footer-social a:hover {
-  color: #0076df;
-}
-
-@media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .footer-text, .footer-center, .footer-social {
-    flex: none;
-    width: 100%;
-  }
-
-  .footer-social {
-    justify-content: center;
-  }
+.thought {
+  font-style: italic;
+  margin-top: 1rem !important;
 }
 </style>
+
+<script>
+const jordanPetersonQuotes = [
+  "Stand up straight with your shoulders back.",  
+  "You're not everything you could be, and you know it.",  
+  "Winning at everything might only mean that you're not doing anything new or difficult.",  
+  "Treat yourself like someone you are responsible for helping.",  
+  "The purpose of life is finding the largest burden that you can bear and bearing it.",  
+  "You are by no means only what you already know. You are also all that which you could know, if you only would.",  
+  "Make friends with people who want the best for you.",  
+  "If you are not willing to be a fool, you can't become a master.",  
+  "Compare yourself to who you were yesterday, not to who someone else is today.",  
+  "Every decision builds the person you become.",  
+  "Do not let your children do anything that makes you dislike them.",  
+  "If you don't stand your ground, then all that happens is people push you backwards.",  
+  "Set your house in perfect order before you criticize the world.",  
+  "A harmless man is not a good man. A good man is a very dangerous man who has that under voluntary control.",  
+  "Maybe you are a loser. And maybe you're not—but if you are, you don't have to continue in that mode.",  
+  "Pursue what is meaningful (not what is expedient).",  
+  "The secret to your existence is right in front of you. It manifests itself as all those things you know you should do but you're avoiding.",  
+  "Tell the truth—or, at least, don't lie.",  
+  "Clarity cuts through confusion like a blade.",  
+  "Assume that the person you are listening to might know something you don't.",  
+  "People don't have ideas. Ideas have people.",  
+  "Be precise in your speech.",  
+  "Attention shapes the world you live in.",  
+  "Do not bother children when they are skateboarding.",  
+  "It's better to do something badly than to not do it at all.",  
+  "Pet a cat when you encounter one on the street.",  
+  "Love is the desire to see unnecessary suffering ameliorated.",  
+  "Do not carelessly denigrate social institutions or creative achievement.",  
+  "You must determine where you are going in your life, because you cannot get there unless you move in that direction.",  
+  "In order to be able to think, you have to risk being offensive.",  
+  "Imagine who you could be and then aim single-mindedly at that.",  
+  "You don't get to choose not to pay a price, you only get to choose which price you pay.",  
+  "Do not hide unwanted things in the fog.",  
+  "Work as hard as you possibly can on at least one thing and see what happens.",  
+  "Freedom demands discipline, not its absence.",  
+  "Try to make one room in your home as beautiful as possible.",  
+  "If you abandon responsibility, chaos takes its place.",  
+  "Do not do what you hate.",  
+  "If old memories still make you cry, write them down carefully and completely.",  
+  "Abandon ideology.",  
+  "Maintain your connections with the people who support you.",  
+  "To avoid suffering at all costs is to guarantee a meaningless life.",  
+  "Plan and work diligently to maintain the romance in your relationship.",  
+  "Be grateful in spite of your suffering."  
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Get today's date and use it as a seed for quote selection
+  const today = new Date();
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+  const quoteIndex = dayOfYear % jordanPetersonQuotes.length;
+  
+  // Get the quote for today
+  const todaysQuote = jordanPetersonQuotes[quoteIndex];
+  
+  // Display the quote
+  const thoughtElement = document.getElementById('daily-thought');
+  if (thoughtElement) {
+    thoughtElement.textContent = `"${todaysQuote}"`;
+  }
+});
+</script>
 
 {% if site.enable_anchorjs %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
