@@ -15,7 +15,24 @@ I once watched a login flow fail for a customer because one check in a five-step
 
 You've got a request that needs to pass through a sequence of checks, and you don't want the caller writing an if/else ladder for each one, and you don't want any single checker to know about the others. `AuthService.login()` shouldn't need to know that user-exists comes before password comes before role-check, it should just hand the request to the first link and get back a yes or no.
 
-## How it's built
+## Without the pattern
+
+The obvious way to write `AuthService.login()` is one method that does all three checks inline: look up the username in the valid list, if that fails return false, check the password against the stored value, if that fails return false, check the role, if that fails return false, otherwise return true. Nothing wrong with that for three checks bolted together in a single function. The trouble starts when you need a fourth, an email-verified check say, that new branch goes into the same method as user-exists, password, and role, and now you're editing a function three other checks already depend on. Get the ordering wrong, or shadow a variable from the block above it, and you can break password validation while adding a check nobody asked you to touch it for.
+
+```mermaid
+flowchart TD
+    A[login request] --> B{user exists?}
+    B -- no --> F[return false]
+    B -- yes --> C{password valid?}
+    C -- no --> F
+    C -- yes --> D{role authorized?}
+    D -- no --> F
+    D -- yes --> E[return true]
+```
+
+Every one of those diamonds lives in the same method body, sharing the same local variables and the same stack frame. There's no seam between "does the user exist" and "is the password right", so a bug fix in one branch is one misplaced brace away from changing behavior in a branch below it.
+
+## With the pattern
 
 `AuthenticationRequest` carries username, password, email, and an `isAuthorized` flag that gets mutated as it travels. `BaseHandler` is the abstract base: a protected `nextHandler` field, `setNextHandler()`, an abstract `handle()`, and a shared protected `handleRequest(request, handlerName)` that does the actual work, call `canHandle()`, stop if it succeeds, forward to `nextHandler.handle()` if it doesn't. Every concrete handler's `handle()` is really a one-liner that calls `handleRequest()`, the only thing each subclass supplies is `canHandle()`. `UserExistsHandler` checks against a hardcoded list of valid usernames, `ValidPasswordHandler` checks length and looks up an expected password, `RoleCheckHandler` sets `request.setAuthorized(true)` on success, that's a handler mutating shared state as it passes through, which is exactly what this pattern lets you do since every handler receives the same request object. `AuthService.setupHandlerChain()` wires `userExistsHandler -> validPasswordHandler -> roleCheckHandler` with `setNextHandler()`, and `login()` just calls `handlerChain.handle(request)`. `addHandler()` walks to the tail and appends, so the whole chain composition happens at runtime, nothing hardcodes three handlers anywhere except the initial setup.
 
@@ -52,6 +69,10 @@ classDiagram
     AuthService --> BaseHandler : handlerChain
     BaseHandler ..> AuthenticationRequest : handles
 ```
+
+## What it costs you
+
+The logic didn't disappear, it just moved. Instead of one method you can scroll through and see all three checks in order, you've got three separate classes, and seeing the full set of rules that apply to a login request means opening `UserExistsHandler`, `ValidPasswordHandler`, and `RoleCheckHandler` in turn and reassembling the chain in your head, `setupHandlerChain()` is the only place that actually states the order, and it's easy to walk right past it while reading any one handler in isolation. The sharper cost shows up when the chain is wired wrong. If a handler's `handleRequest()` forgot to call `nextHandler.handle()` after failing, or if `addHandler()` inserted a new handler between two existing ones in the wrong order, a request doesn't throw, it just stops. Whichever handler happens to be last in the misconfigured chain returns whatever it returns, and every check after it silently never runs, no exception, no log line, just a request that got approved by a check that was never supposed to be the final word.
 
 ## When to reach for it
 

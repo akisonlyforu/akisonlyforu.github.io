@@ -15,7 +15,23 @@ Picture pairing a VLC audio player with a Windows video player because two separ
 
 Sometimes creating one object isn't the problem, creating a consistent family of objects is. If you pick "Windows" as your platform, every related object you construct after that, audio player, video player, whatever else belongs to that family, needs to actually be the Windows variant. Two separate Factory Method calls can't guarantee that, there's nothing stopping you from calling one factory for audio and a different one for video.
 
-## How it's built
+## Without the pattern
+
+Before MediaFactory exists, the obvious move is to skip factories entirely and just instantiate what you need at the call site, `new WindowsAudioPlayer()` in one place, `new WindowsVideoPlayer()` in another, wherever the codebase happens to need a player. It works, and it keeps working right up until someone adds a settings screen that lets the user pick VLC instead of Windows. Now every one of those `new WindowsXPlayer()` calls has to be found and swapped for the VLC equivalent, and there's nothing tying them together, no compiler error, no test failure, if you catch nine of the ten call sites and miss the tenth.
+
+```mermaid
+flowchart TD
+    A[User flips platform setting: Windows to VLC] --> B[SettingsPanel.java updated:<br/>new WindowsAudioPlayer becomes new VlcAudioPlayer]
+    A --> C[PlaybackController.java missed:<br/>still hardcodes new WindowsVideoPlayer]
+    B --> D[App running]
+    C --> D
+    D --> E[VlcAudioPlayer paired with WindowsVideoPlayer<br/>in the same playback session]
+    E --> F[Audio and video assume different platform conventions,<br/>stream desyncs, and the bug report says nothing<br/>about "someone forgot a call site"]
+```
+
+Nothing in the naive version stops that pairing. AudioPlayer and VideoPlayer are constructed independently, so the fact that they're supposed to travel together as a "Windows family" or a "VLC family" only exists in the programmer's head, not in the code.
+
+## With the pattern
 
 There are two abstract products here, AudioPlayer (playSong()) and VideoPlayer (playVideo()), each with a Windows implementation and a VLC implementation, WindowsAudioPlayer/WindowsVideoPlayer and VlcAudioPlayer/VlcVideoPlayer.
 
@@ -67,6 +83,10 @@ classDiagram
     VlcMediaFactory ..> VlcVideoPlayer : creates
     MediaFactoryProducer ..> MediaFactory : creates
 ```
+
+## What it costs you
+
+Four extra types, MediaFactory, WindowsMediaFactory, VlcMediaFactory, MediaFactoryProducer, to create two kinds of objects that used to just be a plain constructor call. Tracing which concrete class actually gets built now takes two hops instead of one: `getFactory("WINDOWS")` hands you back a MediaFactory, and only when you go read WindowsMediaFactory.createAudioPlayer() do you find the WindowsAudioPlayer construction. Grepping for `new WindowsAudioPlayer` at the call site that actually uses one won't find it, there isn't one there, it's buried inside the factory. And the family guarantee cuts both ways: add a third product, say SubtitleRenderer, and MediaFactory needs a new abstract method, and WindowsMediaFactory and VlcMediaFactory both need it implemented, whether or not either one has any other reason to change that day.
 
 ## When to reach for it
 

@@ -15,7 +15,34 @@ I once wrote a tiny arithmetic evaluator for a pricing config field, something l
 
 You need to evaluate expressions built from a small grammar, numbers, variables, plus, minus, times, divide, and you want adding a new operator to mean adding a class, not editing an existing one.
 
-## How it's built
+## Without the pattern
+
+The obvious thing is a single `evaluate(String expr, Context ctx)` method: tokenize the string, then walk the tokens with an if/else chain or a switch on token type, recursing (or juggling an explicit stack) to get precedence right. That holds together for `+` and `-`. Add `*` and `/` and the switch needs precedence-aware branching so `2 + 3 * 4` doesn't collapse to `20`. Add variables and every branch needs a fallthrough to a lookup table. Add a unary minus later and you're threading yet another case through a function that already has five others it can't afford to break.
+
+```mermaid
+flowchart TD
+    A[Raw expression string] --> B[tokenize]
+    B --> C{switch on token type}
+    C -->|number| D[parse int]
+    C -->|variable| E[look up in variable map]
+    C -->|plus| F[check precedence, recurse left and right]
+    C -->|minus| G[check precedence, recurse left and right]
+    C -->|times| H[check precedence, recurse left and right]
+    C -->|divide| I{divisor zero}
+    I -->|yes| J[throw ArithmeticException]
+    I -->|no| K[recurse left and right]
+    D --> L[combine and return int]
+    E --> L
+    F --> L
+    G --> L
+    H --> L
+    K --> L
+    L -.new operator means editing C.-> C
+```
+
+Every one of `NumberExpression`, `VariableExpression`, `AddExpression`, `SubtractExpression`, `MultiplyExpression`, `DivideExpression` below started life as a branch in that switch, all six living in one method that got a little more tangled each time the grammar grew by one rule. Adding a modulo operator to the switch version means reopening that method and threading a new case through logic that already has four other cases it can't afford to break. Adding it here means writing `ModuloExpression` and never touching the other five classes.
+
+## With the pattern
 
 `Context` wraps a `Map<String, Integer>` for variables, `setVariable()`, `getVariable()`, `hasVariable()`. `AbstractExpression` is the one-method contract, `interpret(Context)` returns an int. `NumberExpression` and `VariableExpression` are the terminal nodes, a `NumberExpression` just returns its stored int, a `VariableExpression` looks itself up in the `Context` via `getVariable()`. `AddExpression`, `SubtractExpression`, `MultiplyExpression`, `DivideExpression` are the non-terminal nodes, each holding a `leftExpression` and `rightExpression`, and `interpret()` recursively calls `interpret()` on both sides before combining them. `DivideExpression` is the only one that has to think about failure, it throws `ArithmeticException` on a zero divisor before doing the division. Composing an expression is just nesting constructors: `(x + y) * (10 - 5)` becomes `new MultiplyExpression(new AddExpression(varX, varY), new SubtractExpression(num10, num5))`. There's no parser here, the tree is built by hand, a real implementation would need a tokenizer in front of this to go from a raw string to that tree.
 
@@ -59,6 +86,10 @@ classDiagram
     DivideExpression o--> AbstractExpression : left/right
     AbstractExpression ..> Context : interprets against
 ```
+
+## What it costs you
+
+Six operators is nothing, but a real config language grows comparisons, boolean and/or, maybe a ternary, and each one of those is another class with its own `interpret()` override, the class count tracks the grammar size one-to-one and that stops being cute somewhere past a couple dozen rules. It's also just slow compared to what a real parser/compiler pipeline gets you, there's no compilation step here, `(x + y) * (10 - 5)` gets walked node by node, with a virtual dispatch at every level, on every single evaluation, forever, there's nothing cached or precomputed about it. This is the right tool for a small, stable, well-defined grammar, a pricing rule field, a config expression, not for building anything you'd call a production-grade language. Past that line you want a real parser generator and something closer to a bytecode interpreter, not more expression classes.
 
 ## When to reach for it
 

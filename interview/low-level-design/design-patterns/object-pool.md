@@ -15,7 +15,29 @@ The test file for this one fakes "expensive" with a 50 millisecond Thread.sleep(
 
 Some objects are genuinely expensive to construct and short-lived in how they're used, database connections being the standard example. Creating a fresh one per request and throwing it away afterward means paying the expensive part constantly and generating garbage the collector has to clean up. If the number of objects actually in use at any moment is small, a pool of pre-built, reusable ones is cheaper than constant creation and disposal.
 
-## How it's built
+## Without the pattern
+
+The obvious thing is to skip the pool entirely and let every caller do `new ExpensiveObject()` whenever it needs one. The constructor runs its 50 millisecond simulated handshake (a real socket setup or DB connection costs about the same, just with a network round trip instead of a sleep), the object handles one doWork() call, and then it gets discarded. No acquire/release ceremony, no available/inUse bookkeeping, nothing to forget.
+
+The problem shows up on the second call, and every call after it. Ten requests means paying that 50 millisecond construction cost ten separate times, back to back, instead of once. Nothing's broken, each object works fine on its own, you're just re-paying the expensive part on every single request instead of reusing what you already built and are done with.
+
+```mermaid
+sequenceDiagram
+    participant C1 as Caller 1
+    participant C2 as Caller 2
+    participant C3 as Caller 3
+    C1->>C1: new ExpensiveObject() (50ms handshake)
+    C1->>C1: doWork(), discard
+    C2->>C2: new ExpensiveObject() (50ms handshake, again)
+    C2->>C2: doWork(), discard
+    C3->>C3: new ExpensiveObject() (50ms handshake, again)
+    C3->>C3: doWork(), discard
+    Note over C1,C3: Same 50ms handshake paid three times,<br/>three objects built and thrown away after one use each
+```
+
+That's fine when construction is cheap or calls are rare. It stops being fine once the cost is real and request volume isn't trivial, at which point you're spending more wall-clock time building objects than doing the work you built them for.
+
+## With the pattern
 
 Reusable is the one-method contract, reset(). ExpensiveObject implements it, carries an inUse boolean, and its constructor does the simulated expensive work (the sleep) before printing that it's done. reset() just flips inUse back to false. doWork() checks inUse first and throws IllegalStateException if the object hasn't actually been acquired, which catches the specific bug of someone holding a reference to a pooled object they never checked out.
 
@@ -59,6 +81,10 @@ classDiagram
     ObjectPool ..> Reusable : manages
     ExpensiveObjectFactory ..> ExpensiveObject : creates
 ```
+
+## What it costs you
+
+You traded per-call construction cost for a pool that now needs its own lifecycle discipline, every acquire() has to be matched by a release(), and nothing in the type system stops a caller from acquiring an ExpensiveObject and just never calling release() on it. That object doesn't get garbage collected in any useful sense, it's stuck in inUse forever, never coming back to available no matter how many times someone else calls acquire(). The pool doesn't refill itself, it just quietly shrinks by one usable object every time a caller forgets. The other failure mode is subtler: release() calls reset() to clear inUse, but reset() only clears what it's told to clear, if ExpensiveObject picked up any other state during doWork() that reset() doesn't touch, the next caller to acquire that same instance inherits it, and now one caller's leftover state is showing up in a completely unrelated request. A pool is only as safe as its reset() method is thorough, and that method is exactly the kind of thing that's easy to leave incomplete when you add a new field later.
 
 ## When to reach for it
 

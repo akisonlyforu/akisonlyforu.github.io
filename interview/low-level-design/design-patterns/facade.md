@@ -15,7 +15,29 @@ If you've ever had to call three services in a specific order just to book a hot
 
 A real operation touches multiple subsystems in a specific sequence, and every caller who wants to perform that operation has to know the sequence, the dependencies between the calls, and the error handling for each step. Duplicate that knowledge across enough call sites and a change to the sequence means hunting down every place that got it right (or wrong) independently.
 
-## How it's built
+## Without the pattern
+
+Drop the facade and the caller is left holding all three subsystem objects directly: a `RoomBookingService`, a `HousekeepingService`, a `RestaurantService`, plus whichever `Menu` implementation it picked. Booking a room means the caller has to know, on its own, that `checkAvailability` comes before `reserveRoom`, that `reserveRoom` comes before `cleanRoom`, and that `prepareRoom` only makes sense once the room's actually been cleaned, none of which is enforced anywhere except in whatever order the caller happens to type the calls. Ordering food means picking a `Menu` implementation, calling `getMenu()`, then remembering `orderFood` has to run before `deliverFood`, and that neither one means anything until a room's been booked. Write that sequence once in a checkout controller and once in an admin rebooking tool and you've got two independent chances for someone to swap two lines and never notice, because nothing here throws if you clean a room before you've reserved it, it just quietly prepares a room nobody's checked into.
+
+```mermaid
+sequenceDiagram
+    participant Caller
+    participant RoomBookingService
+    participant HousekeepingService
+    participant RestaurantService
+    Caller->>RoomBookingService: checkAvailability(roomNumber)
+    RoomBookingService-->>Caller: true
+    Caller->>RoomBookingService: reserveRoom(roomNumber)
+    Caller->>HousekeepingService: cleanRoom(roomNumber)
+    Caller->>HousekeepingService: prepareRoom(roomNumber)
+    Note over Caller,RestaurantService: Caller still has to separately track down a Menu,<br/>call orderFood, then deliverFood, in that order,<br/>every single time it wants food sent up
+    Caller->>RestaurantService: orderFood(foodItem)
+    Caller->>RestaurantService: deliverFood(roomNumber, foodItem)
+```
+
+Nothing here is wrong on any individual call, `RoomBookingService` and `HousekeepingService` and `RestaurantService` all do exactly what they say. The problem is that the correct ordering and the dependency between the calls exists only in whichever caller wrote this sequence out by hand, and it has to be re-derived correctly at every call site that wants to book a room or send up food.
+
+## With the pattern
 
 `HotelKeeper` is the facade. Its constructor creates and holds a `HousekeepingService`, a `RestaurantService`, and a `RoomBookingService`, all owned internally, the caller never sees them.
 
@@ -66,6 +88,10 @@ classDiagram
     Menu <|.. NonVegMenu
     Menu <|.. MixedMenu
 ```
+
+## What it costs you
+
+`HotelKeeper` now knows about every subsystem in the hotel, `RoomBookingService`, `HousekeepingService`, `RestaurantService`, all three `Menu` implementations, and that list only grows if a new subsystem shows up, payments, a concierge desk, whatever comes next. At some point it stops being a thin facade and turns into a hub that everything depends on and that itself depends on everything, which is exactly the coupling this pattern was supposed to get rid of in the first place. It also flattens control on purpose: `bookRoom` always checks availability, reserves, cleans, and prepares in that fixed order, so a caller that genuinely needs to prepare a room without re-cleaning it, say the room's already spotless, has no way to say that through `HotelKeeper`. It either bypasses the facade and talks to `HousekeepingService` directly, which puts you right back in the "Without the pattern" section, or someone bolts a new method or a flag onto `HotelKeeper` for that one case, and the facade slowly accretes a parameter for every exception anyone's ever needed. And when `bookRoom` throws or does the wrong thing, debugging means stepping through one more layer before you reach the subsystem call that actually failed, a small tax on every call in exchange for not paying it in the coordination logic.
 
 ## When to reach for it
 

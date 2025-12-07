@@ -15,7 +15,26 @@ If you've ever had to wire a legacy service into a codebase where none of the me
 
 You have two interfaces that do conceptually the same thing but don't share a method signature, and you can't (or won't) change either one. Rewriting the legacy class risks breaking whatever already depends on it. Rewriting the new consumer defeats the point of it being new. You need a translation layer, not a rewrite.
 
-## How it's built
+## Without the pattern
+
+Without a translation layer the mismatch doesn't disappear, it just gets pushed onto every caller. Say client code is written against `get()` and `select()`, and now it needs to talk to something that only exposes `find()` and `click()`. The easy-looking fix is an `instanceof` check right at the call site: if this is the legacy object, call `find()` instead of `get()`. That's fine once. The second call site that also needs the legacy object writes the same branch again, because nothing forces it to share logic with the first one, and now the find()-means-get() mapping lives in two places that will quietly drift the moment someone updates one and forgets the other.
+
+The other route is worse: reach into the legacy class itself and bolt `get()` and `select()` methods onto it that just forward to `find()` and `click()`. That works right up until you remember the legacy class is legacy for a reason, maybe it's vendored, maybe it's owned by another team, maybe you genuinely don't have write access to that repository. You've patched your one caller and left a landmine in a class you don't own.
+
+```mermaid
+flowchart TD
+    A["Call site 1: wants get()"] --> B{"instanceof legacy?"}
+    B -->|yes| C["legacy.find()"]
+    B -->|no| D["impl.get()"]
+    E["Call site 2: wants select()"] --> F{"instanceof legacy?"}
+    F -->|yes| G["legacy.click()"]
+    F -->|no| H["impl.select()"]
+    C -. same mapping, written twice .- G
+```
+
+Two call sites, same translation logic duplicated between them, and a third call site is just a third copy waiting to happen.
+
+## With the pattern
 
 The setup here is `WebInterface`, the target interface the client expects, declaring `get()` and `select()`. The legacy side is `OldWebInterface`, declaring `find()` and `click()`, implemented by `OldWebInterfaceImpl`. `WebInterfaceAdapter` implements `WebInterface` and holds a reference to an `OldWebInterface` (a field literally named `oldWebInterface`, set through the constructor). Its `get()` method doesn't do any work itself, it just calls `oldWebInterface.find()`. Its `select()` calls `oldWebInterface.click()`. That's the whole pattern: one class translating calls, nothing else.
 
@@ -51,6 +70,10 @@ classDiagram
     OldWebInterface <|.. OldWebInterfaceImpl
     WebInterfaceAdapter o-- OldWebInterface
 ```
+
+## What it costs you
+
+`WebInterfaceAdapter` is a fourth class in a pattern that started with two, and every additional adaptee you need to bridge costs you another one of these, that's nothing when you've got one legacy implementation, it adds up when you're wrapping five different vendors. Every call also picks up an extra hop: the client calls `adapter.get()`, the adapter calls `oldWebInterface.find()`, that's a stack frame and a virtual dispatch that wasn't there when the client called the old interface directly, usually not worth measuring but not free either. The sharper cost is semantic, not structural: `get()` and `find()` can line up perfectly on signature and still mean different things underneath. If `find()` throws on a missing element and the caller's `get()` contract promises null on a miss, the adapter either has to catch that exception and translate it (real logic, not a thin pass-through anymore) or it lets the exception leak through and the caller eats a contract violation it never agreed to. An adapter can make two interfaces look alike; it can't make two implementations behave alike, and the thinner you keep the adapter, the easier it is to forget that gap is still sitting there.
 
 ## When to reach for it
 

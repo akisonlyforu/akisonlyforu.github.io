@@ -15,7 +15,25 @@ If you've ever stared at a Spring `@Configuration` class, seen a `@Bean` method 
 
 Sometimes you want to control access to an object, whether that's delaying its creation until it's actually needed, checking whether it already exists before making another one, or adding a check before a call reaches it, and you want to do it without changing the real object's code or the caller's code.
 
-## How it's built
+## Without the pattern
+
+The obvious thing is to skip the indirection and just hand the client a `RealImage` directly, `Image display = new RealImage(filename)` wherever an image is needed, no `ProxyImage` in the middle. Since `RealImage`'s constructor calls `loadImageFromDisk()` immediately, that line pays the disk hit the moment it runs, whether or not `display()` ever actually gets called, and whether or not you're about to construct the exact same file again three lines later.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant RealImage
+    Client->>RealImage: new RealImage("diagram.png")
+    RealImage->>RealImage: loadImageFromDisk() (disk hit, unconditional)
+    Client->>RealImage: display()
+    Note over Client,RealImage: Client needs the same file again
+    Client->>RealImage: new RealImage("diagram.png")
+    RealImage->>RealImage: loadImageFromDisk() (disk hit, again)
+```
+
+Nothing about that call site can hold the load back until `display()` is actually needed, or notice the same filename was already loaded a second ago, or check whether the caller's even allowed to see it. The constructor doesn't know any of that's a concern, and by the time control returns to the client the expensive part has already happened. Every caller that wants deferred loading, caching, or an access check has to reimplement it inline, right next to its own `new RealImage(...)` call, because there's no seam between "get a reference to an `Image`" and "pay the cost of building one."
+
+## With the pattern
 
 The core example here is small and it's worth working through directly. `Image` is the service interface: `display()`. `RealImage` implements it, and its constructor calls a private `loadImageFromDisk()` immediately, so constructing a `RealImage` does the expensive work right away, whether you needed it yet or not.
 
@@ -43,6 +61,10 @@ classDiagram
     Image <|.. ProxyImage
     ProxyImage o-- RealImage
 ```
+
+## What it costs you
+
+`ProxyImage.display()` is one more hop than calling `RealImage.display()` directly, for every single call, cache hit or not, since it's the one checking `realImage == null` before it can even consider delegating. That hop only stays invisible as long as `ProxyImage`'s interface matches `RealImage`'s exactly, add a method to `RealImage` without adding it to `Image` (and `ProxyImage`), and a caller holding an `Image` reference just can't reach it, no compiler error pointing at the proxy, it's simply not there. The same risk runs the other way: if `ProxyImage.display()` ever drifted from what `RealImage.display()` actually does, that's a bug that only shows up when someone's holding the proxy instead of the real thing, and in a codebase full of `Image` references that's not obviously visible from the call site. And the whole reason this pattern is convenient, that the caller never sees the `loadImageFromDisk()` cost, cuts both ways, a caller who genuinely needed to know that first `display()` call was about to block on disk I/O now can't tell that from the type or the method signature. Same story for Spring's transactional proxies: hide the fact that a method call is opening a database transaction and you've also hidden the fact that it can fail in ways a plain method call can't.
 
 ## When to reach for it
 

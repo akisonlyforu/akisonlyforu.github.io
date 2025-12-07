@@ -15,7 +15,25 @@ The source code for this one is a little more interesting than the README lets o
 
 Building a new Car or Bus from scratch every time means running the full constructor path again, even when what you actually want is "the same as this one, but slightly different." And if you're handing callers a shared canonical instance instead, you risk one caller's mutation leaking into everyone else's copy.
 
-## How it's built
+## Without the pattern
+
+Without VehicleRegistry, the obvious way to hand someone a standard car is to just call `new Car(engine, wheels, color, doors)` wherever you need one, feeding it "V6", 4, "White", 4, whether those four values are hardcoded or pulled fresh from wherever the STANDARD_CAR spec actually lives. That's fine as long as a Car really is four cheap fields and nothing else. It stops being fine the moment building one means more than assigning into four slots, reading a trim spec off disk, validating a color code against a catalog, running whatever setup the real constructor needs before you get back a usable Vehicle. Every caller who wants "a standard car" pays that setup cost again, in full, to arrive at an object that's byte-for-byte identical to the one the last caller built five milliseconds earlier.
+
+```mermaid
+sequenceDiagram
+    participant C1 as Caller 1
+    participant C2 as Caller 2
+    participant Spec as Trim spec / catalog
+    C1->>Spec: load STANDARD_CAR spec
+    Spec-->>C1: engine, wheels, color, doors
+    C1->>C1: new Car(engine, wheels, color, doors)
+    C2->>Spec: load STANDARD_CAR spec
+    Spec-->>C2: engine, wheels, color, doors
+    C2->>C2: new Car(engine, wheels, color, doors)
+    Note over C1,C2: Same spec loaded twice, same setup cost paid twice,<br/>nothing about the second Car differs from the first
+```
+
+## With the pattern
 
 VehiclePrototype is the interface, two methods, cloneVehicle() and displayInfo(). Vehicle is an abstract class implementing it, holding the three shared fields, engine, wheels, color, with a regular constructor for building fresh and a second, protected copy constructor, Vehicle(Vehicle vehicle), that copies those three fields from an existing instance.
 
@@ -73,6 +91,10 @@ classDiagram
     Vehicle <|-- Bus
     VehicleRegistry ..> VehiclePrototype : manages
 ```
+
+## What it costs you
+
+The catch is that clone-by-copy-constructor only stays safe as long as every field is a primitive or an immutable reference, and that guarantee doesn't enforce itself, you have to re-verify it by hand every time a class grows a new field. Say Vehicle picked up a mutable field down the line, a `List<String> features`, say, and whoever added it wrote the copy constructor the way copy constructors get written when nobody's paying close attention: `this.features = vehicle.features;`. That compiles, the existing tests still pass, cloneVehicle() still returns something that looks like a Car. What it actually returns is a Car whose features field points at the exact same List object as the Car it was cloned from. Call getPrototype("STANDARD_CAR") twice, mutate features on one of the two Vehicles you get back, and the other one changes too, despite nobody touching it directly, because there was only ever one List, just two Vehicle objects both holding a reference to it. That's the whole deep-vs-shallow split in one sentence: copying the reference isn't copying the object, and a clone that quietly shares mutable state with its original isn't really a clone.
 
 ## When to reach for it
 

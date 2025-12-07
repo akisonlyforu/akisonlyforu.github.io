@@ -15,7 +15,24 @@ If you've ever built something that renders thousands of icons and noticed most 
 
 You need a large number of similar objects, and most of their state is actually identical across instances. Storing that identical state once per object is wasted memory that scales with object count instead of with the actual variety of data.
 
-## How it's built
+## Without the pattern
+
+The obvious thing is to skip the factory and the cache entirely, and let each `FileSystemItem` build its own icon in its constructor: `new FileIcon(fileType)` or `new FolderIcon(color)`, right there, one per item. That compiles fine, and every icon draws correctly. The problem is what it does to the object graph once you're past a handful of files. A `FileIcon` stores `type` and builds `image` as `"Image for " + type + " files"` in its own constructor, so a thousand `.txt` files means a thousand separate `FileIcon` objects, each carrying its own independently-allocated copy of the exact same `type` string and the exact same `image` string. Same story for folders keyed on `color`. You're not storing four file-type icons and three folder-color icons anymore, you're storing one heavyweight icon per file on disk, and the "same type, same image, same everything" state gets duplicated on every single instance instead of built once.
+
+Nothing about this is functionally wrong, it just means memory scales with file count instead of with the actual variety of icons in play, and those two numbers can be wildly different. Ten thousand files backed by four distinct images should cost you four images, not ten thousand.
+
+```mermaid
+flowchart TD
+    subgraph dup["One FileIcon object per file, same data every time"]
+        F1["FileSystemItem: report.txt<br/>new FileIcon('TXT')<br/>type='TXT', image='Image for TXT files'"]
+        F2["FileSystemItem: notes.txt<br/>new FileIcon('TXT')<br/>type='TXT', image='Image for TXT files'"]
+        F3["FileSystemItem: todo.txt<br/>new FileIcon('TXT')<br/>type='TXT', image='Image for TXT files'"]
+    end
+    F1 -. same data, different object .-> F2
+    F2 -. same data, different object .-> F3
+```
+
+## With the pattern
 
 `Icon` is the flyweight interface: `draw(int x, int y)`. Notice `x` and `y` are parameters, not fields, that's the extrinsic state, unique per usage, passed in at call time rather than stored on the flyweight.
 
@@ -62,6 +79,10 @@ classDiagram
     IconFactory ..> Icon
     FileSystemItem o-- Icon
 ```
+
+## What it costs you
+
+Splitting `Icon` into intrinsic state that lives on the shared object (`type`, `image`) and extrinsic state that gets passed into `draw()` on every call (`x`, `y`) isn't free, it's a design decision you have to get right up front, and the split doesn't always fall out cleanly from how the domain wants to be modeled. `FileIcon` and `FolderIcon` only work as shared, cached objects because nothing about them ever changes after the constructor runs, if `draw()` ever needed to mutate `image` based on something item-specific, every `FileSystemItem` pointing at that same cached `FileIcon` would start stepping on every other one, one caller's change leaking into another caller's icon with no exception thrown to tell you it happened. That's the trade: the shared flyweight has to be treated as immutable for as long as it lives in `iconCache`, and anything that's even slightly per-instance has to be pulled out of the object and threaded through as a parameter instead, which is why `draw(x, y)` carries arguments a non-shared `Icon` would never need, and why every caller of `IconFactory` has to remember that what `getFileIcon("TXT")` hands back isn't theirs alone.
 
 ## When to reach for it
 

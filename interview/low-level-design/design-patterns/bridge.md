@@ -15,7 +15,36 @@ If you've ever started sketching out a class hierarchy and realized halfway thro
 
 You've got two dimensions of variation that both need to grow independently. Every time inheritance is the tool you reach for in this situation, you get a class per combination, and every new vehicle type or every new workshop operation multiplies the class count instead of adding to it.
 
-## How it's built
+## Without the pattern
+
+The instinct that gets you into trouble is folding both axes into one inheritance tree. Say you skip the `Workshop` interface entirely and just give `Vehicle` an abstract `performOperation()`, letting each vehicle type override it per operation it needs. Now `Car` needs a produce step, an assemble step, a paint step, and an inspect step, and since a single override can't cleanly be "four different methods depending on context," you end up carving out a subclass per operation instead: `CarProduce`, `CarAssemble`, `CarPaint`, `CarInspect`. Fine, that's one vehicle handled. Then `Bike` needs the same four operations, so you write `BikeProduce`, `BikeAssemble`, `BikePaint`, `BikeInspect`, and by the time `Truck` and `Motorcycle` show up you've written sixteen classes to express what's really a 4-by-4 grid of two independent lists.
+
+```mermaid
+classDiagram
+    class Vehicle {
+        <<abstract>>
+    }
+    Vehicle <|-- CarProduce
+    Vehicle <|-- CarAssemble
+    Vehicle <|-- CarPaint
+    Vehicle <|-- CarInspect
+    Vehicle <|-- BikeProduce
+    Vehicle <|-- BikeAssemble
+    Vehicle <|-- BikePaint
+    Vehicle <|-- BikeInspect
+    Vehicle <|-- TruckProduce
+    Vehicle <|-- TruckAssemble
+    Vehicle <|-- TruckPaint
+    Vehicle <|-- TruckInspect
+    Vehicle <|-- MotorcycleProduce
+    Vehicle <|-- MotorcycleAssemble
+    Vehicle <|-- MotorcyclePaint
+    Vehicle <|-- MotorcycleInspect
+```
+
+The tell isn't the number sixteen itself, it's what happens when either axis grows by one. Add a fifth vehicle, `Bus`, and you're not writing one new class, you're writing four, one per existing operation. Add a fifth operation, `Repair`, and you're not writing one new class either, you're writing four, one per existing vehicle. The two axes were never actually coupled, a workshop doesn't care what it's servicing and a vehicle doesn't care how it's serviced, but jamming them into a single hierarchy makes every future addition on either side pay for both.
+
+## With the pattern
 
 `Workshop` is the implementor interface: `work()` and `getWorkshopType()`. `Produce`, `Assemble`, `Paint`, and `Inspect` are the concrete implementors, each just printing what it does and naming itself.
 
@@ -78,6 +107,10 @@ classDiagram
     Vehicle <|-- Motorcycle
     Vehicle o-- Workshop
 ```
+
+## What it costs you
+
+Bridge fixes the explosion, but it isn't free. You're now maintaining two hierarchies instead of one, `Vehicle` and its subclasses on one side, `Workshop` and its subclasses on the other, and reasoning about a `Car` built with `Paint` and `Inspect` means holding both trees in your head at once instead of just one. Every `manufacture()` call also pays an indirection hop the naive version didn't have: `performWorkshop1()` doesn't do the work itself, it calls `workshop1.work()` through a field reference, so you're chasing composition instead of hitting a method directly on the object. And it's premature if the implementation side never actually varies, if every vehicle in your system always gets the same four workshop steps in the same order, splitting `Workshop` out as its own hierarchy just gives you two class trees to update every time you touch what used to be one thing. Bridge earns its cost when both axes genuinely move independently, not because two hierarchies sounds more architecturally sound than one.
 
 ## When to reach for it
 

@@ -15,7 +15,23 @@ I've written the constructor with six optional parameters, most of them ints def
 
 Some objects have a mix of required and optional fields, and neither telescoping constructors (one overload per combination of optional params) nor a plain no-args constructor plus setters (which gives up immutability and lets the object exist half-configured) is a good answer. You want required fields enforced at compile time, optional fields easy to skip, and an object that can't be mutated once it exists.
 
-## How it's built
+## Without the pattern
+
+The naive version is a single constructor that takes every field, required and optional, as positional arguments: Vehicle(String engine, int wheel, int airbags). It compiles, it works, and it's fine right up until wheel and airbags are both plain ints and a caller transposes them. new Vehicle("V8", 2, 4) type-checks perfectly, the compiler has no idea you meant 4 wheels and 2 airbags, it just sees three arguments matching three parameters in order. You get a car with two wheels and four airbags, and nothing about the build tells you that's wrong.
+
+```mermaid
+sequenceDiagram
+    participant Caller
+    participant Vehicle
+    Caller->>Vehicle: new Vehicle("V8", 2, 4)
+    Note over Caller,Vehicle: Caller meant wheel=4, airbags=2
+    Vehicle->>Vehicle: wheel = 2, airbags = 4
+    Note over Caller,Vehicle: Compiles clean, no exception thrown,<br/>a two-wheeled car with four airbags ships as-is
+```
+
+Add a couple more optional fields, and the usual next move is telescoping constructor overloads, Vehicle(engine, wheel), Vehicle(engine, wheel, airbags), Vehicle(engine, wheel, airbags, color), each one covering a different combination of optionals. That doesn't fix the ordering problem, it just multiplies the number of places you can get the order wrong, and half the overloads exist only to let you skip parameters you don't care about.
+
+## With the pattern
 
 Vehicle has two required fields, engine and wheel, and one optional field, airbags. Its constructor is private and takes a VehicleBuilder, not raw values, so the only way to get a Vehicle is through the builder.
 
@@ -50,6 +66,10 @@ classDiagram
     VehicleDirector ..> VehicleBuilder : uses
     VehicleBuilder ..> Vehicle : builds
 ```
+
+## What it costs you
+
+You've now got a whole second class, VehicleBuilder, that exists purely to hold the same three fields Vehicle already has, plus a setter and a build() method to maintain in lockstep with whatever Vehicle's constructor expects. Construction is two steps instead of one, build the builder with its required fields, chain the optional setters, then call build() to actually get a Vehicle, versus a single new Vehicle(engine, wheel, airbags) call. For a class with exactly one optional field, that's real ceremony bought against a fairly small ordering mistake. If Vehicle stays at three fields forever, a plain constructor with a comment reminding callers which int is which would probably have been enough; the builder starts paying for itself once the field count or the optional-combination count grows past what you'd want to track in your head.
 
 ## When to reach for it
 

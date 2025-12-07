@@ -15,7 +15,22 @@ I once chased a bug where a config object had all the right values in local test
 
 Some things in a system genuinely need to exist exactly once. A ParkingLot only makes sense if every Level and Slot resolves against the same instance, two threads racing to create it shouldn't end up tracking two separate sets of slots. Same story for a shared ID generator or a logger writing to one file. The problem isn't "how do I make a class instantiate only once" (that part's easy), it's making the lazy, first-call initialization safe when multiple threads hit getInstance() before the instance exists.
 
-## How it's built
+## Without the pattern
+
+The obvious thing is a plain constructor, and letting every caller do `new Logger()` when it needs one. That works fine right up until two callers on two threads both need it around the same moment, and both find no instance yet, and both build one.
+
+```mermaid
+sequenceDiagram
+    participant T1 as Thread 1
+    participant T2 as Thread 2
+    T1->>T1: new Logger() → instance A (fd 7)
+    T2->>T2: new Logger() → instance B (fd 8)
+    Note over T1,T2: Two Logger objects, two open file handles,<br/>one log stream torn in half between them
+```
+
+Nothing crashes. Nothing throws. You just quietly have two loggers writing to two file descriptors, or two ParkingLots each convinced they own the only copy of Level 3, and whichever one a given caller happened to grab depends on a race you didn't know you were running.
+
+## With the pattern
 
 The repo has two versions living side by side, SingletonWithNoParameter and SingletonWithParameter.
 
@@ -40,6 +55,10 @@ classDiagram
         +getData() String
     }
 ```
+
+## What it costs you
+
+You traded a five-second `new Logger()` for a private constructor, a volatile field, and a synchronized block that's easy to get subtly wrong, drop the volatile and the whole thing still compiles, still passes every single-threaded test, and only breaks under real concurrent load, which is the worst possible time to find out. It's also a global by another name: anything holding a reference to the singleton can be reached from anywhere, which makes unit tests harder (you can't just construct a fresh one per test without resetting static state) and hides a dependency that a constructor parameter would have made obvious. Use it because the correctness problem is real, not because "only one" sounds tidy.
 
 ## When to reach for it
 
