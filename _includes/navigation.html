@@ -36,6 +36,7 @@
   height: 56px;
   display: flex;
   align-items: center;
+  margin-top: 0 !important;
 }
 
 .nav-container {
@@ -284,7 +285,6 @@ document.addEventListener('DOMContentLoaded', function() {
       e.stopPropagation();
       this.classList.toggle('active');
       mainMenu.classList.toggle('active');
-      console.log('Menu toggled');
     });
 
     dropdowns.forEach(dropdown => {
