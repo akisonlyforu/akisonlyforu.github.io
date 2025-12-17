@@ -29,22 +29,6 @@ When not doing Data or ML Platform stuff, I spent quite a bit of time working wi
 
 Previous to Canva I worked at [Zendesk](https://www.zendesk.com/) on their [Answer Bot](https://www.zendesk.com/answer-bot/) machine learning product, and at [Atlassian](https://www.atlassian.com) as an application developer intern in their reliability/monitoring team.
 
-<div id="stats" class="hidden">
-
-<h3 id="dashboard"><code>#dashboard</code></h3>
-
-<h2>Just finished.</h2>
-
-<p>Curious what I'm reading? Here's my most recent reads, updating daily. And my <a href="https://www.goodreads.com/user/show/88184044-jonathon-belotti)" target="_blank" rel="noopener noreferrer">Goodreads profile</a> has more history.</p>
-
-<div id="recent-finished-books"></div>
-
-<h2>Top tracks.</h2>
-
-<p>Curious what I'm currently listening to? Here's my top tracks on Spotify, updating daily.</p>
-
-<ol id="top-spotify-tracks"></ol>
-
 </div>
 
 <script>
@@ -59,47 +43,6 @@ function htmlToElement(html) {
     template.innerHTML = html;
     return template.content.firstChild;
 }
-
-function populateDashboardHTML(data) {
-    const topSpotifyTracksList = document.querySelector('#top-spotify-tracks');
-    data.spotify.forEach(track => {
-        topSpotifyTracksList.appendChild(htmlToElement(`
-            <li>
-                <a target="_blank" rel="noopener noreferrer" href="${track.link}"><strong>${track.name}</strong></a> 
-                <p>${track.artist}</p>
-            </li>
-        `));
-    });
-
-    const recentFinishedBooks = document.querySelector('#recent-finished-books');
-    data.goodreads.slice(0, 3).forEach(book => {
-        recentFinishedBooks.appendChild(htmlToElement(`
-            <a target="_blank" rel="noopener noreferrer" class="book-item" target="_blank" rel="noopener noreferrer" href="${book.link}">
-            <div class="cover-container">
-                <img class="grow-me" src="${book.cover_image_link}">
-            </div>
-            <div class="book-info">
-                <h4>${book.title}</h4>
-                <p>${book.authors[0]}</p>
-            </div>
-            </a>
-        `));
-    });
-}
-
-fetch('https://thundergolfer--thundergolferdotcom-about-page-web.modal.run')
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    return response.json();
-  })
-  .then((data) => {
-    populateDashboardHTML(data);
-    /* Reveal the now populated stats section. */
-    document.getElementById("stats").classList.remove("hidden");
-  });
 
 </script>
 

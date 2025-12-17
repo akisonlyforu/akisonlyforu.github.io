@@ -1,6 +1,6 @@
 # akisonlyforu.github.io
 
-Just my website. The theme is [thundergolfer/**junior-theme**](https://github.com/thundergolfer/junior-theme)
+Just my website.
 
 ### What it looks like 
 
