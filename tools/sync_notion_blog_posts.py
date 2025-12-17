@@ -52,4 +52,3 @@ def retrieve_full_page(page_id: str):
 blog_listing_page_id = "532ddb26-001e-4f2f-a7ec-38fef6081dda"
 children = retrieve_full_page(page_id=blog_listing_page_id)
 import pdb; pdb.set_trace()
-# TODO(Jonathon): Implement 'Notion children' -> Jekyll Markdown Post logic
