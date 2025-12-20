@@ -45,7 +45,7 @@
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 0 1rem;
   height: 100%;
 }
@@ -58,9 +58,11 @@
   font-family: monospace;
   letter-spacing: -0.5px;
   margin-right: auto;
+  margin-left: 0;
   display: flex;
   align-items: center;
   height: 24px;
+  flex: 0 0 auto;
 }
 
 .site-logo:hover {
@@ -74,6 +76,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  margin-left: auto;
 }
 
 .nav-item {
@@ -96,6 +99,38 @@
 
 .nav-link:hover {
   color: #000;
+}
+
+.nav-link.disabled {
+  color: #999;
+  cursor: not-allowed;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-link.disabled:hover {
+  color: #999;
+}
+
+.nav-link.disabled::after {
+  content: "Under Construction";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.nav-link.disabled:hover::after {
+  opacity: 1;
 }
 
 .dropdown-content {
@@ -230,23 +265,15 @@
     font-weight: 500;
   }
 
-  .dropdown-content {
+  .nav-link.disabled::after {
     position: static;
-    box-shadow: none;
-    padding: 0.75rem 0;
-    display: none;
-    text-align: center;
-    background: transparent;
-  }
-
-  .dropdown.active .dropdown-content {
     display: block;
-  }
-
-  .dropdown-content a {
-    padding: 0.5rem;
-    font-size: 1.2rem;
-    color: #666;
+    transform: none;
+    font-size: 1rem;
+    background: none;
+    color: #999;
+    padding: 0;
+    opacity: 1;
   }
 
   .menu-icon, 
