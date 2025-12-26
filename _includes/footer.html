@@ -11,7 +11,7 @@
         </p>
       </div>
       <div class="footer-quote">
-        <p id="daily-thought"></p>
+        <p id="daily-thought" style="font-size: 14.4px;"></p>
       </div>
     </div>
   </div>
@@ -156,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const thoughtElement = document.getElementById('daily-thought');
   if (thoughtElement) {
     thoughtElement.textContent = todaysThought;
+    thoughtElement.style.fontSize = "14.4px";
   }
 });
 </script>
