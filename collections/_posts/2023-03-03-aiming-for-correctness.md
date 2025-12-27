@@ -10,7 +10,7 @@ categories: ddia data-integrity correctness distributed-systems
 
 Building **correct systems**—those that produce well-defined, reliable outcomes even in the presence of faults—is among the most significant challenges in distributed systems. **Stateful systems**, like databases, are particularly tricky since they are designed to persist information long-term, making errors difficult to reverse. Traditional tools like ACID transactions and consensus protocols are foundational but insufficient for all modern data needs. This subchapter explores practical approaches to correctness with a focus on fault tolerance, immutable dataflows, and balancing constraints.
   
----  
+---
 
 ### **The End-to-End Argument for Databases**
 
@@ -21,7 +21,7 @@ Simply using a robust data system does not guarantee correctness if faults arise
 
 **End-to-End Integrity Checking** solves this problem by performing validation across the entire system pipeline. For instance, immutable data events along with cryptographic verifications ensure correctness at multiple stages.
   
----  
+---
 
 ### **Beyond Transactions: Immutability and Fault Tolerance**
 
@@ -36,7 +36,7 @@ Advantages include:
 1. Reprocessing data to recover from bugs becomes straightforward.
 2. Strong audibility and easier debugging since every state change has a traceable history.
 
----  
+---
 
 ### **Timeliness vs. Integrity**
 
@@ -47,7 +47,7 @@ Advantages include:
 #### Practical Trade-offs
 Applications like credit card processing often prioritize **data integrity** (e.g., accurate balances) over **timeliness**. Events like delayed transaction posting are less critical than ensuring transactions do not corrupt accounts.
   
----  
+---
 
 ### **Coordination-Avoiding Systems**
 
@@ -58,7 +58,7 @@ Distributed systems often rely on strong coordination through protocols like ato
 2. High-cost coordination can be deferred until absolutely necessary. For example:
     - A selling platform may permit oversubscribing inventory temporarily but resolve violations during nightly audits.
 
----  
+---
 
 ### **Trust, but Verify: Auditing and Correctness**
 
@@ -68,7 +68,7 @@ Even highly reliable systems are susceptible to faults, whether from undetectabl
 - **End-to-End Data Validation**: Error-checking extends across the entire pipeline, verifying transformations from input to output. Logs or materialized views can be reprocessed to confirm integrity.
 - **Redundant Computation**: Running parallel systems (e.g., real-time and batch pipelines) over the same data provides a sanity check for results.
 
----  
+---
 
 ### **Conclusion**
 

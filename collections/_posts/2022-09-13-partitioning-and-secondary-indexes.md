@@ -10,7 +10,7 @@ categories: ddia partitioning secondary-indexes distributed-databases
 
 In distributed database systems, **secondary indexes** are crucial for queries involving columns or fields other than the primary key. However, the presence of secondary indexes complicates partitioning, because secondary indexes don’t map as cleanly to partitions as primary keys do. This post explores the challenges and solutions for efficiently managing secondary indexes in partitioned databases.
   
----  
+---
 
 ### **Document-Based Partitioning of Secondary Indexes**
 
@@ -32,7 +32,7 @@ Imagine a website for selling used cars:
 3. **Known Implementations**:    
    Systems like **MongoDB**, **Cassandra**, **Elasticsearch**, and **SolrCloud** use document-partitioned indexes due to their write efficiency, though reads can be expensive.
 
----  
+---
 
 ### **Term-Based Partitioning of Secondary Indexes**
 
@@ -56,7 +56,7 @@ Alternatively, secondary indexes can be structured as **global indexes**, where 
 2. **Consistency Maintenance**:
     - Updates to global indexes often occur asynchronously, which can create temporary inconsistencies.
 
----  
+---
 
 ### **Comparing Document-Based vs. Term-Based Partitioning**
 
@@ -67,7 +67,7 @@ Alternatively, secondary indexes can be structured as **global indexes**, where 
 | **Complexity**         | Simpler to implement; lower maintenance.            | Higher complexity; more effort to maintain.     |  
 | **Examples**           | MongoDB, Elasticsearch (default indexing model).    | Used in global indexing setups like DynamoDB.   |  
    
----  
+---
 
 ### **Practical Considerations**
 
@@ -78,7 +78,7 @@ Alternatively, secondary indexes can be structured as **global indexes**, where 
 2. **Hybrid Approaches**:
     - To improve both read and write performance, some systems implement hybrid strategies, using **document-based indexes** by default and selectively creating **term-based global indexes** for specific fields or frequent queries.
 
----  
+---
 
 ### **Conclusion**
 

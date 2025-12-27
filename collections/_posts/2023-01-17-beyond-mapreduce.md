@@ -10,7 +10,7 @@ categories: ddia batch-processing distributed-systems dataflow
 
 While MapReduce was a defining breakthrough in distributed batch processing, its limitations have prompted the development of alternatives tailored for efficiency and flexibility. Modern engines such as Spark, Tez, and Flink build on the principles of MapReduce but improve execution models, reduce latency, and simplify iterative operations. These advancements enable faster performance and support specialized use cases like machine learning or graph processing.
   
----  
+---
 
 ### **Materialization of Intermediate State**
 
@@ -25,7 +25,7 @@ In MapReduce, each job is independent, reading inputs from and writing outputs t
 3. **Overhead of Temporary Data Replication**
    - Intermediate datasets written to the distributed filesystem are replicated across several nodes. While providing durability, this process consumes significant I/O bandwidth and disk space for transient information.
 
----  
+---
 
 ### **Dataflow Engines as a Solution**
 
@@ -40,7 +40,7 @@ Modern systems such as Spark, Tez, and Flink adopt **dataflow execution** engine
 3. **Immediate Downstream Processing**
    - Operators can begin processing as soon as their upstream dependencies produce output, eliminating the need to wait for entire job phases to complete.
 
----  
+---
 
 ### **Iterative Graph Processing**
 
@@ -53,7 +53,7 @@ Traditional MapReduce struggles with algorithms that require iterative execution
 2. **Fault Tolerance in Iterative Processing**
    - Frameworks checkpoint the state of each iteration, enabling selective recovery of failed tasks without rerunning the entire pipeline.
 
----  
+---
 
 ### **High-Level APIs and Declarative Query Languages**
 
@@ -69,7 +69,7 @@ Building raw MapReduce jobs is labor-intensive and error-prone. Recognizing this
 3. **Interactive Exploration**
    - Incremental interfaces (e.g., Spark's REPL) allow developers to run partial queries, inspect outputs, and iteratively refine logic during development.
 
----  
+---
 
 ### **Applications Across Domains**
 
@@ -79,7 +79,7 @@ Modern batch processing frameworks are increasingly specialized for specific dom
 2. **Graph Analysis**
    - Use cases like recommendation engines or social network analysis require iterative graph computations, which dataflow engines execute efficiently.
 
----  
+---
 
 ### **Conclusion**
 

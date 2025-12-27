@@ -10,7 +10,7 @@ categories: ddia partitioning routing distributed-databases
 
 In a distributed database, after partitioning data across multiple nodes, the system faces a new challenge—**how does a client know which node to interact with for a specific request?** Since the partition-to-node mapping is dynamic due to rebalancing or node additions/removals, request routing becomes a crucial aspect of managing distributed systems.
    
----  
+---
 
 ### **Approaches to Request Routing**
 
@@ -50,7 +50,7 @@ Representation:
     - Higher complexity at the client level.
     - Clients must be regularly updated to reflect partition movements.
 
----  
+---
 
 ### **Keeping Track of Node Assignments**
 
@@ -69,7 +69,7 @@ Mapping handled by coordination services is essential for:
 - Cluster rebalancing during node failure or expansion.
 - Synchronizing consistent views among participants for accurate routing.
 
----  
+---
 
 ### **Challenges in Dynamic Request Routing**
 
@@ -84,7 +84,7 @@ Even with well-designed routing strategies, managing the following concerns rema
 - **Routing Failures**
     - A dependency on a centralized routing tier (in architecture 2) can create potential single points of failure unless the router is itself distributed redundantly.
 
----  
+---
 
 ### **Conclusion**
 

@@ -8,7 +8,7 @@ categories: sahp modularity architecture
 
 Architectural modularity is at the heart of scalable and maintainable systems. Breaking down a monolithic system into modular components not only aligns technology with business needs but also enhances agility. Let’s explore the subdrivers of modularity and how they contribute to modern resilient architectures.
    
----  
+---
 
 ## What Drives Modularity
 
@@ -21,7 +21,7 @@ While modularity sounds ideal, systems are seldom fragmented without reason. The
 
 Each characteristic is mutually reinforcing, making it easier for organizations to respond quickly to shifting market demands.
    
----  
+---
 
 ### 1. Maintainability
 
@@ -29,9 +29,9 @@ Maintainability refers to the ease of making changes, such as bug fixes or updat
 #### Key Factors:
 - Component size and complexity directly affect how maintainable a system is.
 - System modifications in monolithic systems demand widespread rewrites, hampering efficiency.    
-  Using modular architectures, domain partitioning isolates functionality for better independent updates<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 1 </strong></span></sup>.
+  Using modular architectures, domain partitioning isolates functionality for better independent updates.
 
----  
+---
 
 ### 2. Testability
 
@@ -40,9 +40,9 @@ Test automation is vital for iterative releases. Architectural modularity improv
 - Smaller test suites enable developers to pinpoint bugs without affecting the entire system.
 - Modular systems allow quicker validation of isolated changes.
 
-For example, changing a service's logic won’t require code freezes or running irrelevant test cases<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 2 </strong></span></sup>.
+For example, changing a service's logic won’t require code freezes or running irrelevant test cases.
    
----  
+---
 
 ### 3. Deployability
 
@@ -50,27 +50,27 @@ Deployment impacts how quickly organizations deliver new features to end users.
 - **Frequent Deployments**: Modular architectures enable incremental releases, minimizing risks.
 - **Reduced Risk**: Small, focused changes minimize dependencies sprawling across systems.
 
-Independent deployments ensure minimal downtime while resolving bugs or adding functionality<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 3 </strong></span></sup>.
+Independent deployments ensure minimal downtime while resolving bugs or adding functionality.
    
----  
+---
 
 ### 4. Scalability
 
 Scalability measures how systems support increased traffic without slowing operations. For heavily transactional systems like concert ticket sales involving significant spikes, modularity isolates scalability bottlenecks. Here’s how:
 - Scaled services operate independently; instance access prevents infrastructure overspending.
 
-The concept of elasticity complements cost optimization<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 4 </strong></span></sup>.
+The concept of elasticity complements cost optimization.
   
----  
+---
 
 ### 5. Fault Tolerance
 
 Fault Tolerance addresses maintaining operational continuity amid failures. Distributed systems, by zoning crashes, avoid systemic downtimes.
 - Having asynchronous service retries enables smoother recoveries.
 
-Notably, monolithic inconsistencies shape operational risks<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 5 </strong></span></sup>.
+Notably, monolithic inconsistencies shape operational risks.
    
----  
+---
 
 ## Conclusion
 

@@ -8,7 +8,7 @@ categories: data-models databases ddia
 
 When dealing with data models, query languages play a significant role in how efficiently we can interact with data. They dictate how we retrieve, manipulate, and process the stored information. In this post, we explore two primary categories: **imperative** and **declarative** query languages, along with examples to understand their nuances.
 
----  
+---
 
 ### **Imperative vs. Declarative Approaches**
 
@@ -17,7 +17,7 @@ The main distinction between imperative and declarative query languages lies in 
 - **Imperative:** Describes *how* to achieve a goal step-by-step.
 - **Declarative:** Specifies *what* you want without detailing the execution process.
 
----  
+---
 
 ### **Examples of Imperative Querying**
 
@@ -43,7 +43,7 @@ Conceptual Flow:
 [Animal List] --> [Filter: Sharks] --> [Result: [Shark_1, Shark_2 ...]]  
 ```  
    
----  
+---
 
 ### **Declarative Query Example: SQL**
 Declarative query languages, such as SQL, abstract away these steps, focusing only on the desired outcome:
@@ -57,7 +57,7 @@ SELECT * FROM animals WHERE family = 'Sharks';
 1. Optimized Execution: SQL relies on query optimizers to determine the best plan for retrieving data.
 2. Independence: The database takes care of indexing or access paths, allowing performance improvements behind the scenes without modifying the query syntax.
 
----  
+---
 
 ### **Declarative Querying on the Web**
 
@@ -85,7 +85,7 @@ Illustration of Styling Workflow:
 [List Item with "selected" class] -> [Highlight: Applied Styles]  
 ```  
    
----  
+---
 
 ### **MapReduce Querying**
 
@@ -106,7 +106,7 @@ db.observations.mapReduce(
 );  
 ```  
    
----  
+---
 
 ### **Comparative Diagram**
 A high-level difference between **imperative** and **declarative** models in query optimization:
@@ -123,13 +123,13 @@ A high-level difference between **imperative** and **declarative** models in que
 [User Describes Result] -> [DBMS Optimizer] -> [Efficient Execution]  
 ```  
    
----  
+---
 
 ### **Distributed Querying: Parallelism**
 
 Declarative query languages excel when handling parallel computations. Since they focus on *what* needs to be retrieved rather than *how*, they facilitate the distribution of workloads across multiple cores/machines, unlocking performance on modern hardware architectures.
   
----  
+---
 
 ### **Graph Querying: Cypher and SPARQL**
 
@@ -147,7 +147,7 @@ Graph Representation in Cypher:
 [Person] -> [:BORN_IN] -> [Location] <- [:WITHIN*0..]-(USA)  
 ```  
    
----  
+---
 
 ### **Conclusions**
 

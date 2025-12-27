@@ -8,7 +8,7 @@ categories: storage analytics databases ddia
 
 Managing massive datasets for analytics presents unique challenges, and column-oriented storage emerges as a groundbreaking approach to tackle them. Unlike traditional row-oriented systems, columnar databases store data by columns rather than rows, optimizing it for analytical workloads. This post dives into the mechanics and benefits of column-oriented storage systems, explaining why they are fundamental for modern data warehouses.
    
----  
+---
 
 ### **What is Column-Oriented Storage?**
 
@@ -31,7 +31,7 @@ In a **row-oriented database**, this query requires fetching entire rows, even t
 
 In **column-oriented storage**, only the relevant columns are loaded, dramatically reducing the data volume processed.
    
----  
+---
 
 ### **Compression and Storage Efficiency**
 
@@ -48,7 +48,7 @@ Country:  [USA] [USA] [FR] [USA]
 Bitmaps:  100   100   010  100  → Sparse Compression Applied.  
 ```  
    
----  
+---
 
 ### **Vectorized Processing: Turbocharging Analytics**
 
@@ -59,7 +59,7 @@ Column stores enhance CPU utilization through vectorized processing:
 
 This efficient memory access significantly reduces processing time in large-scale queries.
    
----  
+---
 
 ### **Sorted Column Storage for Optimized Queries**
 
@@ -67,7 +67,7 @@ Columnar systems further improve query performance by sorting column data:
 1. Sorting allows query optimizers to scan only subsets of rows meeting specific sorted criteria.
 2. Compression is enhanced (e.g., sorting dates helps group similar values, maximizing run-length encoding).
 
----  
+---
 
 ### **Challenges with Writes in Column-Oriented Systems**
 
@@ -77,7 +77,7 @@ While excellent for reads, writes in column-oriented databases can be challengin
     - Writes are first logged into memory (row format).
     - Periodic compaction merges new writes into columnar form.
 
----  
+---
 
 ### **Applications of Column-Oriented Databases**
 
@@ -86,7 +86,7 @@ Column-oriented databases like **Apache Parquet**, **Google BigQuery**, and **Sn
 - Customer segmentation analysis.
 - Log and event data aggregation.
 
----  
+---
 
 ### **Conclusion**
 

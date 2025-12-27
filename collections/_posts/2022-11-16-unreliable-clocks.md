@@ -12,7 +12,7 @@ Time is fundamental in modern software applications, used for everything from me
 
 Understanding the limitations of hardware clocks and the mechanisms of clock synchronization is critical to designing robust distributed systems.
   
----  
+---
 
 ### **Monotonic vs. Time-of-Day Clocks**
 
@@ -29,7 +29,7 @@ Understanding the limitations of hardware clocks and the mechanisms of clock syn
 - Limitations:
    - Does not correspond to absolute wall-clock time, so events cannot be ordered across nodes.
 
----  
+---
 
 ### **Clock Synchronization Challenges**
 
@@ -41,7 +41,7 @@ Synchronizing clocks across distributed systems is fraught with difficulties:
 3. **Leap Seconds**:
    - Occasionally, a minute will have 59 or 61 seconds (to adjust Earth’s rotation), causing timing inaccuracies unless applications are specifically designed to handle them.
 
----  
+---
 
 ### **Relying on Synchronized Clocks**
 
@@ -50,7 +50,7 @@ Using synchronized clocks in distributed systems can be problematic:
 2. The confidence interval of clock readings means precise time-based operations (e.g., resolving conflicts) must consider uncertainties in timestamps.
 3. If a node’s clock drifts too far from others’, it might be silently removed from the cluster to prevent data corruption—requiring constant monitoring of clock offsets.
 
----  
+---
 
 ### **Safer Alternatives to Physical Clocks**
 
@@ -63,7 +63,7 @@ Using synchronized clocks in distributed systems can be problematic:
 3. **TrueTime API**:
    - Used in Google Spanner, TrueTime returns a time interval `[earliest, latest]` rather than a single timestamp, enabling the system to account for uncertainties in clock values.
 
----  
+---
 
 ### **Key Use Cases of Clocks**
 
@@ -72,7 +72,7 @@ Distributed systems depend on clocks for critical operations:
 2. **Task Scheduling**: Time-of-day clocks define execution times for scheduled processes.
 3. **Global State Consistency**: Systems like snapshot isolation rely on synchronized clocks to ensure consistent snapshots during distributed database operations.
 
----  
+---
 
 ### **Conclusion**
 

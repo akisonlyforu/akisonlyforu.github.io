@@ -10,7 +10,7 @@ categories: ddia batch-processing unix-tools system-design
 
 Traditionally, batch processing systems take large amounts of input data, perform transformations or computations, and generate results as output. Systems like these focus primarily on throughput, as operations are often scheduled periodically and do not require immediate results. One of the simplest yet highly effective tools for batch processing comes from the Unix ecosystem, whose philosophy and utilities remain relevant even amidst modernized distributed systems.
    
----  
+---
 
 ### **Leveraging Unix Tools for Log Analysis**
 
@@ -69,7 +69,7 @@ cat /var/log/nginx/access.log |
 
 By chaining these lightweight Unix commands, terabytes of log files can be processed in mere seconds.
    
----  
+---
 
 ### **The Unix Philosophy and Its Relevance**
 
@@ -84,7 +84,7 @@ The power of Unix tools lies in their adherence to a minimalist philosophy:
     - Output from any intermediate stage can be inspected without disrupting the pipeline.
     - Input files are treated as immutable, reducing accidental overwrites.
 
----  
+---
 
 ### **Sorting vs. In-Memory Aggregation**
 
@@ -109,7 +109,7 @@ top5.each { |count, url| puts "#{count} #{url}" }
 
 This script performs the same task but relies on storing all unique URLs in memory. While efficient for small datasets, the Unix pipeline remains preferable for larger workloads due to its disk-backed sorting capabilities.
    
----  
+---
 
 ### **Lessons for Modern Distributed Systems**
 
@@ -123,7 +123,7 @@ Unix's design philosophy has influenced modern distributed systems in profound w
 3. **Resiliency Through Immutability**:    
    Inputs are treated as immutable files, allowing reprocessing or debugging without fear of corruption—a foundational idea mirrored in distributed batch jobs.
 
----  
+---
 
 ### **Conclusion**
 

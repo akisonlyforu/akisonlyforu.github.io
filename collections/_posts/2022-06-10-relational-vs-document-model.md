@@ -8,7 +8,7 @@ categories: data-models databases ddia
 
 In the ever-expanding field of data management, the decision to use either the **Relational Model** or the **Document Model** can have a profound impact on system design and efficiency. This post explores their contrasts, supplemented with examples and diagrams to make the differences more tangible.
    
----  
+---
 
 ### **Schema Flexibility**
 
@@ -59,7 +59,7 @@ ALTER TABLE Users
 ADD COLUMN address VARCHAR(255);  
 ```  
    
----  
+---
 
 ### **Performance and Locality**
 
@@ -104,7 +104,7 @@ The results would require combining multiple sets of data:
 +----------------+------------------+------------+  
 ```  
    
----  
+---
 
 ### **Handling Data Relationships**
 
@@ -145,7 +145,7 @@ In document databases, relationship data is often embedded to reduce joins:
 
 However, denormalization may increase redundancy and complexities if jobs are related to multiple users.
    
----  
+---
 
 ### **Image Illustrations**
 
@@ -172,14 +172,14 @@ However, denormalization may increase redundancy and complexities if jobs are re
 +-------------------------------------------+  
 ```  
    
----  
+---
 
 ### **Use Case Suitability**
 
 - **Document Model:** Ideal for loosely coupled, hierarchical data such as content management systems, catalogs, or social media profiles.
 - **Relational Model:** Preferred for highly interconnected data structures like financial systems or inventory management where consistency and normalization are critical.
 
----  
+---
 
 ### **Convergence of Models**
 
@@ -206,7 +206,7 @@ db.users.aggregate([
 ]);  
 ```  
    
----  
+---
 
 ### **Final Thoughts**
 

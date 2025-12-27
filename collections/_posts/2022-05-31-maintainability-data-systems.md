@@ -1,16 +1,16 @@
----  
+---
 layout:     post  
 title:      Building Maintainable Software Systems  
 date:       2022-05-31  
 summary:    A discussion on how to ensure maintainability in data systems by focusing on operability, simplicity, and evolvability.  
 categories: maintainability ddia
----  
+---
    
 Software lifespan doesn’t end at deployment—it begins there. Over time, systems accumulate changes, adapt to new requirements, and scale to meet growing demands. This is why **maintainability**, as described in *Designing Data-Intensive Applications*, is vital for creating systems that engineers can continue to work on productively.  
   
 In this post, we tackle what maintainability truly means, its three foundational pillars, and how to achieve it in large-scale data systems.  
   
----  
+---
   
 ## **Maintainability: A Mission-Critical Requirement**  
   
@@ -21,7 +21,7 @@ In this post, we tackle what maintainability truly means, its three foundational
   
 While reliability and scalability are essential for meeting functional requirements, maintainability ensures sustainability and adaptability over time. Poor maintainability leads to inefficiencies, longer downtimes, and frustration among engineers.  
   
----  
+---
   
 ## **The Three Pillars of Maintainability**  
   
@@ -49,7 +49,7 @@ Effective operability means making life easier for the people managing software 
   
 > **Key Takeaway**: Good operability doesn’t just help recover from problems—it actively prevents them.  
   
----  
+---
   
 ### **2. Simplicity: Managing Complexity**  
   

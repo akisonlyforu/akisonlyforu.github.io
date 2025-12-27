@@ -10,7 +10,7 @@ categories: ddia distributed-systems transactions consensus
 
 Distributed systems often need to ensure consistency while accommodating failures and partitions. Key to this process is the ability to coordinate decisions and updates across multiple nodes. This subchapter delves into two interconnected topics: **atomic commit for distributed transactions** and **distributed consensus algorithms**.
   
----  
+---
 
 ### **Atomic Commit and Distributed Transactions**
 
@@ -34,7 +34,7 @@ Despite its simplicity, 2PC introduces significant operational and availability 
 - If the coordinator fails after the prepare phase but before broadcasting commit/abort, participants are left in an uncertain state, referred to as an **in-doubt transaction**.
 - These limitations make 2PC susceptible to halting progress during network partitions or crashes.
 
----  
+---
 
 ### **Distributed Consensus**
 
@@ -49,7 +49,7 @@ Despite its simplicity, 2PC introduces significant operational and availability 
 ##### **FLP Impossibility**
 The famous FLP result states that no deterministic algorithm can guarantee consensus in an asynchronous system if a single node can fail. Nevertheless, practical systems overcome this limitation by introducing timeouts that allow systems to recover after suspecting faults.
   
----  
+---
 
 ### **Coordination Services in Practice**
 
@@ -61,7 +61,7 @@ Modern systems like **ZooKeeper** and **etcd** implement consensus protocols (e.
 2. **Atomic Commit Protocols**:  
    The outcome of a distributed transaction relies on all nodes agreeing on commit/abort decisions—a task that consensus guarantees.
 
----  
+---
 
 ### **Trade-offs and Challenges**
 1. **Performance Overheads**:    
@@ -73,7 +73,7 @@ Modern systems like **ZooKeeper** and **etcd** implement consensus protocols (e.
 3. **Network Partitions and Scalability**:    
    Ensuring progress despite partitions often means sacrificing availability (per the CAP theorem). Large-scale deployments face added coordination complexity.
 
----  
+---
 
 ### **Conclusion**
 

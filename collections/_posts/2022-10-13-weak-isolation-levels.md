@@ -12,7 +12,7 @@ In an ideal world, databases would provide strong, serializable isolation for tr
 
 Concurrency bugs caused by weak isolation can lead to lost data, inconsistent results, and even financial losses in mission-critical systems. As we explore these levels, understanding what correctness guarantees each offers will help inform your application design.
    
----  
+---
 
 ### **Read Committed: The Foundation of Isolation**
 
@@ -29,7 +29,7 @@ Example:
 #### **Preventing Dirty Writes**
 If two users try to write to the same data (e.g., modifying the same invoice entry), the database ensures that only one write succeeds while the other waits for a commit or rollback.
    
----  
+---
 
 ### **Snapshot Isolation: Avoiding Nonrepeatable Reads**
 
@@ -41,7 +41,7 @@ Instead of blocking concurrent transactions, snapshot isolation ensures that rea
 Example:
 - Alice queries her bank accounts and sees balances totaling `$1,000`. If Bob transfers `$100` from one account to another during Alice’s transaction, her total balance remains `$1,000` based on her consistent snapshot.
 
----  
+---
 
 ### **Trade-Offs of Weak Isolation**
 
@@ -54,7 +54,7 @@ While snapshot and read committed isolation levels improve performance by avoidi
 
 Weak isolation levels avoid locks but may still require additional care, such as manually handling concurrency conflicts through retry logic and compensating application operations.
    
----  
+---
 
 ### **Practical Applications of Weak Isolation Levels**
 
@@ -65,7 +65,7 @@ Both read committed and snapshot isolation are suited for applications prioritiz
 
 When higher consistency matters, developers can introduce custom locking mechanisms or adopt stronger isolation levels like serializability.
    
----  
+---
 
 ### **Conclusion**
 

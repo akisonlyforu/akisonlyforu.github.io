@@ -8,7 +8,7 @@ categories: sahp architecture quantum coupling
 
 Software architecture is about trade-offs and balancing complexity. Modern distributed systems, particularly microservices, demand a deep understanding of "architecture quantum," a concept that intertwines deployability, cohesion, and coupling. This post explores Chapter 2 of *Software Architecture: The Hard Parts* to understand these principles.
    
----  
+---
 
 ## **What is Architecture Quantum?**
 
@@ -19,7 +19,7 @@ An **architecture quantum** is the fundamental building block of software archit
 
 Each quantum acts as a deployable unit, such as a service in a microservices architecture. The quantum's boundaries, consisting of interrelated components, facilitate better management and scalability for modern solutions.
    
----  
+---
 
 ## **Breaking It Down**
 
@@ -30,7 +30,7 @@ To meet this requirement:
 
 A microservices architecture thrives on this property, ensuring agile deployments and incremental improvements .
    
----  
+---
 
 ### 2. **High Functional Cohesion**
 Cohesion refers to how closely components related to a quantum's function are grouped.
@@ -39,7 +39,7 @@ Cohesion refers to how closely components related to a quantum's function are gr
 
 Monolithic designs struggle here because their size reduces singular functional representation.
    
----  
+---
 
 ### 3. **Static and Dynamic Coupling**
 
@@ -54,7 +54,7 @@ Dynamic coupling examines runtime communication between quanta:
 
 Dynamic quantum coupling illustrates multi-dimensional decision-making—balancing communication, consistency, and coordination needs.
    
----  
+---
 
 ## **The Larger Picture**
 
@@ -63,6 +63,6 @@ By understanding these dimensions, architects build systems that balance agility
 ### Final Thoughts
 Understanding architecture quantums helps design systems with clarity and adaptability. What are your thoughts on coupling and cohesion? Share your experiences!
   
----    
+---  
 
 Let me know if you'd like similar blogs generated for other subchapters.

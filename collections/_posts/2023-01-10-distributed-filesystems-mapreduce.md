@@ -10,7 +10,7 @@ categories: ddia batch-processing distributed-filesystems system-design
 
 Batch processing frameworks like **MapReduce** revolutionized data processing by enabling scalable computation across distributed systems. These frameworks leverage **distributed filesystems**—such as the Hadoop Distributed File System (HDFS)—to store and process massive datasets efficiently. Together, MapReduce and distributed filesystems provide a robust, reliable mechanism for handling tasks like ETL (Extract, Transform, Load) pipelines, log analysis, and search index creation.
    
----  
+---
 
 ### **Understanding Distributed Filesystems**
 
@@ -19,7 +19,7 @@ Distributed filesystems like HDFS form the backbone of MapReduce by ensuring eff
 2. **Shared-Nothing Architecture**: Unlike traditional storage systems requiring dedicated hardware, HDFS runs on commodity hardware connected through standard datacenter networks.
 3. **Scalability**: Modern HDFS deployments span tens of thousands of nodes, managing hundreds of petabytes of data cost-effectively.
 
----  
+---
 
 ### **How MapReduce Works**
 
@@ -35,7 +35,7 @@ The framework groups all key-value pairs with the same key (e.g., grouping all c
 #### **3. Reducer Stage**
 The reducer aggregates the grouped data for each key. For example, summing URL counts to produce a final total for each page.
    
----  
+---
 
 ### **Advantages of MapReduce and Distributed Filesystems**
 
@@ -48,7 +48,7 @@ The reducer aggregates the grouped data for each key. For example, summing URL c
 3. **Scalable Processing**
    - MapReduce is designed to process datasets with hundreds of terabytes or petabytes, leveraging the high-throughput capabilities of HDFS.
 
----  
+---
 
 ### **Applications of MapReduce**
 
@@ -61,7 +61,7 @@ The reducer aggregates the grouped data for each key. For example, summing URL c
 3. **Recommendation Systems**
    - MapReduce workflows comprise 50–100 stages in complex recommendation systems for tasks such as collaborative filtering and frequent itemset mining.
 
----  
+---
 
 ### **Limitations of MapReduce**
 
@@ -70,7 +70,7 @@ Despite its effectiveness, MapReduce comes with specific limitations:
 2. **Latency**: MapReduce, being batch-oriented, lacks the low-latency performance needed for real-time analytics workloads.
 3. **Intermediate State**: Every stage writes intermediate results to the distributed filesystem, leading to high I/O overhead compared to stream processing systems.
 
----  
+---
 
 ### **Conclusion**
 

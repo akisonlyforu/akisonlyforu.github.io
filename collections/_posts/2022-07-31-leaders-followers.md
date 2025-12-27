@@ -10,7 +10,7 @@ categories: replication databases distributed-systems ddia
 
 Replication ensures multiple copies of data are stored across different systems for durability, reliability, and availability. The **leader-follower model** (also called **master-slave replication** or **active/passive replication**) serves as one of the most prevalent replication architectures. In this approach, **one node is designated as the “leader”**, and other nodes act as **followers** of this leader.
    
----  
+---
 
 ### **How Leader-Based Replication Works**
 
@@ -24,7 +24,7 @@ Replication ensures multiple copies of data are stored across different systems 
     - Write operations are consistent because only the leader accepts them.
     - Read operations can be load-balanced by querying follower replicas, improving system scalability.
 
----  
+---
 
 ### **Synchronous vs. Asynchronous Replication**
 
@@ -57,7 +57,7 @@ Representation:
 +-------------+           +-------------+   +-------------+  
 ```  
    
----  
+---
 
 ### **Setting Up New Followers**
 
@@ -67,7 +67,7 @@ Creating a new follower involves the following steps:
 3. **Replay Replication Log**: The follower replays any data changes that occurred after the snapshot to catch up to the leader.
 4. **Start Update Cycle**: The follower begins consuming live replication updates.
 
----  
+---
 
 ### **Handling Node Failures**
 
@@ -84,7 +84,7 @@ Challenges in automatic failover include:
 - Handling **"split-brain" scenarios**, where two nodes may simultaneously declare themselves as leaders.
 - Managing data loss if replication is asynchronous and the new leader doesn't have the most recent writes.
 
----  
+---
 
 ### **Advantages and Trade-offs**
 
@@ -95,7 +95,7 @@ Challenges in automatic failover include:
 | **Write Throughput**  | Slower (dependent on followers) | Fast (independent of followers)      |  
 | **Read Scalability**  | Moderate                  | High                                |  
    
----  
+---
 
 ### **Conclusion**
 

@@ -8,7 +8,7 @@ categories: transactions analytics OLTP OLAP ddia
 
 In the world of databases, there are two dominant workloads: **transaction processing (OLTP)** and **data analytics (OLAP)**. These workloads have evolved over time, each demanding specialized solutions for optimal performance. In this post, we’ll explore the core concepts, differences, and the strategies employed for both transactional and analytical systems.
    
----  
+---
 
 ### **What is Transaction Processing?**
 
@@ -27,7 +27,7 @@ SELECT * FROM orders WHERE order_id = 12345;
 UPDATE orders SET status='shipped' WHERE order_id = 12345;  
 ```  
    
----  
+---
 
 ### **What is Data Analytics?**
 
@@ -47,7 +47,7 @@ WHERE date BETWEEN '2023-01-01' AND '2023-01-31'
 GROUP BY region;  
 ```  
    
----  
+---
 
 ### **OLTP vs. OLAP: A Comparison**
 
@@ -59,7 +59,7 @@ GROUP BY region;
 | **Users**                      | End users (via apps).             | Internal analysts/decision-makers. |  
 | **Schema Design**              | Normalized for transaction speed. | Denormalized (e.g., star schemas) for query efficiency. |  
    
----  
+---
 
 ### **The Role of Data Warehouses**
 
@@ -78,7 +78,7 @@ Popular Data Warehouse Solutions:
 - Commercial: Teradata, Microsoft SQL Server (with analytics extensions).
 - Open Source/Cloud: Apache Hive, Amazon RedShift, Google BigQuery.
 
----  
+---
 
 ### **Modern Challenges and Trends**
 
@@ -88,7 +88,7 @@ Popular Data Warehouse Solutions:
 
 3. **Separation for Scalability:** Gradual specialization has led to separation of responsibilities—transaction systems for real-time operations and warehouses for analytics.
 
----  
+---
 
 ### **Conclusion**
 

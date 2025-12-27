@@ -8,7 +8,7 @@ categories: storage data-structures databases ddia
 
 At the heart of every database lies a powerful combination of data structures designed to efficiently store and retrieve information. This post explores some of the essential mechanisms—including **hash indexes**, **B-trees**, and **LSM-trees**—that drive the performance of modern database systems.
    
----  
+---
 
 ### **Building Blocks: A Simple Key-Value Store**
 
@@ -36,7 +36,7 @@ This script does the following:
 
 Introducing **indexes** solves the lookup inefficiency by adding metadata to help locate data quickly and eliminate unnecessary scans.
    
----  
+---
 
 ### **Hash Indexes: Fast Lookup for Key-Value Stores**
 
@@ -62,7 +62,7 @@ For example:
 
 Whenever you write data, the offset is updated in the hash table. This approach works wonders for small-to-moderate datasets thanks to its memory dependency for high-speed lookups.
    
----  
+---
 
 ### **SSTables and LSM-Trees: Sequential Efficiency**
 
@@ -86,7 +86,7 @@ Representation of an LSM-Tree:
    [Updated SSTable]  
 ```  
    
----  
+---
 
 ### **B-Trees: The Hidden Champions**
 
@@ -111,7 +111,7 @@ Key Features:
 - **Logarithmic Depth:** O(log n) lookups ensure performance is robust for large datasets.
 - **Dynamic Updates:** Supports both insertion and modification efficiently.
 
----  
+---
 
 ### **Trade-offs and When to Use Each Structure**
 
@@ -121,7 +121,7 @@ Key Features:
 | **LSM-Trees**       | High write throughput. Optimized for sequential reads. | Merging overhead. Slower for random reads.                       | Distributed systems with high write load (Cassandra, HBase).                          |  
 | **B-Trees**         | Balanced reads/writes. Supports efficient range queries. | Requires more bookkeeping & concurrency controls.             | Dominant in relational databases and applications with mixed workload needs.          |  
    
----  
+---
 
 ### **Combining Approaches for Optimal Performance**
 
@@ -132,7 +132,7 @@ Modern databases often blend these structures to handle different workloads. For
 
 Each structure comes with its own set of trade-offs, which means there's no one-size-fits-all solution. By understanding these building blocks, developers can select or tune storage engines that best meet their needs.
    
----  
+---
 
 ### **Conclusion: The Behind-the-Scenes Magic**
 
