@@ -7,7 +7,7 @@ permalink: /contact/
   <h1>Get in Touch</h1>
   <p class="contact-intro">Have a question or want to discuss something? Feel free to reach out using the form below.</p>
 
-  <form action="https://formspree.io/f/{{ site.formspree_id }}" method="POST" class="contact-form">
+  <form action="https://script.google.com/macros/s/AKfycbwBcgaTjeRMNmXJ0prTeY1UTlMiswDhfKbBXgLq_IX8USzcVjAYzXF5uHpOAx7azPKjWQ/exec" method="POST" class="contact-form">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" id="name" name="name" required>
@@ -186,15 +186,19 @@ document.addEventListener('DOMContentLoaded', function() {
       const formData = new FormData(form);
       const response = await fetch(form.action, {
         method: 'POST',
-        body: formData,
+        body: new URLSearchParams(formData),
         headers: {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
         },
-        mode: 'cors',
-        redirect: 'manual'
+        mode: 'no-cors' // Add this to prevent CORS issues with Google Apps Script
       });
       
+      // Since mode is 'no-cors', we can't read the response
+      // Just assume success if no error was thrown
+      showMessage('Message sent successfully! 🎉', false);
+      form.reset();
+
       // Check the specific status code
       if (response.status === 200) {
         showMessage('Message sent successfully! 🎉', false);
