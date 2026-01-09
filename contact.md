@@ -7,7 +7,7 @@ permalink: /contact/
   <h1>Get in Touch</h1>
   <p class="contact-intro">Have a question or want to discuss something? Feel free to reach out using the form below.</p>
 
-  <form action="https://script.google.com/macros/s/AKfycbyUwszLFasZgQ5lPlptoU2WWnFV_tLr_nhls9bTQ5YIuOuaoaglv3CPyep1Nfhd-p2KQQ/exec" method="POST" class="contact-form">
+  <form action="https://script.google.com/macros/s/AKfycbxg5vk4drzb36TM3dsZsAkzpRfr7BbdBOYQRy9ffkBXhXRxNxuxNVImte94ijvmQE-vsw/exec" method="GET" class="contact-form">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" id="name" name="name" required>
@@ -152,86 +152,4 @@ permalink: /contact/
 }
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('.contact-form');
-  if (!form) return;
-
-  const messageEl = document.getElementById('form-message');
-  const button = form.querySelector('button');
-  
-  // Show message with fade in
-  const showMessage = (message, isError) => {
-    messageEl.textContent = message;
-    messageEl.className = `${isError ? 'error' : 'success'} visible`;
-    
-    // Fade out after 3 seconds
-    setTimeout(() => {
-      messageEl.classList.remove('visible');
-      setTimeout(() => {
-        messageEl.textContent = '';
-      }, 300);
-    }, 3000);
-  };
-
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const originalText = button.textContent;
-    
-    try {
-      button.textContent = 'Sending...';
-      button.disabled = true;
-      button.classList.add('loading');
-      
-      const formData = new FormData(form);
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: new URLSearchParams(formData),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json'
-        },
-        mode: 'no-cors' // Add this to prevent CORS issues with Google Apps Script
-      });
-      
-      // Since mode is 'no-cors', we can't read the response
-      // Just assume success if no error was thrown
-      showMessage('Message sent successfully! 🎉', false);
-      form.reset();
-
-      // Check the specific status code
-      if (response.status === 200) {
-        showMessage('Message sent successfully! 🎉', false);
-        form.reset();
-        // Track successful submission if GA is available
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'contact_form_submit', {
-            'event_category': 'Contact',
-            'event_label': 'Success'
-          });
-        }
-      } else if (response.status === 422) {
-        throw new Error('Please check your inputs and try again.');
-      } else if (response.status === 429) {
-        throw new Error('Too many attempts. Please try again later.');
-      } else {
-        throw new Error('Sorry, message could not be sent. Please try again.');
-      }
-    } catch (error) {
-      showMessage(error.message, true);
-      console.error('Submission error:', error);
-      // Track error if GA is available
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'contact_form_error', {
-          'event_category': 'Contact',
-          'event_label': error.message
-        });
-      }
-    } finally {
-      button.textContent = originalText;
-      button.disabled = false;
-      button.classList.remove('loading');
-    }
-  });
-});
-</script> 
+<script src="/assets/js/contact.js"></script>
