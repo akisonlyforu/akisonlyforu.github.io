@@ -22,6 +22,53 @@ A pooler fixes both halves of that. PgBouncer sits between the app and Postgres,
 
 First experiment is the churn case, the one that looks like normal app traffic. Open a connection, run one tiny query, close it, five thousand times, across fifteen workers. Once straight at Postgres, once at PgBouncer sitting in front of the same Postgres. Same query, same machine, the only difference is who answers the connect.
 
+<style>
+.cache-bench {
+  --cb-bg: #f7f9fb;
+  --cb-text: #333333;
+  --cb-muted: #666666;
+  --cb-grid: rgba(0, 0, 0, 0.12);
+  --cb-blue: #0076df;
+  --cb-orange: #d65f3c;
+  --cb-green: #23856d;
+  --cb-purple: #7b5bb5;
+  margin: 1.8rem 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--cb-grid);
+  border-radius: 8px;
+  background: var(--cb-bg);
+  color: var(--cb-text);
+}
+.cache-bench h3 { margin: 0 0 1rem; color: var(--cb-text); font-size: 1rem; }
+.cache-bench figcaption { margin-top: 0.9rem; color: var(--cb-muted); font-size: 0.82rem; line-height: 1.45; }
+.cb-bar-row { display: grid; grid-template-columns: minmax(7.5rem, 1.3fr) minmax(6rem, 4fr) minmax(4.6rem, 0.9fr); gap: 0.55rem; align-items: center; margin: 0.4rem 0; font-size: 0.78rem; }
+.cb-track { height: 0.72rem; overflow: hidden; border-radius: 999px; background: var(--cb-grid); }
+.cb-fill { display: block; width: var(--value); min-width: 2px; height: 100%; border-radius: inherit; background: var(--bar, var(--cb-blue)); }
+.cb-value { color: var(--cb-muted); text-align: right; font-variant-numeric: tabular-nums; }
+@media (prefers-color-scheme: dark) {
+  .cache-bench {
+    --cb-bg: #252525;
+    --cb-text: #e0e0e0;
+    --cb-muted: #b0b0b0;
+    --cb-grid: rgba(255, 255, 255, 0.14);
+    --cb-blue: #4dabf7;
+    --cb-orange: #ff8a65;
+    --cb-green: #51cf66;
+    --cb-purple: #b197fc;
+  }
+}
+:root[data-theme="dark"] .cache-bench {
+  --cb-bg: #252525;
+  --cb-text: #e0e0e0;
+  --cb-muted: #b0b0b0;
+  --cb-grid: rgba(255, 255, 255, 0.14);
+  --cb-blue: #4dabf7;
+  --cb-orange: #ff8a65;
+  --cb-green: #51cf66;
+  --cb-purple: #b197fc;
+}
+</style>
+
 <figure class="cache-bench">
   <h3>5,000 connect → query → close, throughput</h3>
   <div class="cb-bar-row"><span>direct to Postgres</span><span class="cb-track"><span class="cb-fill" style="--value:48.3%;--bar:var(--cb-orange)"></span></span><span class="cb-value">1,590/s</span></div>
