@@ -25,6 +25,10 @@ tags: blog
         {% if post.summary %} {{ post.summary }} {% else %} {{ post.excerpt }}
         {% endif %}
       </p>
+        <span class="post-substack-link">
+          <a href="{{ site.substack_home_url }}/{{ post.name }}" target="_blank">Read this on Substack</a>
+        </span>
+
     </div>
     {% endfor %}
   </div>
