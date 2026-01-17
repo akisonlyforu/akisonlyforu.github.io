@@ -41,6 +41,13 @@ The site is automatically built and deployed by GitHub Pages when changes are pu
 - `Gemfile` - Ruby dependencies, primarily using github-pages gem for compatibility
 - Collections are defined in `_config.yml` under `collections:` with custom output settings
 
+### Data Files
+
+- `_data/books.yaml` - Book collection data
+- `_data/library.yaml` - Reading library data
+- `_data/antilibrary.yaml` - Antilibrary (unread books) data
+- `_data/bookmarks.json` - Curated bookmarks collection
+
 ### Major Features & Implementation
 
 #### Homepage & Navigation
@@ -96,6 +103,18 @@ The site is automatically built and deployed by GitHub Pages when changes are pu
 - Date-based quote selection for consistency across visits
 - Mobile-responsive hamburger menu with smooth animations
 - Instant.page preloading for faster page transitions
+
+#### Bookmarks System
+
+- Curated bookmarks page (`/bookmarks/index.html`)
+- Data stored in `_data/bookmarks.json`
+- Categories for organizing links
+
+#### Reading Collection
+
+- Library page (`pages/reading/library.md`) - Books read
+- Antilibrary page (`pages/reading/antilibrary.md`) - Books to read
+- Data sourced from YAML files in `_data/`
 
 ### Content Guidelines
 

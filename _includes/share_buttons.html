@@ -1,0 +1,144 @@
+{% if site.show_sharing_icons %}
+<div class="share-buttons">
+  <h4 class="share-title">Share this post</h4>
+  <div class="share-links">
+    <!-- Twitter Share -->
+    <a
+      href="https://twitter.com/intent/tweet?url={{ site.url }}{{ page.url | uri_escape }}&text={{ page.title | uri_escape }}&via={{ site.twitter_username }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Share on Twitter"
+      aria-label="Share on Twitter"
+      class="share-button twitter"
+    >
+      <i class="fab fa-twitter"></i>
+    </a>
+
+    <!-- LinkedIn Share -->
+    <a
+      href="https://www.linkedin.com/sharing/share-offsite/?url={{ site.url }}{{ page.url | uri_escape }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Share on LinkedIn"
+      aria-label="Share on LinkedIn"
+      class="share-button linkedin"
+    >
+      <i class="fab fa-linkedin"></i>
+    </a>
+
+    <!-- Facebook Share -->
+    <a
+      href="https://www.facebook.com/sharer/sharer.php?u={{ site.url }}{{ page.url | uri_escape }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Share on Facebook"
+      aria-label="Share on Facebook"
+      class="share-button facebook"
+    >
+      <i class="fab fa-facebook-f"></i>
+    </a>
+
+    <!-- Email Share -->
+    <a
+      href="mailto:?subject={{ page.title | uri_escape }}&body=I thought you might find this interesting: {{ site.url }}{{ page.url | uri_escape }}"
+      title="Share via Email"
+      aria-label="Share via Email"
+      class="share-button email"
+    >
+      <i class="fas fa-envelope"></i>
+    </a>
+
+    <!-- Copy Link -->
+    <button
+      type="button"
+      onclick="copyToClipboard('{{ site.url }}{{ page.url }}')"
+      title="Copy Link"
+      aria-label="Copy Link"
+      class="share-button copy"
+    >
+      <i class="fas fa-link"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+function copyToClipboard(url) {
+  if (navigator.clipboard && window.isSecureContext) {
+    // Modern approach
+    navigator.clipboard.writeText(url).then(() => {
+      showCopyFeedback();
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+      fallbackCopyTextToClipboard(url);
+    });
+  } else {
+    // Fallback approach
+    fallbackCopyTextToClipboard(url);
+  }
+}
+
+function fallbackCopyTextToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.left = "-999999px";
+  textArea.style.top = "-999999px";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    document.execCommand('copy');
+    showCopyFeedback();
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
+
+  document.body.removeChild(textArea);
+}
+
+function showCopyFeedback() {
+  const copyButton = document.querySelector('.share-button.copy');
+  const originalContent = copyButton.innerHTML;
+  copyButton.innerHTML = '<i class="fas fa-check"></i>';
+  copyButton.style.color = '#28a745';
+
+  setTimeout(() => {
+    copyButton.innerHTML = originalContent;
+    copyButton.style.color = '';
+  }, 2000);
+
+  // Track share event for analytics if available
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'share', {
+      event_category: 'Social',
+      event_label: 'Copy Link',
+      value: 1
+    });
+  }
+}
+
+// Track social media shares
+document.addEventListener('DOMContentLoaded', function() {
+  const shareButtons = document.querySelectorAll('.share-button');
+  shareButtons.forEach(button => {
+    if (!button.classList.contains('copy')) {
+      button.addEventListener('click', function() {
+        if (typeof gtag !== 'undefined') {
+          const platform = this.classList.contains('twitter') ? 'Twitter' :
+                          this.classList.contains('linkedin') ? 'LinkedIn' :
+                          this.classList.contains('facebook') ? 'Facebook' :
+                          this.classList.contains('email') ? 'Email' : 'Unknown';
+
+          gtag('event', 'share', {
+            event_category: 'Social',
+            event_label: platform,
+            value: 1
+          });
+        }
+      });
+    }
+  });
+});
+</script>
+{% endif %}
