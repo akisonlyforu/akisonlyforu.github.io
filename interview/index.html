@@ -1,0 +1,98 @@
+---
+layout: default
+title: Interview Prep
+---
+
+<h1>Interview Prep</h1>
+<p class="interview-intro">Resources and guides to help you prepare for technical interviews.</p>
+
+<div class="interview-grid">
+  <a href="/interview/data-structures" class="interview-card">
+    <div class="card-icon">🗂️</div>
+    <h2>Data Structures</h2>
+    <p>Arrays, Trees, Graphs, HashMaps, Stacks, Queues, and more. Master the fundamentals that power every algorithm.</p>
+    <span class="card-link">Explore →</span>
+  </a>
+
+  <a href="/interview/system-design" class="interview-card">
+    <div class="card-icon">🏗️</div>
+    <h2>System Design</h2>
+    <p>Design scalable systems, understand distributed architectures, load balancing, caching, and database sharding.</p>
+    <span class="card-link">Explore →</span>
+  </a>
+
+  <a href="/interview/low-level-design" class="interview-card">
+    <div class="card-icon">🔧</div>
+    <h2>Low Level Design</h2>
+    <p>Object-oriented design, SOLID principles, design patterns, and creating clean, maintainable code architectures.</p>
+    <span class="card-link">Explore →</span>
+  </a>
+
+  <a href="/interview/multithreading" class="interview-card">
+    <div class="card-icon">⚡</div>
+    <h2>Multithreading</h2>
+    <p>Concurrency, parallelism, locks, semaphores, thread pools, and avoiding race conditions and deadlocks.</p>
+    <span class="card-link">Explore →</span>
+  </a>
+</div>
+
+<style>
+.interview-intro {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.interview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.interview-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: block;
+}
+
+.interview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.interview-card h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.interview-card p {
+  margin: 0 0 1rem 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.card-link {
+  color: var(--link-color, #0066cc);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .interview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

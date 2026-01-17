@@ -13,7 +13,7 @@
         <a class="nav-link {% if page.url == '/blog/' or page.url contains '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Tech</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link {% if page.url contains '/interview/' %}current{% endif %}" href="#">Interview</a>
+        <a class="nav-link {% if page.url contains '/interview' %}current{% endif %}" href="{{site.url}}/interview">Interview</a>
         <div class="dropdown-content">
           <a href="{{site.url}}/interview/data-structures">Data Structures</a>
           <a href="{{site.url}}/interview/system-design">System Design</a>
