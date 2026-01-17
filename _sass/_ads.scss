@@ -1,0 +1,42 @@
+// AdSense container styles
+.ad-container {
+  margin: 2rem 0;
+  padding: 1rem;
+  text-align: center;
+  background: var(--bg-secondary, #f5f5f5);
+  border: 1px solid var(--border-color, #eee);
+  border-radius: 8px;
+  min-height: 100px;
+}
+
+// Sticky footer ad
+.ad-sticky-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin: 0;
+  padding: 0.5rem;
+  background: var(--bg-primary, #fff);
+  border-top: 1px solid var(--border-color, #eee);
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  border-radius: 0;
+}
+
+// Add padding to body to prevent content overlap with sticky ad
+body.has-sticky-ad {
+  padding-bottom: 70px;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .ad-container {
+    margin: 1rem 0;
+    padding: 0.5rem;
+  }
+
+  body.has-sticky-ad {
+    padding-bottom: 60px;
+  }
+}
