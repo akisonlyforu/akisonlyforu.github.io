@@ -24,14 +24,6 @@
         "year_i_finished_reading": null
     },
     {
-        "title": "Graph Algorithms: Practical Examples in Apache Spark & Neo4j",
-        "author": "Mark Needham",
-        "rating": "",
-        "isbn": "1492047686",
-        "review_path": null,
-        "year_i_finished_reading": null
-    },
-    {
         "title": "Inside the Java Virtual Machine (Java Masters Series)",
         "author": "Bill Venners",
         "rating": "",
@@ -88,18 +80,10 @@
         "year_i_finished_reading": null
     },
     {
-        "title": "System Design Interview \u2013 An Insider's Guide: Volume 2",
-        "author": "Alex Xu",
+        "title": "Fundamentals of Data Engineering- Plan and Build Robust Data Systems",
+        "author": "Joe Reis, Matt Housley",
         "rating": "",
-        "isbn": "1736049119",
-        "review_path": null,
-        "year_i_finished_reading": null
-    },
-    {
-        "title": "System Design Interview \u2013 An insider's guide",
-        "author": "Alex Xu",
-        "rating": "",
-        "isbn": "",
+        "isbn": "9355421540",
         "review_path": null,
         "year_i_finished_reading": null
     },
