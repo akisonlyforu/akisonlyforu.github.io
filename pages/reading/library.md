@@ -5,7 +5,7 @@ permalink: /library/
 tags: library read_list
 ---
 
-Selected books that I've read for enjoyment or learning.
+Books I've read/want to read and recommend:
 
 <section style="display: flex; justify-content: space-between; flex-wrap: wrap">
 {% for member in site.data.library limit:120 %}
