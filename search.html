@@ -122,4 +122,34 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
   border-radius: 4px;
   margin: 1rem 0;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .search-container {
+    padding: 1rem;
+  }
+
+  .search-box {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  #search-input {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  #search-button {
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 16px;
+    min-height: 44px; /* Touch-friendly size */
+  }
+
+  .search-container h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+}
 </style> 
