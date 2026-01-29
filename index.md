@@ -79,13 +79,13 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
 
 .tile {
   position: relative;
-  background: #ffffff;
+  background: var(--tile-bg);
   border-radius: 12px;
   padding: 2rem;
   text-decoration: none;
   color: inherit;
   transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--tile-border);
   overflow: hidden;
   min-height: 200px;
   display: flex;
@@ -99,7 +99,7 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, #dcf3ff, #aedbf9);
+  background: var(--tile-gradient);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -107,7 +107,7 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
 
 .tile:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tile-shadow-hover);
 }
 
 .tile:hover::before {
@@ -125,13 +125,13 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
 .tile h3 {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .tile p {
   margin: 0;
   font-size: 1rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.5;
   flex-grow: 1;
 }
@@ -153,8 +153,8 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
 
 .tile.disabled {
   cursor: not-allowed;
-  background: #f8f8f8;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .tile.disabled:hover {
@@ -168,12 +168,12 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
 
 .tile.disabled h3,
 .tile.disabled p {
-  color: #999;
+  color: var(--text-tertiary);
 }
 
 .tile-status {
   font-size: 0.9rem;
-  color: #999;
+  color: var(--text-tertiary);
   margin-top: 1rem;
   align-self: flex-end;
 }

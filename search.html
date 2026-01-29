@@ -57,16 +57,18 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
   flex: 1;
   padding: 12px 20px;
   font-size: 16px;
-  border: 2px solid #ddd;
+  border: 2px solid var(--input-border);
   border-radius: 4px;
   transition: border-color 0.3s ease;
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
 #search-button {
   padding: 12px 24px;
   font-size: 16px;
-  background-color: #333;
-  color: white;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -74,18 +76,18 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 }
 
 #search-button:hover {
-  background-color: #444;
+  background-color: var(--button-bg-hover);
 }
 
 #search-input:focus {
-  border-color: #333;
+  border-color: var(--input-border-focus);
   outline: none;
 }
 
 .search-result {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--divider-color);
 }
 
 .search-result h2 {
@@ -93,7 +95,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 }
 
 .search-result h2 a {
-  color: #333;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
@@ -103,12 +105,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 
 .post-meta {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
 }
 
 .post-excerpt {
-  color: #444;
+  color: var(--text-primary);
   line-height: 1.6;
 }
 

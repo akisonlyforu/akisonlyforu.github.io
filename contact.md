@@ -41,12 +41,13 @@ permalink: /contact/
 }
 
 .contact-intro {
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
 }
 
 .contact-form {
-  background: #fff;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -59,7 +60,7 @@ permalink: /contact/
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -67,7 +68,9 @@ permalink: /contact/
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--input-text);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
@@ -76,12 +79,12 @@ permalink: /contact/
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #666;
+  border-color: var(--input-border-focus);
 }
 
 .submit-button {
-  background-color: #333;
-  color: white;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 4px;
@@ -92,7 +95,7 @@ permalink: /contact/
 }
 
 .submit-button:hover {
-  background-color: #000;
+  background-color: var(--button-bg-hover);
   transform: translateY(-1px);
 }
 
@@ -102,7 +105,7 @@ permalink: /contact/
 
 .submit-button:disabled {
   cursor: not-allowed;
-  background-color: #444;
+  background-color: var(--text-tertiary);
   transform: none;
 }
 
@@ -142,13 +145,15 @@ permalink: /contact/
 }
 
 #form-message.success {
-  background-color: #dcf5e3;
-  color: #166534;
+  background-color: var(--accent-color, #28a745);
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 #form-message.error {
-  background-color: #fde7e7;
-  color: #b91c1c;
+  background-color: #dc3545;
+  color: #ffffff;
 }
 </style>
 
