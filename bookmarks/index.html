@@ -1,0 +1,340 @@
+---
+layout: default
+title: Bookmarks
+permalink: /bookmarks/
+---
+
+{% assign bookmarks_count = site.bookmarks | size %}
+
+<h1>Bookmarks</h1>
+<p class="bookmarks-intro">A curated collection of useful links, tools, and resources I've found interesting.</p>
+
+<div class="bookmarks-page">
+  {% if bookmarks_count > 0 %}
+    <!-- Category Filter -->
+    {% assign all_categories = site.bookmarks | map: 'categories' | join: ',' | split: ',' | uniq | sort %}
+    {% if all_categories.size > 0 %}
+    <div class="bookmark-filters">
+      <button class="filter-btn active" data-category="all">All</button>
+      {% for category in all_categories %}
+        {% unless category == "" %}
+        <button class="filter-btn" data-category="{{ category | strip | downcase }}">{{ category | strip }}</button>
+        {% endunless %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Bookmarks Grid -->
+    <div class="bookmarks-grid">
+      {% assign sorted_bookmarks = site.bookmarks | sort: 'date' | reverse %}
+      {% for bookmark in sorted_bookmarks %}
+      <article class="bookmark-card" data-categories="{% for cat in bookmark.categories %}{{ cat | strip | downcase }} {% endfor %}">
+        <div class="bookmark-card-header">
+          <h3 class="bookmark-card-title">
+            <a href="{{ bookmark.url | prepend: site.baseurl }}">{{ bookmark.title }}</a>
+          </h3>
+
+          <div class="bookmark-card-meta">
+            <time class="bookmark-card-date">{{ bookmark.date | date: site.date_format }}</time>
+            {% if bookmark.categories %}
+              <div class="bookmark-card-categories">
+                {% for category in bookmark.categories %}
+                  <span class="bookmark-card-category">{{ category }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if bookmark.description %}
+        <p class="bookmark-card-description">{{ bookmark.description }}</p>
+        {% endif %}
+
+        <div class="bookmark-card-actions">
+          {% if bookmark.url %}
+          <a href="{{ bookmark.url }}" target="_blank" rel="noopener noreferrer" class="bookmark-card-link">
+            <span class="bookmark-link-icon">🔗</span>
+            Visit Link
+            <span class="bookmark-external-icon">↗</span>
+          </a>
+          {% endif %}
+
+          <a href="{{ bookmark.url | prepend: site.baseurl }}" class="bookmark-card-notes">
+            Read Notes →
+          </a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <!-- Stats -->
+    <div class="bookmarks-stats">
+      <p>{{ bookmarks_count }} bookmark{% unless bookmarks_count == 1 %}s{% endunless %} collected</p>
+    </div>
+
+  {% else %}
+    <div class="bookmarks-empty">
+      <h2>No bookmarks yet</h2>
+      <p>I haven't added any bookmarks yet. Check back soon!</p>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+.bookmarks-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.bookmarks-intro {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.bookmark-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.filter-btn.active {
+  background: var(--primary-gradient);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.bookmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.bookmark-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bookmark-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+}
+
+.bookmark-card.hidden {
+  display: none;
+}
+
+.bookmark-card-header {
+  margin-bottom: 1rem;
+}
+
+.bookmark-card-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.bookmark-card-title a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.bookmark-card-title a:hover {
+  color: var(--primary-color);
+}
+
+.bookmark-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bookmark-card-date {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.bookmark-card-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.bookmark-card-category {
+  background: var(--tag-bg);
+  color: var(--tag-color);
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.bookmark-card-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bookmark-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bookmark-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: var(--primary-gradient);
+  color: white;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.bookmark-card-link:hover {
+  transform: scale(1.05);
+  color: white;
+}
+
+.bookmark-link-icon {
+  font-size: 0.9em;
+}
+
+.bookmark-external-icon {
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.bookmark-card-notes {
+  color: var(--link-color);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.bookmark-card-notes:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.bookmarks-stats {
+  text-align: center;
+  padding: 2rem 0;
+  border-top: 1px solid var(--divider-color);
+  color: var(--text-secondary);
+}
+
+.bookmarks-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.bookmarks-empty h2 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .bookmarks-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .bookmark-filters {
+    gap: 0.25rem;
+  }
+
+  .filter-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .bookmark-card {
+    padding: 1.25rem;
+  }
+
+  .bookmark-card-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bookmark-card-link {
+    justify-content: center;
+  }
+}
+</style>
+
+<script>
+// Category filtering functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const bookmarkCards = document.querySelectorAll('.bookmark-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const category = this.dataset.category;
+
+      // Update active button
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      // Filter bookmarks
+      bookmarkCards.forEach(card => {
+        if (category === 'all' || card.dataset.categories.includes(category)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+});
+</script>

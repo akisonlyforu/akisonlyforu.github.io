@@ -67,7 +67,10 @@ collections_dir: collections
 collections:
   portfolio:
     output: true
-  posts:
+  posts: {}
+  bookmarks:
+    output: true
+    permalink: /bookmarks/:name/
 
 # Form settings
 formspree_id: xeoaoopl  # Get this from formspree.io after creating a form
