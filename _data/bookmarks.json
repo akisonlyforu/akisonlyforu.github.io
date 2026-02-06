@@ -1,46 +1,40 @@
 {
   "bookmarks": [
     {
-      "id": "ddia-book",
-      "name": "Designing Data-Intensive Applications",
-      "url": "https://dataintensive.net/",
-      "description": "The definitive guide to building reliable, scalable, and maintainable systems. Essential reading for backend engineers.",
-      "category": "books"
-    },
-    {
       "id": "github-copilot",
       "name": "GitHub Copilot",
       "url": "https://github.com/features/copilot",
-      "description": "AI-powered code completion that significantly improves development workflow and productivity.",
-      "category": "tools"
+      "description": "AI-powered code completion that significantly improves development workflow and productivity."
+    },
+    {
+      "id": "ddia-book",
+      "name": "Designing Data-Intensive Applications",
+      "url": "https://dataintensive.net/",
+      "description": "The definitive guide to building reliable, scalable, and maintainable systems. Essential reading for backend engineers."
     },
     {
       "id": "excalidraw",
       "name": "Excalidraw",
       "url": "https://excalidraw.com/",
-      "description": "Simple, beautiful drawing tool perfect for technical diagrams and system architecture sketches.",
-      "category": "tools"
+      "description": "Simple, beautiful drawing tool perfect for technical diagrams and system architecture sketches."
     },
     {
       "id": "hacker-news",
       "name": "Hacker News",
       "url": "https://news.ycombinator.com/",
-      "description": "Tech news and discussions from the startup and developer community.",
-      "category": "news"
+      "description": "Tech news and discussions from the startup and developer community."
     },
     {
       "id": "regex101",
       "name": "Regex101",
       "url": "https://regex101.com/",
-      "description": "Online regex tester and debugger with detailed explanations and examples.",
-      "category": "tools"
+      "description": "Online regex tester and debugger with detailed explanations and examples."
     },
     {
       "id": "cloudflare-radar",
       "name": "Cloudflare Radar",
       "url": "https://radar.cloudflare.com/",
-      "description": "Real-time insights into internet traffic patterns, attacks, and technology adoption.",
-      "category": "analytics"
+      "description": "Real-time insights into internet traffic patterns, attacks, and technology adoption."
     }
   ]
 }

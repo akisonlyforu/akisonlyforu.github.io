@@ -15,7 +15,6 @@ permalink: /bookmarks/
         <h3 class="bookmark-title">
           <a href="{{ bookmark.url }}" target="_blank">{{ bookmark.name }}</a>
         </h3>
-        <div class="bookmark-category">{{ bookmark.category }}</div>
         <p class="bookmark-description">{{ bookmark.description }}</p>
       </div>
     </div>
@@ -40,6 +39,7 @@ permalink: /bookmarks/
   margin-bottom: 2rem;
   text-align: center;
 }
+
 
 
 .bookmarks-list {
@@ -93,14 +93,6 @@ permalink: /bookmarks/
   text-decoration: underline;
 }
 
-.bookmark-category {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
 
 .bookmark-description {
   color: var(--text-secondary);
@@ -161,5 +153,6 @@ permalink: /bookmarks/
   }
 }
 </style>
+
 
 
