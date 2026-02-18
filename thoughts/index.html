@@ -27,11 +27,12 @@ tags: thoughts
         {% endif %}
       </p>
         <span class="post-substack-link">
-          <a href="{{ site.substack_home_url }}/{{ post.name }}" target="_blank">Read this on Substack</a>
+          <a href="{{ site.substack_home_url }}/{{ thought.name }}" target="_blank">Read this on Substack</a>
         </span>
     </div>
     {% endfor %}
   </div>
+  {% if site.show_subscribe_cta %} {% include subscribe.html %} {% endif %}
   {% else %}
   <h1 class="center">{{ site.text.index.coming_soon }}</h1>
   {% endif %}
