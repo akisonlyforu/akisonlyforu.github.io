@@ -59,3 +59,17 @@
 .related-post-title {
   border-bottom: thin solid #f3f3f3;
 }
+
+// ShareThis integration styling
+.sharethis-inline-share-buttons {
+  margin: 2rem 0;
+  text-align: center;
+  border-top: 1px solid #e1e1e1;
+  border-bottom: 1px solid #e1e1e1;
+  padding: 1.5rem 0;
+}
+
+// Dark mode support for ShareThis
+[data-theme="dark"] .sharethis-inline-share-buttons {
+  border-color: #444;
+}
