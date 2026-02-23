@@ -14,7 +14,7 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
 <div class="feature-tiles">
   <a href="{{ site.baseurl }}/blog" class="tile">
     <div class="tile-content">
-      <h3>Technical Blog</h3>
+      <h3>Tech Deep Dives</h3>
       <p>Thoughts on distributed systems, engineering, and technology</p>
       <span class="tile-arrow">→</span>
     </div>
@@ -22,8 +22,8 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
   
   <a href="{{ site.baseurl }}/thoughts" class="tile">
     <div class="tile-content">
-      <h3>Thoughts</h3>
-      <p>My journey, work, and interests</p>
+      <h3>Musings</h3>
+      <p>Observations, Reflections & Perspectives I gained along the journey</p>
       <span class="tile-arrow">→</span>
     </div>
   </a>
