@@ -10,10 +10,10 @@
       </button>
       <ul class="menu-items" id="main-menu">
       <li class="nav-item">
-        <a class="nav-link {% if page.url == '/tech/' %}current{% endif %}" href="{{site.url}}/blog">Tech</a>
+        <a class="nav-link {% if page.url == '/blog/' or page.url contains '/blog/' %}current{% endif %}" href="{{site.url}}/blog">Tech</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if page.url == '/thoughts/' %}current{% endif %}" href="{{site.url}}/thoughts">Musings</a>
+        <a class="nav-link {% if page.url == '/thoughts/' or page.url contains '/thoughts/' %}current{% endif %}" href="{{site.url}}/thoughts">Musings</a>
       </li>
       <li class="nav-item">
         <a class="nav-link {% if page.url == '/bookmarks/' %}current{% endif %}" href="{{site.url}}/bookmarks">Bookmarks</a>
