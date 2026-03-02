@@ -17,7 +17,7 @@ permalink: /bookmarks/
             <a href="{{ bookmark.url }}" target="_blank">{{ bookmark.name }}</a>
           </h3>
           <button class="action-btn copy-btn" data-url="{{ bookmark.url }}" title="Copy link">
-            <i class="fas fa-copy"></i>
+            Copy link
           </button>
         </div>
         <p class="bookmark-description">{{ bookmark.description }}</p>
@@ -191,32 +191,31 @@ document.addEventListener('DOMContentLoaded', function() {
       e.stopPropagation();
 
       const url = this.getAttribute('data-url');
-      const icon = this.querySelector('i');
-      const originalClass = icon.className;
+      const originalText = this.textContent;
 
       console.log('Attempting to copy URL:', url);
 
       // Function to show success state
       const showSuccess = () => {
         this.classList.add('copied');
-        icon.className = 'fas fa-check';
+        this.textContent = 'Copied!';
         console.log('Copy successful');
 
         setTimeout(() => {
           this.classList.remove('copied');
-          icon.className = originalClass;
+          this.textContent = originalText;
         }, 2000);
       };
 
       // Function to show error state
       const showError = () => {
         this.classList.add('error');
-        icon.className = 'fas fa-exclamation-triangle';
+        this.textContent = 'Error';
         console.log('Copy failed');
 
         setTimeout(() => {
           this.classList.remove('error');
-          icon.className = originalClass;
+          this.textContent = originalText;
         }, 2000);
       };
 
