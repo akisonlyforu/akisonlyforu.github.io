@@ -69,5 +69,6 @@ Coming soon...
   - [Creational Patterns](/interview/low-level-design/design-patterns/creational)
   - [Structural Patterns](/interview/low-level-design/design-patterns/structural)
   - [Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
+- [Case study: Designing a Document Editor](/interview/low-level-design/problems/document-editor) — one design, five patterns falling out of it
 
 [← Back to Interview Prep](/interview)

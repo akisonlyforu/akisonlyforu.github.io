@@ -62,6 +62,8 @@ classDiagram
 
 Whenever you need to swap an algorithm at runtime and the algorithms genuinely differ in behavior, not just in values. Strategy generally comes in three shapes: a comparator cascade (rank candidates), a first-success cascade (try each until one works), or a contributor list (combine results from all of them). This example is closer to "client picks exactly one," which is a valid, simpler use of the same interface.
 
+One shape this example doesn't show, but worth keeping in your pocket: using Strategy to pry a *complex* algorithm loose from the data structure it runs over, so the two move on independent axes. A document editor keeping its line-breaking out of the document tree is the classic case, swap the formatter without touching the tree, add an element type without touching the formatter. Same interface, a richer reason to reach for it: [Designing a Document Editor](/interview/low-level-design/problems/document-editor).
+
 ## The takeaway
 
 If your "strategies" only differ by which numbers they plug into the same formula, you don't need Strategy, you need a config table. Reach for the interface only when the actual logic changes between implementations, not just the inputs.

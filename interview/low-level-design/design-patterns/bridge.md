@@ -84,6 +84,7 @@ classDiagram
 - You have two hierarchies that both want to grow, and inheriting through both at once multiplies your class count.
 - You want to pick or swap the implementation side at runtime, not bake it in at compile time.
 - You're designing this upfront, this isn't a retrofit pattern, that's Adapter's job.
+- The implementation side is a set of interchangeable single things, not a matched *family* of objects. If it's a family (all-Motif widgets, all-Mac widgets that must stay consistent), that's Abstract Factory's job instead, the two get compared in [Designing a Document Editor](/interview/low-level-design/problems/document-editor).
 
 ## The takeaway
 

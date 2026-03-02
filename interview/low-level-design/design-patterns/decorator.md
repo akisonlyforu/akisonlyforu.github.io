@@ -65,6 +65,8 @@ classDiagram
 
 Each decorator should do exactly one small thing and delegate the rest. The moment a decorator starts checking what else is in the chain or reaching past its immediate `coffee` reference, you've broken the thing that made this useful in the first place.
 
+And if the shape reminds you of [Composite](/interview/low-level-design/design-patterns/composite), good eye: a decorator *is* a single-child composite. Same trick of the wrapper sharing the wrapped thing's interface, except Composite holds many children to model a part-whole tree while a decorator holds exactly one and exists to add a layer before or after forwarding. Same structure, opposite intent, and naming that link is a cheap way to score in an interview. You can watch both fall out of the same design in [Designing a Document Editor](/interview/low-level-design/problems/document-editor).
+
 Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/decorator).
 
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
