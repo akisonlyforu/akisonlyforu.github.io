@@ -4,6 +4,8 @@ title:      Achieving Reliability with Distributed Transactions and Consensus Me
 date:       2022-12-29    
 summary:    Explore the challenges and algorithms behind distributed transactions, atomic commit protocols, and consensus mechanisms that form the backbone of reliable distributed systems.    
 categories: ddia distributed-systems transactions consensus
+series: "Designing Data-Intensive Applications"
+series_order: 31
 ---
 
 ### **Introduction**

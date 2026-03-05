@@ -4,6 +4,8 @@ title:      Consistency Guarantees in Distributed Systems
 date:       2022-12-01    
 summary:    Understand consistency models like eventual consistency, convergence, and trade-offs between ease of use, fault tolerance, and performance.    
 categories: ddia distributed-systems consistency fault-tolerance
+series: "Designing Data-Intensive Applications"
+series_order: 28
 ---
 
 ### **Introduction to Consistency Guarantees**

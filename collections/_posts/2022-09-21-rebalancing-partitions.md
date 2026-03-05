@@ -4,6 +4,8 @@ title:      Efficient Methods for Rebalancing Data in Distributed Systems
 date:       2022-09-21    
 summary:    Explore techniques for rebalancing partitions dynamically and efficiently in distributed databases while maintaining system stability.    
 categories: ddia partitioning rebalancing distributed-databases
+series: "Designing Data-Intensive Applications"
+series_order: 19
 ---
 
 ### **Introduction to Rebalancing Partitions**

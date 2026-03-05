@@ -4,6 +4,8 @@ title:      Transaction Processing vs. Analytics Let's understand the divide
 date:       2022-06-30
 summary:    Explore the contrasting needs of OLTP and OLAP workloads, the evolution of data warehouses, and their unique optimization strategies.    
 categories: transactions analytics OLTP OLAP ddia
+series: "Designing Data-Intensive Applications"
+series_order: 8
 ---
 
 In the world of databases, there are two dominant workloads: **transaction processing (OLTP)** and **data analytics (OLAP)**. These workloads have evolved over time, each demanding specialized solutions for optimal performance. In this post, we’ll explore the core concepts, differences, and the strategies employed for both transactional and analytical systems.

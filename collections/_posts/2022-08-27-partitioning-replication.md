@@ -4,6 +4,8 @@ title:      Partitioning and Replication in Scaling Distributed Databases
 date:       2022-08-27
 summary:    Learn how combining partitioning and replication allows databases to achieve scalability, fault tolerance, and high throughput for distributed systems.
 categories: ddia partitioning replication distributed-databases
+series: "Designing Data-Intensive Applications"
+series_order: 16
 ---
 
 ### **Introduction to Partitioning and Replication**

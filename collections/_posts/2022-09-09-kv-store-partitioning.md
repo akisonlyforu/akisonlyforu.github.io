@@ -4,6 +4,8 @@ title:      Partitioning of Key-Value Data- Strategies and Challenges
 date:       2022-09-09    
 summary:    Explore key-value partitioning methods like key range and hash partitioning, designed to distribute data efficiently while balancing workload.    
 categories: ddia partitioning key-value distributed-databases
+series: "Designing Data-Intensive Applications"
+series_order: 17
 ---
 
 ### **Introduction to Key-Value Partitioning**

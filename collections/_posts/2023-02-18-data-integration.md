@@ -4,6 +4,8 @@ title:      Integrating Distributed Systems for Unified Data Pipelines
 date:       2023-02-18 
 summary:    Explore the intricacies of data integration in distributed applications, including synchronizing specialized systems and maintaining correctness across diverse data sources.    
 categories: ddia data-integration system-design distributed-systems
+series: "Designing Data-Intensive Applications"
+series_order: 38
 ---
 
 ### **Introduction**

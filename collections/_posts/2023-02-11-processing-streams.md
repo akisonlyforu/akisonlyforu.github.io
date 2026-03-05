@@ -4,6 +4,8 @@ title:      Unifying Batch and Stream Processing for Modern Pipelines
 date:       2023-02-11    
 summary:    Examine how unbounded data streams are processed in real-time applications, including operators, time reasoning, joins, and fault tolerance.    
 categories: ddia stream-processing real-time dataflow
+series: "Designing Data-Intensive Applications"
+series_order: 37
 ---
 
 ### **Introduction**
