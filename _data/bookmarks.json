@@ -4,37 +4,43 @@
       "id": "dynamodb-whitepaper",
       "name": "DynamoDB Whitepaper",
       "url": "https://assets.amazon.science/ac/1d/eb50c4064c538c8ac440ce6a1d91/dynamo-amazons-highly-available-key-value-store.pdf",
-      "description": "In-depth technical paper on Amazon DynamoDB, a fully managed NoSQL database service."
+      "description": "In-depth technical paper on Amazon DynamoDB, a fully managed NoSQL database service.",
+      "category": "System Design"
     },
     {
       "id": "brendan-gregg-use-method",
       "name": "Brendan Gregg's USE Method",
       "url": "https://www.brendangregg.com/usemethod.html",
-      "description": "Systematic performance analysis methodology examining system resources for Utilization, Saturation, and Errors to quickly identify bottlenecks."
+      "description": "Systematic performance analysis methodology examining system resources for Utilization, Saturation, and Errors to quickly identify bottlenecks.",
+      "category": "Performance"
     },
     {
       "id": "kafka-communication-protocol",
       "name": "Kafka Communication Protocol",
       "url": "https://snehasishroy.com/understanding-the-kafka-communication-protocol-in-detail",
-      "description": "In-depth exploration of the Kafka communication protocol, including its architecture and design principles."
+      "description": "In-depth exploration of the Kafka communication protocol, including its architecture and design principles.",
+      "category": "System Design"
     },
     {
       "id": "hacker-news",
       "name": "Hacker News",
       "url": "https://news.ycombinator.com/",
-      "description": "Tech news and discussions from the startup and developer community."
+      "description": "Tech news and discussions from the startup and developer community.",
+      "category": "Communities"
     },
     {
       "id": "regex101",
       "name": "Regex101",
       "url": "https://regex101.com/",
-      "description": "Online regex tester and debugger with detailed explanations and examples."
+      "description": "Online regex tester and debugger with detailed explanations and examples.",
+      "category": "Developer Tools"
     },
     {
       "id": "cloudflare-radar",
       "name": "Cloudflare Radar",
       "url": "https://radar.cloudflare.com/",
-      "description": "Real-time insights into internet traffic patterns, attacks, and technology adoption."
+      "description": "Real-time insights into internet traffic patterns, attacks, and technology adoption.",
+      "category": "Developer Tools"
     }
   ]
 }
