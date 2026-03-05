@@ -13,6 +13,13 @@ permalink: /search/
     <button id="search-button">Search</button>
   </div>
 
+  <div class="search-filter-pills">
+    <button class="search-pill search-pill-active" data-type="all">All</button>
+    <button class="search-pill" data-type="post">Posts</button>
+    <button class="search-pill" data-type="thought">Musings</button>
+  </div>
+
+  <div id="search-result-count"></div>
   <div id="search-results"></div>
 </div>
 
@@ -183,4 +190,90 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     text-align: center;
   }
 }
-</style> 
+
+/* Search Filter Pills */
+.search-filter-pills {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-pill {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.search-pill:hover {
+  background: var(--link-color);
+  color: #fff;
+  border-color: var(--link-color);
+}
+
+.search-pill-active {
+  background: var(--link-color) !important;
+  color: #fff !important;
+  border-color: var(--link-color) !important;
+}
+
+/* Result Count */
+#search-result-count {
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1rem;
+}
+
+#search-result-count:empty {
+  display: none;
+}
+
+/* Search Term Highlighting */
+.search-result mark {
+  background: rgba(255, 213, 79, 0.4);
+  color: inherit;
+  padding: 0.1em 0.15em;
+  border-radius: 2px;
+}
+
+[data-theme="dark"] .search-result mark {
+  background: rgba(255, 213, 79, 0.25);
+}
+
+/* Category Tags */
+.search-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.search-category-tag {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-tertiary);
+}
+
+/* No results message */
+.search-no-results {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--text-secondary);
+}
+
+.search-no-results p {
+  margin: 0.5rem 0;
+}
+
+.search-no-results .suggestion {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+</style>
