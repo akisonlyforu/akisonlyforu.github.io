@@ -44,13 +44,13 @@ By profession, I identify myself as a autonomous Backend engineer with good prob
     </div>
   </a>
 
-  <a href="{{ site.baseurl }}/notes" class="tile">
+  <div class="tile disabled" title="Under Construction">
     <div class="tile-content">
       <h3>Notes</h3>
-      <p>Technical notes, snippets, and documentation</p>
+      <p>[Under construction] Technical notes, snippets, and documentation</p>
       <span class="tile-arrow">→</span>
     </div>
-  </a>
+  </div>
 
   <a href="{{ site.baseurl }}/contact" class="tile">
     <div class="tile-content">
