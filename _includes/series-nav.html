@@ -1,0 +1,84 @@
+{% comment %}
+  Series Navigation Component
+  Usage: {% include series-nav.html %}
+  Requires page.series and page.series_order in frontmatter
+{% endcomment %}
+
+{% assign series_posts = "" | split: "" %}
+{% for post in site.posts %}
+  {% if post.series == page.series %}
+    {% assign series_posts = series_posts | push: post %}
+  {% endif %}
+{% endfor %}
+{% assign series_posts = series_posts | sort: "series_order" %}
+{% assign series_total = series_posts | size %}
+
+<div class="series-nav">
+  <div class="series-nav-header">
+    <div class="series-nav-info">
+      <span class="series-nav-label">Series</span>
+      <span class="series-nav-title">{{ page.series }}</span>
+      <span class="series-nav-progress">Part {{ page.series_order }} of {{ series_total }}</span>
+    </div>
+    <button class="series-nav-toggle" aria-expanded="false" aria-label="Toggle series list">
+      <span class="series-nav-toggle-icon"></span>
+    </button>
+  </div>
+
+  <ol class="series-nav-list series-nav-list-collapsed">
+    {% for post in series_posts %}
+    <li class="series-nav-item{% if post.url == page.url %} series-nav-item-current{% endif %}">
+      {% if post.url == page.url %}
+        <span class="series-nav-item-text">{{ post.title }}</span>
+      {% else %}
+        <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+
+  <div class="series-nav-arrows">
+    {% for post in series_posts %}
+      {% assign next_order = page.series_order | plus: 1 %}
+      {% assign prev_order = page.series_order | minus: 1 %}
+      {% if post.series_order == prev_order %}
+        {% assign prev_post = post %}
+      {% endif %}
+      {% if post.series_order == next_order %}
+        {% assign next_post = post %}
+      {% endif %}
+    {% endfor %}
+
+    {% if prev_post %}
+      <a href="{{ prev_post.url | prepend: site.baseurl }}" class="series-nav-arrow series-nav-prev">
+        <span class="series-nav-arrow-label">&larr; Previous</span>
+        <span class="series-nav-arrow-title">{{ prev_post.title }}</span>
+      </a>
+    {% else %}
+      <span class="series-nav-arrow series-nav-arrow-disabled"></span>
+    {% endif %}
+
+    {% if next_post %}
+      <a href="{{ next_post.url | prepend: site.baseurl }}" class="series-nav-arrow series-nav-next">
+        <span class="series-nav-arrow-label">Next &rarr;</span>
+        <span class="series-nav-arrow-title">{{ next_post.title }}</span>
+      </a>
+    {% else %}
+      <span class="series-nav-arrow series-nav-arrow-disabled"></span>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+(function() {
+  var toggle = document.querySelector('.series-nav-toggle');
+  var list = document.querySelector('.series-nav-list');
+  if (!toggle || !list) return;
+
+  toggle.addEventListener('click', function() {
+    var expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', !expanded);
+    list.classList.toggle('series-nav-list-collapsed');
+  });
+})();
+</script>

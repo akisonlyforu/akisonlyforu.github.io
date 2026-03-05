@@ -4,6 +4,8 @@ title:      Synchronizing Databases with Real-Time Streams
 date:       2023-02-03    
 summary:    Examine how streams integrate with databases through change data capture, event sourcing, and the immutability of state, enabling real-time system synchronization.    
 categories: ddia stream-processing databases immutability
+series: "Designing Data-Intensive Applications"
+series_order: 36
 ---
 
 ### **Introduction**

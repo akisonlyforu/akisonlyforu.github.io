@@ -1,0 +1,111 @@
+// ===========================================
+// Print Stylesheet
+// ===========================================
+
+@media print {
+  // Force light colors
+  * {
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  // Hide UI elements
+  .site-nav,
+  .mobile-nav-toggle,
+  .site-footer,
+  .reading-progress,
+  .back-to-top,
+  .toc-toggle,
+  .copy-code-btn,
+  .lightbox-overlay,
+  .sharethis-inline-share-buttons,
+  .subscribe-section,
+  .post-substack-link,
+  .dark-mode-toggle,
+  .relatedPosts {
+    display: none !important;
+  }
+
+  // Show URLs after links
+  .post-content a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555 !important;
+  }
+
+  // Don't show URL for internal anchor links or javascript
+  .post-content a[href^="#"]:after,
+  .post-content a[href^="javascript"]:after {
+    content: "";
+  }
+
+  // TOC: show as simple list, no interactivity
+  .toc {
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+  }
+
+  .toc-list-collapsed {
+    max-height: none !important;
+    opacity: 1 !important;
+  }
+
+  .toc-link-active {
+    border-left-color: #000 !important;
+  }
+
+  // Code blocks: wrap instead of scroll
+  pre {
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    overflow: visible !important;
+    border: 1px solid #ccc !important;
+    padding: 0.5em !important;
+    font-size: 9pt;
+    page-break-inside: avoid;
+  }
+
+  code {
+    font-size: 9pt;
+  }
+
+  // Images
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  // Headings: avoid orphaned headings
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  // Keep paragraphs with headings
+  h2 + *, h3 + * {
+    page-break-before: avoid;
+  }
+
+  // Series nav: show but simplified
+  .series-nav {
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+  }
+
+  .series-nav-toggle {
+    display: none !important;
+  }
+
+  .series-nav-list-collapsed {
+    max-height: none !important;
+    opacity: 1 !important;
+  }
+}

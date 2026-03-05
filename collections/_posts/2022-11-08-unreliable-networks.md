@@ -4,6 +4,8 @@ title:      Navigating Unreliable Networks in Distributed Systems
 date:       2022-11-08    
 summary:    Dive into the challenges posed by unreliable networks and explore techniques for ensuring reliability in distributed systems.    
 categories: ddia distributed-systems fault-tolerance networking
+series: "Designing Data-Intensive Applications"
+series_order: 25
 ---
 
 ### **Introduction to Unreliable Networks**

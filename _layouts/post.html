@@ -59,6 +59,10 @@ layout: default
 
 <article class="post-content">{{ content }}</article>
 
+{% if page.series %}
+  {% include series-nav.html %}
+{% endif %}
+
 <div class="sharethis-inline-share-buttons"></div>
 
 {% include subscribe.html %}

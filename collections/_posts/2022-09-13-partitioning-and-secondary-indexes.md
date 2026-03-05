@@ -4,6 +4,8 @@ title:      Partitioning and Secondary Indexes- Balancing Efficiency and Complex
 date:       2022-09-13   
 summary:    Delve into the challenges and approaches of partitioning secondary indexes, exploring document-based and term-based methods.    
 categories: ddia partitioning secondary-indexes distributed-databases
+series: "Designing Data-Intensive Applications"
+series_order: 18
 ---
 
 ### **Introduction to Partitioning and Secondary Indexes**

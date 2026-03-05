@@ -4,6 +4,8 @@ title:      Enabling Reliable and Scalable Event Streams in Distributed Systems
 date:       2023-01-25    
 summary:    Explore how messaging systems and partitioned logs enable reliable and scalable transmission of event streams within distributed systems.    
 categories: ddia stream-processing distributed-systems messaging
+series: "Designing Data-Intensive Applications"
+series_order: 35
 ---
 
 ### **Introduction**

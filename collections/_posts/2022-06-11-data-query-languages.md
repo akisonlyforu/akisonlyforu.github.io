@@ -4,6 +4,8 @@ title:      Speaking the Language of Data- A Guide to Query Languages
 date:       2022-06-11
 summary:    A deep dive into imperative and declarative query languages, with examples and illustrations for better understanding.
 categories: data-models databases ddia
+series: "Designing Data-Intensive Applications"
+series_order: 5
 ---
 
 When dealing with data models, query languages play a significant role in how efficiently we can interact with data. They dictate how we retrieve, manipulate, and process the stored information. In this post, we explore two primary categories: **imperative** and **declarative** query languages, along with examples to understand their nuances.

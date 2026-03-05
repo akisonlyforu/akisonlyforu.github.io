@@ -4,6 +4,8 @@ title:      Modes of Dataflow in Distributed Systems
 date:       2022-07-20   
 summary:    Explore how data flows between processes via databases, RPC services, and asynchronous message brokers, emphasizing compatibility and flexibility.    
 categories: dataflow systems messaging ddia
+series: "Designing Data-Intensive Applications"
+series_order: 11
 ---
 
 In distributed systems, the mode of dataflow determines how information is exchanged between processes that lack shared memory. This exchange involves encoding data into sequences of bytes (serialization) for transmission just as much as decoding it back (deserialization) on the receiving end. The choice of dataflow mode impacts system performance, reliability, and evolvability.

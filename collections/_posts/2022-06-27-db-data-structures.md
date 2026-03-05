@@ -4,6 +4,8 @@ title:      The Backbone of Databases- Data Structures that Power Storage
 date:       2022-06-27    
 summary:    Dive into the essential data structures, including hash indexes, B-trees, and LSM-trees, that enable efficient storage and retrieval in databases.    
 categories: storage data-structures databases ddia
+series: "Designing Data-Intensive Applications"
+series_order: 7
 ---
 
 At the heart of every database lies a powerful combination of data structures designed to efficiently store and retrieve information. This post explores some of the essential mechanisms—including **hash indexes**, **B-trees**, and **LSM-trees**—that drive the performance of modern database systems.

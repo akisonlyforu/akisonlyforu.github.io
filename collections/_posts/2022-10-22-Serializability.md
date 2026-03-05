@@ -4,6 +4,8 @@ title:      Achieving Serializability in Transactions
 date:       2022-10-22    
 summary:    Learn about serializability, the strongest isolation level, and its implementation techniques like serial execution, two-phase locking, and snapshot-based approaches.    
 categories: ddia transactions databases concurrency-control
+series: "Designing Data-Intensive Applications"
+series_order: 23
 ---
 
 ### **Understanding Serializability**

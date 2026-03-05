@@ -4,6 +4,8 @@ title:      Unraveling Connections- Exploring Graph-Like Data Models
 date:       2022-06-15
 summary:    A deep dive into graph-based data models, their structures, and query languages like Cypher, SPARQL, and Datalog.
 categories: data-models databases ddia
+series: "Designing Data-Intensive Applications"
+series_order: 6
 ---
 
 In scenarios where complex many-to-many relationships dominate, graph-like data models provide a natural and highly efficient solution. These models are well-suited to use cases such as social networks, recommendation engines, and road networks. This post explores the fundamentals of graph models, their key implementations, and examples of queries using popular graph query languages.

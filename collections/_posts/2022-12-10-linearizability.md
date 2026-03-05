@@ -4,6 +4,8 @@ title:      Linearizability in Distributed Systems
 date:       2022-12-10    
 summary:    Discover how linearizability provides a strong consistency guarantee, its use cases, and the trade-offs involved in implementing such systems.    
 categories: ddia distributed-systems linearizability consistency
+series: "Designing Data-Intensive Applications"
+series_order: 29
 ---
 
 ### **What is Linearizability?**

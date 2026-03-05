@@ -4,6 +4,8 @@ title:      MapReduce and Distributed Filesystems- Foundations of Scalable Data 
 date:       2023-01-10    
 summary:    Learn how MapReduce operates over distributed filesystems like HDFS, combining computation and storage for scalable data processing.    
 categories: ddia batch-processing distributed-filesystems system-design
+series: "Designing Data-Intensive Applications"
+series_order: 33
 ---
 
 ### **Introduction**
