@@ -182,4 +182,4 @@ permalink: /contact/
 
 <!-- Google reCAPTCHA v3 -->
 <script src="https://www.google.com/recaptcha/api.js?render=6LdZHtcrAAAAAAJmF3TOHhFZ3pXruQjIqPzXReK-N"></script>
-<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/contact.js?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
