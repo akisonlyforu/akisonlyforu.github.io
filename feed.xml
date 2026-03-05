@@ -22,5 +22,14 @@ layout: null
         {% endif %}
       </item>
     {% endfor %}
+    {% for thought in site.thoughts %}
+      <item>
+        <title>{{ thought.title | xml_escape }}</title>
+        <description>{{ thought.content | xml_escape }}</description>
+        <pubDate>{{ thought.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
+        <link>{{ thought.url | prepend: site.baseurl | prepend: site.url }}</link>
+        <guid isPermaLink="true">{{ thought.url | prepend: site.baseurl | prepend: site.url }}</guid>
+      </item>
+    {% endfor %}
   </channel>
 </rss>

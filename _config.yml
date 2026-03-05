@@ -20,6 +20,8 @@ bing_verification:
 show_related_posts: True
 show_subscribe_cta: True
 show_social_icons: true
+show_sharing_icons: true
+author: Avinash Kumar
 extended_fonts: false
 enable_anchorjs: true
 
@@ -43,8 +45,6 @@ text:
 # Build settings
 theme: null
 markdown: kramdown
-redcarpet:
-  extensions: ["smart", "tables", "with_toc_data", "footnotes"]
 permalink: /blog/:title/
 paginate: 12
 paginate_path: "/blog/:num/"
@@ -71,9 +71,6 @@ collections:
   thoughts:
     output: true
     permalink: /:collection/:title/
-
-# Form settings
-formspree_id: xeoaoopl  # Get this from formspree.io after creating a form
 
 # Substack settings
 substack_home_url: https://akisonlyforu.substack.com
