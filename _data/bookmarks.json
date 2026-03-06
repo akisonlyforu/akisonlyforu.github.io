@@ -1,10 +1,10 @@
 {
   "bookmarks": [
     {
-      "id": "github-copilot",
-      "name": "GitHub Copilot",
-      "url": "https://github.com/features/copilot",
-      "description": "AI-powered code completion that significantly improves development workflow and productivity."
+      "id": "dynamodb-whitepaper",
+      "name": "DynamoDB Whitepaper",
+      "url": "https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf",
+      "description": "In-depth technical paper on Amazon DynamoDB, a fully managed NoSQL database service."
     },
     {
       "id": "ddia-book",
