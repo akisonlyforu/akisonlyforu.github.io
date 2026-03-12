@@ -41,6 +41,7 @@ text:
   og_locale: "en_US"
 
 # Build settings
+theme: null
 markdown: kramdown
 redcarpet:
   extensions: ["smart", "tables", "with_toc_data", "footnotes"]
@@ -76,3 +77,7 @@ formspree_id: xeoaoopl  # Get this from formspree.io after creating a form
 
 # Substack settings
 substack_home_url: https://akisonlyforu.substack.com
+
+# AdSense Settings (set to true once approved)
+adsense_enabled: true
+adsense_publisher_id: "ca-pub-6123691612469211"

@@ -22,7 +22,7 @@
 }
 
 .menu-toggle::before {
-  content: "☰";
+  content: "\2630";
   font-size: 24px;
   color: var(--header-fg);
   display: block;
@@ -30,7 +30,7 @@
 }
 
 .menu-toggle.active::before {
-  content: "×";
+  content: "\00D7";
   font-size: 32px;
   transform: rotate(180deg);
 }
