@@ -2,7 +2,7 @@
 layout: post
 title: On Building Meaningful Software
 date: 2024-12-15
-summary: A reflection on what it means to build software that matters, beyond just solving technical problems.
+description: A reflection on what it means to build software that matters, beyond just solving technical problems.
 tags: philosophy software-craft purpose
 categories: thoughts
 ---

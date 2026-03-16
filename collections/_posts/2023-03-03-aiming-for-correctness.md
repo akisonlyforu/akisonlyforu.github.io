@@ -2,7 +2,7 @@
 layout:     post    
 title:      Building Correct Systems in Distributed Environments  
 date:       2023-03-03    
-summary:    Explore strategies to build reliable and fault-tolerant systems while handling limitations in transactions, data corruption, and distributed coordination.    
+description:    Explore strategies to build reliable and fault-tolerant systems while handling limitations in transactions, data corruption, and distributed coordination.    
 categories: ddia data-integrity correctness distributed-systems
 series: "Designing Data-Intensive Applications"
 series_order: 40

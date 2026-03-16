@@ -2,7 +2,7 @@
 layout:     post  
 title:      Unraveling Connections- Exploring Graph-Like Data Models
 date:       2022-06-15
-summary:    A deep dive into graph-based data models, their structures, and query languages like Cypher, SPARQL, and Datalog.
+description:    A deep dive into graph-based data models, their structures, and query languages like Cypher, SPARQL, and Datalog.
 categories: data-models databases ddia
 series: "Designing Data-Intensive Applications"
 series_order: 6

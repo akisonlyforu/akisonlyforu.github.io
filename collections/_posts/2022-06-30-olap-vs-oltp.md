@@ -2,7 +2,7 @@
 layout:     post    
 title:      Transaction Processing vs. Analytics Let's understand the divide
 date:       2022-06-30
-summary:    Explore the contrasting needs of OLTP and OLAP workloads, the evolution of data warehouses, and their unique optimization strategies.    
+description:    Explore the contrasting needs of OLTP and OLAP workloads, the evolution of data warehouses, and their unique optimization strategies.    
 categories: transactions analytics OLTP OLAP ddia
 series: "Designing Data-Intensive Applications"
 series_order: 8

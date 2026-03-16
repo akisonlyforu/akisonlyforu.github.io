@@ -2,7 +2,7 @@
 layout:     post    
 title:      The Slippery Concept of a Transaction    
 date:       2022-10-06    
-summary:    Explore the fundamentals of transactions, their role in simplifying database programming models, and their trade-offs in modern systems.    
+description:    Explore the fundamentals of transactions, their role in simplifying database programming models, and their trade-offs in modern systems.    
 categories: ddia transactions databases system-design
 series: "Designing Data-Intensive Applications"
 series_order: 21

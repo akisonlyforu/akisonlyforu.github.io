@@ -2,7 +2,7 @@
 layout:     post  
 title:      Building Maintainable Software Systems  
 date:       2022-05-31  
-summary:    A discussion on how to ensure maintainability in data systems by focusing on operability, simplicity, and evolvability.  
+description:    A discussion on how to ensure maintainability in data systems by focusing on operability, simplicity, and evolvability.  
 categories: maintainability ddia
 series: "Designing Data-Intensive Applications"
 series_order: 3

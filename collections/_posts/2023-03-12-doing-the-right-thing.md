@@ -2,7 +2,7 @@
 layout:     post    
 title:      Ethical Data Practices for Building Better Systems    
 date:       2023-03-12    
-summary:    A critical look at how data-intensive systems can impact society, exploring issues like predictive analytics, surveillance, biases, and the responsibilities of engineers.    
+description:    A critical look at how data-intensive systems can impact society, exploring issues like predictive analytics, surveillance, biases, and the responsibilities of engineers.    
 categories: ddia ethics data-systems accountability
 series: "Designing Data-Intensive Applications"
 series_order: 41

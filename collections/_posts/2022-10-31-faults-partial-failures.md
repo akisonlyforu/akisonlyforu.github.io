@@ -2,7 +2,7 @@
 layout:     post    
 title:      Faults and Partial Failures in Distributed Systems    
 date:       2022-10-31    
-summary:    Explore the complex challenges of partial failures in distributed systems and the strategies to build resilient architectures.    
+description:    Explore the complex challenges of partial failures in distributed systems and the strategies to build resilient architectures.    
 categories: ddia distributed-systems fault-tolerance system-design
 series: "Designing Data-Intensive Applications"
 series_order: 24

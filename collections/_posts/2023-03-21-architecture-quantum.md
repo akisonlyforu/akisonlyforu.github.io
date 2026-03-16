@@ -2,7 +2,7 @@
 layout:     post    
 title:      Deciphering Coupling in Software Architecture- Architecture Quantum Explored    
 date:       2023-03-21    
-summary:    Learn how independent deployability, functional cohesion, and coupling help define architecture quanta for robust distributed systems.    
+description:    Learn how independent deployability, functional cohesion, and coupling help define architecture quanta for robust distributed systems.    
 categories: sahp architecture quantum coupling
 ---
 
