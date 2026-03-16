@@ -2,7 +2,7 @@
 layout:     post  
 title:      Designing Reliable Data Systems  
 date:       2022-05-16  
-summary:    Exploring the keys to building reliable distributed systems - replication, recovery, and fault tolerance.  
+description:    Exploring the keys to building reliable distributed systems - replication, recovery, and fault tolerance.  
 categories: reliability ddia
 series: "Designing Data-Intensive Applications"
 series_order: 1

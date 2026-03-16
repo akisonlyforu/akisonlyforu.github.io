@@ -2,7 +2,7 @@
 layout:     post    
 title:      Exploring Architectural Modularity with Subdrivers    
 date:       2022-05-16    
-summary:    Understand how maintainability, testability, deployability, scalability, and fault tolerance drive architectural modularity for robust systems    
+description:    Understand how maintainability, testability, deployability, scalability, and fault tolerance drive architectural modularity for robust systems    
 categories: sahp modularity architecture
 ---
 

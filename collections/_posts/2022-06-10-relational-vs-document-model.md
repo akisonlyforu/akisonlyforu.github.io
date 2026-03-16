@@ -2,7 +2,7 @@
 layout:     post  
 title:      Relational Model Versus Document Model 
 date:       2022-06-10  
-summary:    A comparative exploration of the relational and document data models, with code samples and examples to illustrate their differences.
+description:    A comparative exploration of the relational and document data models, with code samples and examples to illustrate their differences.
 categories: data-models databases ddia
 series: "Designing Data-Intensive Applications"
 series_order: 4

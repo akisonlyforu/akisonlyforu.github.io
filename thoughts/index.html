@@ -23,8 +23,7 @@ tags: thoughts
         ><h3 class="h2 post-title">{{ thought.title }}</h3></a
       >
       <p class="post-summary">
-        {% if thought.summary %} {{ thought.summary }} {% else %} {{ thought.excerpt }}
-        {% endif %}
+        {% if thought.description %} {{ thought.description }} {% else %} {{ thought.excerpt }} {% endif %}
       </p>
         <span class="post-substack-link">
           <a href="{{ site.substack_home_url }}/{{ thought.name }}" target="_blank">Read this on Substack</a>

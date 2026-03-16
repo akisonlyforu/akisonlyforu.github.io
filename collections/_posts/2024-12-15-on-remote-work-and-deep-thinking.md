@@ -2,7 +2,7 @@
 layout: post
 title: On Remote Work and Deep Thinking
 date: 2024-12-15
-summary: Reflections on how remote work has changed the way we think, collaborate, and find meaning in our professional lives.
+description: Reflections on how remote work has changed the way we think, collaborate, and find meaning in our professional lives.
 categories: personal reflection remote-work thoughts
 ---
 

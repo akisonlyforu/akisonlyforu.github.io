@@ -2,7 +2,7 @@
 layout:     post    
 title:      Component-Based Decomposition    
 date:       2022-05-16    
-summary:    Understanding the methodical approach of component-based decomposition to break down monolithic applications.    
+description:    Understanding the methodical approach of component-based decomposition to break down monolithic applications.    
 categories: decomposition software-architecture
 ---
 
