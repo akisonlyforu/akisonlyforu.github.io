@@ -4,6 +4,8 @@ title:      Formats for Encoding Data
 date:       2022-07-15   
 summary:    An exploration into data encoding techniques, comparing language-specific, textual, and binary formats for effective data exchange across systems.    
 categories: encoding data-formats serialization ddia
+series: "Designing Data-Intensive Applications"
+series_order: 10
 ---
 
 ### **Introduction to Data Encoding**

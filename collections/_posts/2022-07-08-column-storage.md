@@ -4,6 +4,8 @@ title:      "Understanding Column-Oriented Storage- A Deep Dive into Analytics O
 date:       2022-07-08
 summary:    Explore how columnar databases revolutionize analytics with efficient storage, compression, vectorized processing, and more.    
 categories: storage analytics databases ddia
+series: "Designing Data-Intensive Applications"
+series_order: 9
 ---
 
 Managing massive datasets for analytics presents unique challenges, and column-oriented storage emerges as a groundbreaking approach to tackle them. Unlike traditional row-oriented systems, columnar databases store data by columns rather than rows, optimizing it for analytical workloads. This post dives into the mechanics and benefits of column-oriented storage systems, explaining why they are fundamental for modern data warehouses.

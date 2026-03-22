@@ -1,0 +1,129 @@
+---
+layout: default
+title: Categories
+---
+
+<h1>Categories</h1>
+
+{% assign all_categories = "" | split: "" %}
+{% for post in site.posts %}
+  {% for cat in post.categories %}
+    {% unless all_categories contains cat %}
+      {% assign all_categories = all_categories | push: cat %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+{% assign all_categories = all_categories | sort %}
+
+<div class="category-pills">
+  {% for cat in all_categories %}
+    {% assign count = 0 %}
+    {% for post in site.posts %}
+      {% if post.categories contains cat %}
+        {% assign count = count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+    <a href="#{{ cat }}" class="category-pill">{{ cat }} <span class="category-count">{{ count }}</span></a>
+  {% endfor %}
+</div>
+
+{% for cat in all_categories %}
+<div class="category-section" id="{{ cat }}">
+  <h2 class="category-heading">{{ cat }}</h2>
+  <div class="category-posts">
+    {% for post in site.posts %}
+      {% if post.categories contains cat %}
+      <div class="category-post-item">
+        <span class="category-post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+        <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+
+<style>
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.category-pill:hover {
+  background: var(--link-color);
+  color: #fff !important;
+  border-color: var(--link-color);
+}
+
+.category-pill:hover .category-count {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.category-count {
+  background: var(--border-color);
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  line-height: 1.4;
+}
+
+.category-section {
+  margin-bottom: 2.5rem;
+}
+
+.category-heading {
+  font-size: 1.3rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.category-post-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.4rem 0;
+}
+
+.category-post-date {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.category-post-item a {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  .category-post-item {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .category-post-date {
+    min-width: auto;
+  }
+}
+</style>
