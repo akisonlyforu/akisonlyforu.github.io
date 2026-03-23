@@ -4,27 +4,64 @@ title: Bookmarks
 permalink: /bookmarks/
 ---
 
+{% assign bookmarks = site.data.bookmarks.bookmarks %}
+{% assign bookmark_count = bookmarks | size %}
+
+{% assign all_categories = "" | split: "" %}
+{% for b in bookmarks %}
+  {% unless all_categories contains b.category %}
+    {% assign all_categories = all_categories | push: b.category %}
+  {% endunless %}
+{% endfor %}
+{% assign all_categories = all_categories | sort %}
+{% assign category_count = all_categories | size %}
+
 <h1>Bookmarks</h1>
 <p class="bookmarks-intro">A curated collection of useful reading resources I've found interesting.</p>
+<p class="bookmarks-count">{{ bookmark_count }} bookmarks across {{ category_count }} categories</p>
 
 <div class="bookmarks-page">
-  <div class="bookmarks-list">
-    {% for bookmark in site.data.bookmarks.bookmarks %}
-    <div class="bookmark-item">
-      <div class="bookmark-main">
-        <div class="bookmark-header">
-          <h3 class="bookmark-title">
-            <a href="{{ bookmark.url }}" target="_blank">{{ bookmark.name }}</a>
-          </h3>
-          <button class="action-btn copy-btn" data-url="{{ bookmark.url }}" title="Copy link">
-            Copy link
-          </button>
-        </div>
-        <p class="bookmark-description">{{ bookmark.description }}</p>
-      </div>
-    </div>
+
+  <div class="bookmark-pills">
+    <button class="bookmark-pill bookmark-pill-active" data-filter="all">All <span class="bookmark-pill-count">{{ bookmark_count }}</span></button>
+    {% for cat in all_categories %}
+      {% assign cat_count = 0 %}
+      {% for b in bookmarks %}
+        {% if b.category == cat %}
+          {% assign cat_count = cat_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      <button class="bookmark-pill" data-filter="{{ cat | slugify }}">{{ cat }} <span class="bookmark-pill-count">{{ cat_count }}</span></button>
     {% endfor %}
   </div>
+
+  {% for cat in all_categories %}
+  <div class="bookmark-section" id="{{ cat | slugify }}" data-category="{{ cat | slugify }}">
+    <h2 class="bookmark-section-heading">{{ cat }}</h2>
+    <div class="bookmarks-list">
+      {% for bookmark in bookmarks %}
+        {% if bookmark.category == cat %}
+        {% assign domain = bookmark.url | split: "//" | last | split: "/" | first %}
+        <div class="bookmark-item">
+          <div class="bookmark-main">
+            <div class="bookmark-header">
+              <h3 class="bookmark-title">
+                <img class="bookmark-favicon" src="https://www.google.com/s2/favicons?domain={{ domain }}&sz=16" alt="" width="16" height="16" loading="lazy">
+                <a href="{{ bookmark.url }}" target="_blank" rel="noopener">{{ bookmark.name }} <span class="bookmark-external">&#8599;</span></a>
+              </h3>
+              <button class="action-btn copy-btn" data-url="{{ bookmark.url }}" title="Copy link">
+                Copy link
+              </button>
+            </div>
+            <span class="bookmark-domain">{{ domain }}</span>
+            <p class="bookmark-description">{{ bookmark.description }}</p>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
 
 </div>
 
@@ -38,27 +75,94 @@ permalink: /bookmarks/
 .bookmarks-intro {
   color: var(--text-secondary);
   font-size: 1.1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   text-align: center;
-}
-
-
-
-.bookmarks-list {
-  margin-bottom: 2rem;
 }
 
 .bookmarks-count {
   text-align: center;
-  padding: 1rem 0;
-  border-top: 1px solid var(--divider-color);
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.bookmark-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  justify-content: center;
+}
+
+.bookmark-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.bookmark-pill:hover {
+  background: var(--link-color);
+  color: #fff !important;
+  border-color: var(--link-color);
+}
+
+.bookmark-pill:hover .bookmark-pill-count {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.bookmark-pill-active {
+  background: var(--link-color) !important;
+  color: #fff !important;
+  border-color: var(--link-color) !important;
+}
+
+.bookmark-pill-active .bookmark-pill-count {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.bookmark-section-hidden {
+  display: none;
+}
+
+.bookmark-pill-count {
+  background: var(--border-color);
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  line-height: 1.4;
+}
+
+.bookmark-section {
+  margin-bottom: 2.5rem;
+}
+
+.bookmark-section-heading {
+  font-size: 1.3rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0.5rem;
+}
+
+.bookmarks-list {
+  margin-bottom: 1rem;
 }
 
 .bookmark-item {
   border-bottom: 1px solid var(--divider-color);
-  padding: 1.5rem 0;
+  padding: 1.25rem 0;
   transition: all 0.2s ease;
 }
 
@@ -69,7 +173,7 @@ permalink: /bookmarks/
 .bookmark-item:hover {
   background: var(--bg-secondary);
   margin: 0 -1rem;
-  padding: 1.5rem 1rem;
+  padding: 1.25rem 1rem;
   border-radius: 0.5rem;
 }
 
@@ -82,39 +186,45 @@ permalink: /bookmarks/
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .bookmark-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   margin: 0;
   line-height: 1.3;
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.bookmark-link {
-  color: var(--link-color);
-  text-decoration: none;
-  transition: color 0.2s ease;
+.bookmark-favicon {
+  flex-shrink: 0;
+  border-radius: 2px;
 }
 
-.bookmark-link:hover {
-  color: var(--link-hover);
-  text-decoration: underline;
+.bookmark-external {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  font-weight: 400;
 }
 
+.bookmark-domain {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.4rem;
+  padding-left: 1.5rem;
+}
 
 .bookmark-description {
   color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
-  margin: 0 0 1rem 0;
-}
-
-.bookmark-actions {
-  display: flex;
-  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.5rem;
 }
 
 .action-btn {
@@ -132,6 +242,7 @@ permalink: /bookmarks/
   justify-content: center;
   min-width: 2rem;
   height: 2rem;
+  flex-shrink: 0;
 }
 
 .action-btn:hover {
@@ -152,9 +263,6 @@ permalink: /bookmarks/
   border-color: #ef4444;
 }
 
-
-
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .bookmarks-page {
     padding: 0 0.5rem;
@@ -162,11 +270,7 @@ permalink: /bookmarks/
 
   .bookmark-item:hover {
     margin: 0 -0.5rem;
-    padding: 1.5rem 0.5rem;
-  }
-
-  .bookmark-actions {
-    gap: 0.4rem;
+    padding: 1.25rem 0.5rem;
   }
 
   .action-btn {
@@ -177,99 +281,97 @@ permalink: /bookmarks/
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const copyButtons = document.querySelectorAll('.copy-btn');
+(function() {
+  // --- Category Filter ---
+  var pills = document.querySelectorAll('.bookmark-pill');
+  var sections = document.querySelectorAll('.bookmark-section');
 
-  console.log('Found copy buttons:', copyButtons.length);
+  function filterCategory(slug) {
+    pills.forEach(function(p) { p.classList.remove('bookmark-pill-active'); });
 
-  copyButtons.forEach(button => {
-    button.addEventListener('click', async function(e) {
+    if (slug === 'all') {
+      sections.forEach(function(s) { s.classList.remove('bookmark-section-hidden'); });
+      pills[0].classList.add('bookmark-pill-active');
+      history.replaceState(null, '', window.location.pathname);
+    } else {
+      sections.forEach(function(s) {
+        if (s.getAttribute('data-category') === slug) {
+          s.classList.remove('bookmark-section-hidden');
+        } else {
+          s.classList.add('bookmark-section-hidden');
+        }
+      });
+      pills.forEach(function(p) {
+        if (p.getAttribute('data-filter') === slug) p.classList.add('bookmark-pill-active');
+      });
+      history.replaceState(null, '', '#' + slug);
+    }
+  }
+
+  pills.forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      filterCategory(this.getAttribute('data-filter'));
+    });
+  });
+
+  // Apply filter from URL hash on load
+  var hash = window.location.hash.replace('#', '');
+  if (hash) filterCategory(hash);
+
+  // --- Copy to Clipboard ---
+  var copyButtons = document.querySelectorAll('.copy-btn');
+
+  copyButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
 
-      const url = this.getAttribute('data-url');
-      const originalText = this.textContent;
+      var url = this.getAttribute('data-url');
+      var btn = this;
+      var originalText = btn.textContent;
 
-      console.log('Attempting to copy URL:', url);
-
-      // Function to show success state
-      const showSuccess = () => {
-        this.classList.add('copied');
-        this.textContent = 'Copied!';
-        console.log('Copy successful');
-
-        setTimeout(() => {
-          this.classList.remove('copied');
-          this.textContent = originalText;
+      function showSuccess() {
+        btn.classList.add('copied');
+        btn.textContent = 'Copied!';
+        setTimeout(function() {
+          btn.classList.remove('copied');
+          btn.textContent = originalText;
         }, 2000);
-      };
-
-      // Function to show error state
-      const showError = () => {
-        this.classList.add('error');
-        this.textContent = 'Error';
-        console.log('Copy failed');
-
-        setTimeout(() => {
-          this.classList.remove('error');
-          this.textContent = originalText;
-        }, 2000);
-      };
-
-      // Try modern Clipboard API first
-      if (navigator.clipboard && window.isSecureContext) {
-        try {
-          await navigator.clipboard.writeText(url);
-          showSuccess();
-          return;
-        } catch (err) {
-          console.log('Clipboard API failed, trying fallback:', err);
-        }
       }
 
-      // Fallback method
-      try {
-        const textArea = document.createElement('textarea');
-        textArea.value = url;
+      function showError() {
+        btn.classList.add('error');
+        btn.textContent = 'Error';
+        setTimeout(function() {
+          btn.classList.remove('error');
+          btn.textContent = originalText;
+        }, 2000);
+      }
 
-        // Make the textarea visible and properly positioned
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        textArea.style.top = '-999999px';
-        textArea.style.opacity = '0';
-        textArea.style.zIndex = '-1';
-        textArea.setAttribute('readonly', '');
-
-        document.body.appendChild(textArea);
-
-        // Focus and select the text
-        textArea.focus();
-        textArea.select();
-        textArea.setSelectionRange(0, 99999); // For mobile devices
-
-        // Execute copy command
-        const successful = document.execCommand('copy');
-
-        document.body.removeChild(textArea);
-
-        if (successful) {
-          showSuccess();
-        } else {
-          showError();
-          // Show manual copy instructions
-          prompt('Copy this URL manually:', url);
-        }
-
-      } catch (err) {
-        console.error('All copy methods failed:', err);
-        showError();
-        // Last resort - show the URL in a prompt
-        prompt('Copy this URL manually:', url);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(showSuccess).catch(function() {
+          fallbackCopy(url, showSuccess, showError);
+        });
+      } else {
+        fallbackCopy(url, showSuccess, showError);
       }
     });
   });
-});
+
+  function fallbackCopy(text, onSuccess, onError) {
+    var textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      onSuccess();
+    } catch (e) {
+      onError();
+    }
+    document.body.removeChild(textarea);
+  }
+})();
 </script>
-
-
-
