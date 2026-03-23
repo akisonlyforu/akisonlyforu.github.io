@@ -1,10 +1,10 @@
 # Site settings
 title: akisonlyforu
 email: kumaravinashinbox@gmail.com
-description: >- 
-  Write an awesome description for your blog here.
+description: >-
+  Backend engineering deep dives on distributed systems, data-intensive applications, and software architecture by Avinash Kumar.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://akisonlyforu.github.io" # the base hostname & protocol for your site
 date_format: "%b %-d, %Y"
 
 # Google services
@@ -30,6 +30,36 @@ github_username: akisonlyforu
 twitter_username: akisonlyforu
 linkedin_username: akisonlyforu
 
+# SEO / Social (used by jekyll-seo-tag)
+twitter:
+  username: akisonlyforu
+  card: summary_large_image
+
+social:
+  name: Avinash Kumar
+  links:
+    - https://twitter.com/akisonlyforu
+    - https://github.com/akisonlyforu
+    - https://linkedin.com/in/akisonlyforu
+
+logo: /images/site-logo.svg
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /images/site-og-image.svg
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      image: /images/site-og-image.svg
+  - scope:
+      path: ""
+      type: "thoughts"
+    values:
+      image: /images/site-og-image.svg
+
 text:
   pagination:
     newer: "Newer"
@@ -53,6 +83,8 @@ sass:
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-feed
 # https://github.com/jekyll/jekyll/issues/2938
 exclude:
   - Gemfile

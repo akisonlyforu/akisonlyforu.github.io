@@ -21,7 +21,7 @@ layout: none
         "title": {{ thought.title | default: "" | jsonify }},
         "url": {{ thought.url | absolute_url | jsonify }},
         "date": {{ thought.date | date: '%B %d, %Y' | jsonify }},
-        "excerpt": {{ thought.summary | default: thought.excerpt | default: "" | strip_html | strip_newlines | truncatewords: 50 | jsonify }},
+        "excerpt": {{ thought.description | default: thought.excerpt | default: "" | strip_html | strip_newlines | truncatewords: 50 | jsonify }},
         "content": {{ thought.content | default: "" | strip_html | strip_newlines | jsonify }},
         "type": "thought",
         "categories": {{ thought.categories | jsonify }}

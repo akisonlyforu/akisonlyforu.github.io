@@ -2,7 +2,7 @@
 layout:     post    
 title:      Knowledge Truth and Lies in Distributed Systems    
 date:       2022-11-24    
-summary:    Distributed systems cannot always rely on perfect assumptions; explore the philosophical nuances of truth, majority decisions, Byzantine faults, and practical system models.    
+description:    Distributed systems cannot always rely on perfect assumptions; explore the philosophical nuances of truth, majority decisions, Byzantine faults, and practical system models.    
 categories: ddia distributed-systems fault-tolerance system-models
 series: "Designing Data-Intensive Applications"
 series_order: 27

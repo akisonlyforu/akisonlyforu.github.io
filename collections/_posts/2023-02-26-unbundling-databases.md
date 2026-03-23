@@ -2,7 +2,7 @@
 layout:     post    
 title:      Unbundling Monolithic Databases for Flexibility
 date:       2023-02-26
-summary:    Learn how unbundling databases helps to achieve scalability and flexibility, combining specialized tools to meet modern data needs.    
+description:    Learn how unbundling databases helps to achieve scalability and flexibility, combining specialized tools to meet modern data needs.    
 categories: ddia future-data-systems unbundling-system-design
 series: "Designing Data-Intensive Applications"
 series_order: 39

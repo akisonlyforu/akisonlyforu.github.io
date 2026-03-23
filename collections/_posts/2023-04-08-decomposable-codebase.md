@@ -2,7 +2,7 @@
 layout:     post    
 title:      Unlocking Decomposability for Monolithic Codebases    
 date:       2022-05-16    
-summary:    Analyzing metrics like coupling, abstraction, and stability to assess whether a monolithic codebase can be effectively decomposed    
+description:    Analyzing metrics like coupling, abstraction, and stability to assess whether a monolithic codebase can be effectively decomposed    
 categories: sahp codebase decomposition architecture
 ---
 

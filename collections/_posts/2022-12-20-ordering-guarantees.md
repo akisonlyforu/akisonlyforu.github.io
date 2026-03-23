@@ -2,7 +2,7 @@
 layout:     post    
 title:      Understanding Ordering Guarantees in Distributed Systems    
 date:       2022-12-20   
-summary:    Explore ordering guarantees like causality, sequence numbers, and total order broadcast. Learn their importance for preserving consistency in distributed systems.    
+description:    Explore ordering guarantees like causality, sequence numbers, and total order broadcast. Learn their importance for preserving consistency in distributed systems.    
 categories: ddia distributed-systems consistency ordering
 series: "Designing Data-Intensive Applications"
 series_order: 30

@@ -2,7 +2,7 @@
 layout:     post    
 title:      Modes of Dataflow in Distributed Systems    
 date:       2022-07-20   
-summary:    Explore how data flows between processes via databases, RPC services, and asynchronous message brokers, emphasizing compatibility and flexibility.    
+description:    Explore how data flows between processes via databases, RPC services, and asynchronous message brokers, emphasizing compatibility and flexibility.    
 categories: dataflow systems messaging ddia
 series: "Designing Data-Intensive Applications"
 series_order: 11

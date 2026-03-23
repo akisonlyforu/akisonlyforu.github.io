@@ -2,7 +2,7 @@
 layout:     post    
 title:      Problems with Replication Lag - Challenges and Solutions   
 date:       2022-08-01    
-summary:    Explore the challenges introduced by replication lag in distributed systems, with examples like read anomalies and strategies to mitigate them.    
+description:    Explore the challenges introduced by replication lag in distributed systems, with examples like read anomalies and strategies to mitigate them.    
 categories: replication distributed-systems databases ddia
 series: "Designing Data-Intensive Applications"
 series_order: 13

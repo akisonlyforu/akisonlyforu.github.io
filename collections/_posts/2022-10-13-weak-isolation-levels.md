@@ -2,7 +2,7 @@
 layout:     post    
 title:      Exploring Weak Isolation Levels in Databases    
 date:       2022-10-13
-summary:    Learn about weak isolation levels like read committed and snapshot isolation, and how they strike a balance between performance and consistency.    
+description:    Learn about weak isolation levels like read committed and snapshot isolation, and how they strike a balance between performance and consistency.    
 categories: ddia transactions databases system-design
 series: "Designing Data-Intensive Applications"
 series_order: 22

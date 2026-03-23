@@ -2,7 +2,7 @@
 layout:     post  
 title:      Speaking the Language of Data- A Guide to Query Languages
 date:       2022-06-11
-summary:    A deep dive into imperative and declarative query languages, with examples and illustrations for better understanding.
+description:    A deep dive into imperative and declarative query languages, with examples and illustrations for better understanding.
 categories: data-models databases ddia
 series: "Designing Data-Intensive Applications"
 series_order: 5
