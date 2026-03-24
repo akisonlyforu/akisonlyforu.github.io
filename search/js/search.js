@@ -1,5 +1,3 @@
-//# sourceMappingURL=search.js.map
-
 // Debug helper function
 function debugLog(message, data = null) {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -99,6 +97,15 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       `;
     });
+
+  // --- Enhancement: HTML escape helper (post titles/headings can contain < > &) ---
+  function escapeHTML(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
 
   // --- Enhancement: Highlight helper ---
   function highlightText(text, term) {
@@ -242,18 +249,20 @@ document.addEventListener('DOMContentLoaded', function() {
       const contentType = item.type === 'thought' ? 'Musing' : 'Post';
       const badgeClass = item.type === 'thought' ? 'badge-thought' : 'badge-post';
 
-      // Highlighted title
-      const highlightedTitle = searchTerm ? highlightText(item.title || 'Untitled', searchTerm) : (item.title || 'Untitled');
+      // Highlighted title (escape first so `<mark>` tags from highlightText survive)
+      const escapedTitle = escapeHTML(item.title || 'Untitled');
+      const highlightedTitle = searchTerm ? highlightText(escapedTitle, searchTerm) : escapedTitle;
 
       // Contextual excerpt with highlighting
       const rawExcerpt = searchTerm ? getContextualExcerpt(item.content || item.excerpt || '', searchTerm, 30) : (item.excerpt || 'No excerpt available');
-      const highlightedExcerpt = searchTerm ? highlightText(rawExcerpt, searchTerm) : rawExcerpt;
+      const escapedExcerpt = escapeHTML(rawExcerpt);
+      const highlightedExcerpt = searchTerm ? highlightText(escapedExcerpt, searchTerm) : escapedExcerpt;
 
       // Category tags
       let categoriesHTML = '';
       if (item.categories && item.categories.length > 0) {
         const tags = item.categories.map(function(cat) {
-          return '<span class="search-category-tag">' + cat + '</span>';
+          return '<span class="search-category-tag">' + escapeHTML(cat) + '</span>';
         }).join('');
         categoriesHTML = '<div class="search-categories">' + tags + '</div>';
       }
@@ -265,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <span class="content-type-badge ${badgeClass}">${contentType}</span>
           </h2>
           <div class="post-meta">
-            <span class="date">${item.date || 'No date'}</span>
+            <span class="date">${escapeHTML(item.date || 'No date')}</span>
             <span class="match-location">Matches in: ${item.matchLocation.join(', ')}</span>
           </div>
           <div class="post-excerpt">${highlightedExcerpt}</div>

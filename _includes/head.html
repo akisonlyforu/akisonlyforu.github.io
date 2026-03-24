@@ -17,6 +17,7 @@
     <meta http-equiv="Content-Language" content="en">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     {% if page.meta_robots %}<meta name="robots" content="{{ page.meta_robots }}">
     {% else %}<meta name="robots" content="all">{% endif %}
     {% if page.categories %}<meta name="keywords" content="{{ page.categories | join: ', ' }}">{% endif %}
@@ -33,7 +34,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
     {% if site.enable_mathjax or page.mathjax == true %}
     <!-- MathJax -->
-    <script async type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     {% endif %}
 
     {% if site.google_verification %}
@@ -58,9 +59,6 @@
     <!-- Enhanced Analytics Tracking -->
     <script src="{{ "/assets/js/analytics.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
     {% endif %}
-
-    <!-- ShareThis Share Buttons -->
-    <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=68d9ab9ff57dfd1a77a9d282&product=inline-share-buttons' async='async'></script>
 
     {% if site.adsense_enabled %}
     <!-- Google AdSense -->

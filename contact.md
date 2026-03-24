@@ -7,7 +7,7 @@ permalink: /contact/
   <h1>Get in Touch</h1>
   <p class="contact-intro">Have a question or want to discuss something? Feel free to reach out using the form below.</p>
 
-  <form action="https://script.google.com/macros/s/AKfycbxluuT1xMYvgYKlyV-gkFHipxGOotCMYymGZROeISw411dS8IfFmDHO1-WV6nA3wqmEMQ/exec" method="GET" class="contact-form">
+  <form action="https://script.google.com/macros/s/AKfycbxluuT1xMYvgYKlyV-gkFHipxGOotCMYymGZROeISw411dS8IfFmDHO1-WV6nA3wqmEMQ/exec" method="POST" class="contact-form">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" id="name" name="name" required>

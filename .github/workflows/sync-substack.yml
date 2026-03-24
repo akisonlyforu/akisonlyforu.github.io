@@ -1,0 +1,50 @@
+name: Sync Substack posts
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-substack
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out site
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test importer
+        run: python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Import public Substack posts
+        run: python scripts/sync_substack.py
+
+      - name: Commit imported posts
+        run: |
+          if [ -z "$(git status --porcelain -- collections/_posts images/substack)" ]; then
+            echo "No Substack changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all -- collections/_posts
+          if [ -d images/substack ]; then
+            git add --all -- images/substack
+          fi
+          git commit -m "Sync posts from Substack"
+          git pull --rebase origin master
+          git push origin HEAD:master

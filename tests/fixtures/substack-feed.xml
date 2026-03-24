@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Test publication</title>
+    <item>
+      <title><![CDATA[A title: "with quotes"]]></title>
+      <link>https://akisonlyforu.substack.com/p/test-post</link>
+      <guid>https://akisonlyforu.substack.com/p/test-post</guid>
+      <pubDate>Sat, 11 Jul 2026 10:00:00 GMT</pubDate>
+      <description><![CDATA[The short <strong>description</strong>.]]></description>
+      <category>engineering</category>
+      <content:encoded><![CDATA[
+        <p>Hello <a href="/p/another-post">world</a>.</p>
+        <script>alert('unsafe')</script>
+        <meta http-equiv="refresh" content="0; url=https://evil.example">
+        <link rel="stylesheet" href="https://evil.example/style.css">
+        <base href="https://evil.example/">
+        <img src="https://substackcdn.com/image/fetch/example.png" srcset="https://tracker.example/2x 2x" onerror="alert(1)">
+        <a href="javascript:alert(1)">unsafe link</a>
+        <pre><code>{{ site.data }} {% include secret.html %}</code></pre>
+      ]]></content:encoded>
+    </item>
+  </channel>
+</rss>
