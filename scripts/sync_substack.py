@@ -171,7 +171,16 @@ def fetch(
     host_check = allowed_host or (lambda host: host == (parsed.hostname or "").lower())
     if parsed.scheme != "https" or not parsed.hostname or not host_check(parsed.hostname.lower()):
         raise SyncError(f"Refusing URL outside the allowed HTTPS hosts: {url}")
-    request = urllib.request.Request(url, headers={"User-Agent": "akisonlyforu.com Substack sync/1.0"})
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": (
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+            ),
+            "Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5",
+        },
+    )
     opener = urllib.request.build_opener(SafeRedirectHandler(host_check))
     try:
         with opener.open(request, timeout=30) as response:
