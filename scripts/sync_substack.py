@@ -11,6 +11,7 @@ import os
 import re
 import sys
 import tempfile
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -396,14 +397,16 @@ def main() -> int:
     if args.feed_file:
         posts = parse_feed(args.feed_file.read_bytes(), publication_host)
     else:
+        separator = "&" if "?" in args.feed_url else "?"
+        feed_request_url = f"{args.feed_url}{separator}sync={int(time.time()) // 900}"
         try:
             data = fetch(
-                args.feed_url, MAX_FEED_BYTES, allowed_host=lambda host: host == publication_host
+                feed_request_url, MAX_FEED_BYTES, allowed_host=lambda host: host == publication_host
             )[0]
             posts = parse_feed(data, publication_host)
         except SyncError as direct_error:
             print(f"warning: direct RSS fetch failed ({direct_error}); using public RSS proxy", file=sys.stderr)
-            proxy_url = RSS_PROXY_URL.format(urllib.parse.quote(args.feed_url, safe=""))
+            proxy_url = RSS_PROXY_URL.format(urllib.parse.quote(feed_request_url, safe=""))
             data = fetch(
                 proxy_url, MAX_FEED_BYTES, "application/json",
                 allowed_host=lambda host: host == "api.rss2json.com",
