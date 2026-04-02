@@ -21,7 +21,15 @@ show_related_posts: True
 show_subscribe_cta: True
 show_social_icons: true
 show_sharing_icons: true
+show_comments: true
 author: Avinash Kumar
+
+# Giscus comments (GitHub Discussions)
+giscus:
+  repo: akisonlyforu/akisonlyforu.github.io
+  repo_id: "MDEwOlJlcG9zaXRvcnkxNDIwODI2Njc="
+  category: Announcements
+  category_id: "DIC_kwDOCHgCa84DBBjp"
 extended_fonts: false
 enable_anchorjs: true
 
