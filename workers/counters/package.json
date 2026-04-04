@@ -1,0 +1,14 @@
+{
+  "name": "akisonlyforu-counters",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute akisonlyforu-counters --local --file=schema.sql",
+    "db:remote": "wrangler d1 execute akisonlyforu-counters --remote --file=schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.110.0"
+  }
+}

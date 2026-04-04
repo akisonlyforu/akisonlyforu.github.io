@@ -1,0 +1,17 @@
+name = "akisonlyforu-counters"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+workers_dev = false
+
+[[routes]]
+pattern = "metrics.akisonlyforu.com"
+custom_domain = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "akisonlyforu-counters"
+database_id = "73fca337-db9c-44fa-a7d8-01f676e48f80"
+
+[vars]
+ALLOWED_ORIGINS = "https://akisonlyforu.com,http://localhost:4000,http://localhost:4321"
