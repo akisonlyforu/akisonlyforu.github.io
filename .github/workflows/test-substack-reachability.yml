@@ -1,0 +1,26 @@
+name: TEST - Substack comments API reachability
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Curl archive endpoint
+        run: |
+          echo "=== archive ==="
+          curl -s -o /tmp/archive.json -w "status: %{http_code}\n" "https://akisonlyforu.substack.com/api/v1/archive?sort=new&limit=5"
+          head -c 500 /tmp/archive.json
+          echo ""
+
+      - name: Curl comments endpoint
+        run: |
+          echo "=== comments ==="
+          curl -s -o /tmp/comments.json -w "status: %{http_code}\n" "https://akisonlyforu.substack.com/api/v1/post/206565224/comments?token=&all_comments=true"
+          cat /tmp/comments.json
+          echo ""
+
+      - name: Report runner egress IP
+        run: curl -s https://api.ipify.org && echo ""
