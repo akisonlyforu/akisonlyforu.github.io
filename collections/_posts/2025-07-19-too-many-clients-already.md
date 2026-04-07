@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Too Many Clients Already
-date:       2026-07-19
+date:       2025-07-19
 description:    Traffic doubles, the app opens more connections to Postgres, and the database starts turning callers away with FATAL sorry too many clients already. The query was never the problem, the connection was. Same load through PgBouncer in transaction mode answered every caller with a tenth of the backends. Here's the reproduction.
 categories: postgres pgbouncer connection-pooling databases performance
 ---
