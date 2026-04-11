@@ -38,7 +38,7 @@ The goal of this round is to project yourself as a Object Oriented Programmer an
 
 - Drop controllers. I wish someone would have told me this earlier. In machine coding there is no HTTP. A Main/Demo class that runs your scenario IS the controller. Interviewers want working code + a driver.
 
-- Add VARIATION PACKAGE. This is where the predicted follow-up lands, and it's the package most interviewee's current structure misses. Its name depends on where the variation actually lives in the problem.
+- Add VARIATION PACKAGE. This is where the predicted follow-up lands, and it's the package most interviewee's current structure misses. The name depends on where the variation actually lives in the problem.
 
 | Where variation lives | Package | Example problems |
 |---|---|---|
@@ -65,9 +65,10 @@ src/
 └── Main.java        # Demo driver: wires dependencies, runs the scenario.
 ```
 
-Create the variation package only when it will have real contents: two-plus implementations of one interface, or two-plus state/command/rule classes. Roughly a third of the question bank has no strategy axis at all (parsers, data-structure problems, concurrency drills, chess-style games where polymorphism on the entity beats an external strategy), forcing an empty strategies/ folder there reads as cargo-culting, and saying "the variation here is data, not code" scores better than the folder would.
-
-Interface rule: only at real substitution seams. Strategies: always (multiple implementations are the point). Repositories: usually (in-memory today, DB tomorrow is a credible swap, and it aids testing). Services: usually NOT, one implementation, no seam; a concrete RideService is fine, extract an interface only when a second implementation appears. Mechanical interface+impl pairs everywhere reads as cargo-culting, not design.
+Interface rule: I see a lot of candidates end up creating interfaces for each non-entity class out there. While I like the strategy and sometimes I follow it too, it eats up small chunks of your time. So a better idea is to add them only at real substitution. 
+- Strategies: always (multiple implementations are the point). 
+- Repositories: usually (in-memory today, DB tomorrow is a credible swap, and it aids testing). 
+Services: usually NOT as we generally have one implementation, no seam; a concrete RideService is fine, extract an interface only when a second implementation appears. 
 
 Java naming: no I prefix. The interface gets the good name (RideService, PricingStrategy); implementations get descriptive names (InMemoryRideRepository, SurgePricing, or DefaultRideService as last resort). Keep interface and implementations in the same package, no interface/impl subfolders.
 
@@ -79,34 +80,46 @@ Other rules: constructor injection everywhere (no new inside services). Models g
 
 First, confirm the round format: "Do you want fully working, runnable code, or design discussion with class diagrams and key methods?" Machine coding and design-discussion LLD have different winning moves: working code vs breadth of design reasoning. Then ask, in this order:
 
-- "What are the 3-4 core operations you want working?" (locks scope)
-- "Single-threaded or should I handle concurrency?" (at Uber L5, assume yes, say "I'll make the booking path thread-safe" proactively)
-- "In-memory is fine, right?" (always yes; confirms no DB code)
-- "Any extension you already know you'll ask for?" (often they tell you, free roadmap)
+- "What are the 3-4 core operations you want working?" (lock scope as early as you can)
+- "Single-threaded or should I handle concurrency?" (For SDE 2+ levels, assume a Yes.)
+- "In-memory is fine, right?" (always yes but you will be seen as someone who clarifies requirements, interviewerd dig that)
+- "Any extensions that we should plan for ?" (you don't want to write soemthing which cannot be extended for future scopes)
 
-Then say the scope OUT LOUD: "I'll build X, Y, Z; I'm explicitly skipping auth, payments, persistence." Skipping without saying it looks like forgetting.
+Then say the scope Out Loud: "I'll build X, Y, Z; I'm explicitly skipping things not in scope like auth, payments, DB persistence."
 
 **Step 2: Entities, invariants & enums (5 min)**
 
-List nouns → classes, adjectives-with-fixed-values → enums, lifecycles → status enums. Don't stop at nouns, for each entity note who owns whom (a Floor owns its Slots; a Trip references a Driver) and 2-3 invariants ("one active trip per driver", "seat can't be booked twice"). Invariants become your validation checks and, later, your lock boundaries. Write this as a comment block first, code fast. IDs are String via UUID.randomUUID(); timestamps long or Instant.
+List nouns → classes.
+
+Adjectives-with-fixed-values → enums.
+
+Lifecycles → status enums.
+
+Don't stop at nouns, for each entity note who owns whom (a Floor owns its Slots; a Trip references a Driver) and 2-3 invariants ("one active trip per driver", "seat can't be booked twice"). Invariants become your validation checks and, later, your lock boundaries. Write this as a comment block first, code fast.
+
+IDs are String via UUID.randomUUID(); timestamps long or Instant.
 
 **Step 3: Name the variation axis (2 min, out loud)**
 
-"The thing most likely to change here is ___ (pricing / eviction / matching / notification channel / discount rules), so I'll put that behind a Strategy interface." A strong L5 signal, alongside not instead of, correct code and stated invariants. And if the problem has no swappable algorithm, say THAT: "the variation here lives in the states / the rules / the data, so I'll use State / a rule chain / a config table instead", correctly declining Strategy is the same signal (see §1 table).
+"The thing most likely to change here is ___ (pricing / eviction / matching / notification channel / discount rules), so I'll put that behind a Strategy interface." And if the problem has no swappable algorithm, say THAT: "the variation here lives in the states / the rules / the data, so I'll use State / a rule chain / a config table instead", correctly declining Strategy is the same signal.
 
 **Step 4: Service interfaces (3 min)**
 
-Write the service class skeleton (or interface, if a real seam exists, §1 rule) with the 3-4 operations from Step 1. Method signatures = your API contract. Return domain objects, throw custom exceptions (never return null / boolean success flags).
+Write the service class skeleton with the 3-4 operations from Step 1. 
+
+Method signatures = your API contract.
+
+Return domain objects, throw custom exceptions (never return null / boolean success flags). There are some exceptions though for example, a Delete API.
 
 **Step 5: Code inside-out (30 min), THE ORDER MATTERS**
 
 enums → models → exceptions → repository → strategies → service → Main
 
-Never start with the service. Dependencies first means you never write code that doesn't compile. Get one end-to-end flow WORKING before adding the second feature, Uber interviewers consistently report: working minimal code first, patterns in the refactor pass. A beautiful design that doesn't run fails the round; a running system you then refactor toward patterns passes it.
+Never start with the service. Dependencies first means you never write code that doesn't compile. Get one end-to-end flow WORKING before adding the second feature. Write working minimal code first. Do a second pass for refactoring using patterns. A beautiful design that doesn't run fails the round; a running system you then refactor toward patterns passes it.
 
 **Step 6: Concurrency pass (8 min)**
 
-See §4. Do it as an explicit pass: "now let me make this thread-safe", narrating it earns the points even if you don't finish every lock.
+Do it as an explicit pass: "now let me make this thread-safe", narrating it earns the points even if you don't finish every lock.
 
 **Step 7: Demo + extensibility pitch (5 min)**
 
@@ -114,7 +127,7 @@ Run Main. Then say: "To add [likely extension], I'd only add a new class impleme
 
 ## 3. Pattern selection: trigger table
 
-Don't memorize 23 patterns. These 8 cover the vast majority of the question bank:
+These 8 cover the vast majority of the questions asked:
 
 | Trigger in the problem | Pattern | Canonical example |
 |---|---|---|
@@ -134,14 +147,20 @@ Singleton: use enum singleton or just instantiate once in Main, mention thread-s
 
 ## 4. Concurrency playbook (this is the Uber L5 differentiator)
 
-Uber's machine-coding round explicitly expects thread-safe code.
+Senior engineer machine-coding round expects thread-safe code.
 
-Start from invariants, not from tools. The method: (1) restate the invariant ("a slot holds at most one vehicle"), (2) find the smallest sequence of reads+writes that must be atomic to preserve it, that's your atomic boundary, (3) pick the cheapest primitive that covers exactly that boundary. Then choose from this menu:
+Start from invariants, not from tools. The method:
 
-- **Storage**: ConcurrentHashMap for repositories. Caveat you must say out loud: CHM makes individual map operations safe, not your workflow, two safe gets followed by a put is still a race.
+(1) restate the invariant ("a slot holds at most one vehicle")
+
+(2) find the smallest sequence of reads+writes that must be atomic to preserve it, that's your atomic boundary
+
+(3) pick the cheapest primitive that covers exactly that boundary. Then choose from this menu:
+
+- **Storage**: ConcurrentHashMap for repositories. Note - this makes individual map operations safe, not your workflow. Two safe gets followed by a put is still a race condition to solve.
 - **Single-key check-then-act** ("claim this exact slot ID if free"): atomic map ops, putIfAbsent, computeIfAbsent, compute. Powerful, but only atomic per key. It does NOT cover conditions spanning multiple keys or a range, e.g. interval-overlap booking ("is any meeting overlapping 2-3pm?") can't be solved with putIfAbsent; lock the resource's calendar object instead.
-- **Multi-entity invariants** (transfer A→B, multi-seat booking): per-entity ReentrantLock; acquire in sorted ID order to prevent deadlock. Say it: "I lock in a globally consistent order."
-- **Counters/metrics**: AtomicInteger / AtomicLong / LongAdder.
+- **Multi-entity invariants** (transfer A→B, multi-seat booking): per-entity ReentrantLock; acquire in sorted ID order to prevent deadlock. Call it out loud: "I lock in a globally consistent order."
+- **Counters/metrics**: Use AtomicInteger / AtomicLong / LongAdder.
 - **Producer-consumer** (queues, schedulers, elevators): BlockingQueue (ArrayBlockingQueue; DelayQueue for TTL expiry).
 - **Read-heavy config/tables/rule lists**: volatile reference swap of a whole immutable object (never mutate in place), or ReadWriteLock. The same idea scales up as seal-and-freeze: append to a mutable current segment, seal it immutable, then read lock-free (logs, search indexes, heatmap windows).
 - **Per-entity ordering without locks**: one queue + one consumer per entity (per-device commands, per-conversation messages, per-symbol order book). Ordering comes from the single consumer, not from locking, say that.
@@ -167,7 +186,7 @@ Narrate every choice: "booking a specific slot is single-key check-then-act, so 
 
 If you get 90 minutes instead: keep the same proportions, spend the extra ~30 min on a second working flow, a real concurrency test in Main (spawn threads, assert the invariant held), and 2-3 quick edge-case checks. Don't spend it on more patterns.
 
-| Dimension | L4 answer | L5 answer |
+| Dimension | Mid Level answer | Senior Level answer |
 |---|---|---|
 | Scope | Builds what's asked | Declares what's out of scope and why |
 | Patterns | Names them | Places one interface exactly at the variation axis, rejects unnecessary ones |
@@ -175,22 +194,6 @@ If you get 90 minutes instead: keep the same proportions, spend the extra ~30 mi
 | Follow-ups | Rewrites code | Extension = new class only, no edits to existing code (Open/Closed in action) |
 | Communication | Codes silently | Narrates trade-offs continuously |
 
-## 6. The 10 archetypes (how 200+ questions become 10)
-
-Every core LLD question in the bank maps to one of these recipes, master the recipe and any question in the family is a re-skin. The bank also has two supplementary tracks that are NOT archetypes: Track A (maps/search/recommendation, algorithm-leaning) and Track B (pure concurrency drills that feed §4).
-
-| # | Archetype | Recipe (entities + patterns + concurrency) | Master problem |
-|---|---|---|---|
-| 1 | Resource booking | Resource, Booking, Slot + Strategy (allocation/pricing) + putIfAbsent on slot | Parking Lot |
-| 2 | Board game | Board, Cell, Player, Piece, GameEngine + State/Factory + turn loop, win-check | Chess / Snake & Ladder |
-| 3 | Order & payment | Order, Item, Cart, Payment + State (order lifecycle) + Strategy (discount/payment) + per-order lock | Food delivery / Amazon |
-| 4 | Matching/dispatch | Rider, Driver, Trip + Strategy (matching) + Observer (notify) + concurrent assignment | Uber ride sharing |
-| 5 | Cache / KV store | Node, DoublyLinkedList + Strategy (eviction, swappable at runtime) + CHM + per-segment lock | LRU with pluggable eviction |
-| 6 | Infra component | Message, Topic, Subscriber + Observer + BlockingQueue + retry/backoff | Pub-Sub / Rate limiter |
-| 7 | Splitting/ledger | User, Expense, Split, Balance + Strategy (equal/exact/percent) + BigDecimal + simplify-debts graph | Splitwise |
-| 8 | State machine device | Machine, Inventory, Coin/Card + State pattern + single-lock transactions | Vending machine / Elevator |
-| 9 | Feed/social | User, Post, Comment (composite), Follow + Observer + merged-feed iterator | Twitter / Stack Overflow |
-| 10 | Editor/undo | Document, Command history (two stacks) + Command + Memento-lite | Text editor |
 
 Preparation plan: do 2 problems per archetype deeply (20 total, marked ★ in the question bank) rather than 200 shallowly, plus the two Track B concurrency drills first. For each ★: full code in your structure, timed at 60 min, concurrency pass included, then one self-inflicted follow-up.
 
