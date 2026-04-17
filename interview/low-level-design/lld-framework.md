@@ -7,7 +7,7 @@ title: What do you actually do in a LLD Interview?
 
 If you're starting out, or still prefer writing code the harder way without AI, this is for you.
 
-There was a time we all coded by hand. With the flood of candidates on the job market, tech companies added a new round called the "Low Level Design Round," where you're expected to write things by hand under a 60-90 minute constraint. As the hairs have started turning grey and the bald patch growing bigger, I've experienced a lot of LLD rounds. Aced some, got rejected in some, and have also sat on the other side of the table. Experience is the only tool under my belt, and over time I've drafted all my learnings here. I treat this doc as my source of truth, something I can come back to when I have doubts.
+There was a time we all coded by hand. With the flood of candidates on the job market, tech companies added a new round called the "Low Level Design Round," where you're expected to write things by hand under a 60-90 minute constraint. As the hairs have started turning grey and the bald patch growing bigger, I've experienced a lot of LLD rounds. Aced some, got rejected in some, and have also sat on the other side of the table. Over time I've drafted all my learnings here, my source of truth I come back to when in doubt.
 
 ## What is it
 
@@ -19,9 +19,9 @@ A repeatable framework for you to follow. Unfortunately, an interview is not an 
 
 ## A note on language
 
-The code examples here are in Java, that's just what I use day to day. The framework itself isn't tied to Java, entities, states, invariants, strategies, and concurrency boundaries exist the same way in Python, Go, or whatever you code in. Translate the syntax, keep the thinking.
+The code examples here are in Java, that's just what I use for interviews. Our learning framework itself isn't tied to Java. Entities, states, invariants, strategies, and concurrency boundaries exist the same way in whatever language you code in.
 
-## 1. Components of a Problem Statmen
+## 1. Components of a Problem Statement
 
 Every LLD question, no matter how tough, can be broken down into the same 6 things:
 
@@ -33,6 +33,7 @@ Every LLD question, no matter how tough, can be broken down into the same 6 thin
 - **CONCURRENCY** → which operations race, and on what shared state
 
 Two additions matter most at Senior+ levels:
+
 - INVARIANTS: for each entity, state the rules that must never break ("a slot holds at most one vehicle", "balances across a transfer sum to zero"), they drive your validation code AND your concurrency boundaries.
 - VARIATION: predict the follow-up ("now add LFU eviction", "now add surge pricing") and put an interface exactly there. But neither substitutes for the real bar: correct working code, sound judgment, and clear narration of trade-offs. A pattern-rich design that violates an invariant fails; a plain design that runs and respects them passes.
 
@@ -44,14 +45,14 @@ The goal of this round is to project yourself as a Object Oriented Programmer an
 
 - Add VARIATION PACKAGE. This is where the predicted follow-up lands, and it's the package most interviewee's current structure misses. The name depends on where the variation actually lives in the problem.
 
-| Where variation lives | Package | Example problems |
+| What's changing | Where it goes | Example problems |
 |---|---|---|
-| Swappable algorithms | strategies/ | Pricing, matching, eviction, ranking, backoff |
-| Lifecycle behavior per state | states/ | Vending machine, elevator, circuit breaker |
-| Undoable/queued operations | commands/ | Text editor, home automation |
-| Configurable rule chains | rules/ | Coupon eligibility, fraud checks, access policies |
-| Pure data (no package) | config/tables | Vending recipes, tax slabs, fee schedules |
-| The data structure itself | none | Limit order book, bloom filter, median store, parsers |
+| The algorithm itself can be swapped out | strategies/ | Pricing, matching, eviction, ranking, backoff |
+| An entity behaves differently depending on its current stage | states/ | Vending machine, elevator, circuit breaker |
+| An action needs to be queued, undone, or replayed later | commands/ | Text editor, home automation |
+| A chain of rules decides the outcome | rules/ | Coupon eligibility, fraud checks, access policies |
+| Only the numbers change, the logic applying them stays the same | config/tables | Vending recipes, tax slabs, fee schedules |
+| There's nothing to swap, the problem is the data structure | no separate package needed | Limit order book, bloom filter, median store, parsers |
 
 ```
 src/
@@ -70,15 +71,16 @@ src/
 ```
 
 **Interface rule**: I see a lot of candidates end up creating interfaces for each non-entity class out there. While I like the strategy and sometimes I follow it too, it eats up small chunks of your time. So a better idea is to add them only at real substitution.
+
 - Strategies: always (multiple implementations are the point).
 - Repositories: usually (in-memory today, DB tomorrow is a credible swap, and it aids testing).
 Services: usually NOT as we generally have one implementation, nothing to swap; a concrete RideService is fine, extract an interface only when a second implementation appears.
 
 Java naming: no I prefix. The interface gets the good name (RideService, PricingStrategy); implementations get descriptive names (InMemoryRideRepository, SurgePricing, or DefaultRideService as last resort). Keep interface and implementations in the same package, no interface/impl subfolders.
 
-Other rules: constructor injection everywhere (no new inside services). Models get behavior (ride.canBeCancelled()), don't make them anemic bags of getters.
+Other rules: constructor injection everywhere (no new inside services) which demonstrate Dependency Injection. Give your models real behavior (ride.canBeCancelled()), don't make them just plain data holders with getters and setters.
 
-## 2. The 7-step method (60-minute round)
+## 3. The 7-step method (60-minute round)
 
 **Step 1: Clarify & scope (5 min)**
 
@@ -86,8 +88,8 @@ First, confirm the round format: "Do you want fully working, runnable code, or d
 
 - "What are the 3-4 core operations you want working?" (lock scope as early as you can)
 - "Single-threaded or should I handle concurrency?" (For SDE 2+ levels, assume a Yes.)
-- "In-memory is fine, right?" (always yes but you will be seen as someone who clarifies requirements, interviewerd dig that)
-- "Any extensions that we should plan for ?" (you don't want to write soemthing which cannot be extended for future scopes)
+- "In-memory is fine, right?" (always yes but you will be seen as someone who clarifies requirements, interviewers dig that)
+- "Any extensions that we should plan for?" (you don't want to write something which cannot be extended for future scopes)
 
 Then say the scope Out Loud: "I'll build X, Y, Z; I'm explicitly skipping things not in scope like auth, payments, DB persistence."
 
@@ -131,7 +133,7 @@ Run your Main class. Then say something like: "To add [likely extension], I'd on
 
 When the variation is data-driven, use the data-shaped version instead: "New fiscal year / new recipe / new fee tier, our change is limited to a new data row, zero code changes." Close every round with one of these sentences.
 
-## 3. Pattern selection: trigger table
+## 4. Pattern selection: trigger table
 
 These 8 patterns cover the vast majority of the questions asked:
 
@@ -152,11 +154,13 @@ Two rules of thumb worth remembering:
 - **Rule chains**: default to a flat rule LIST evaluated by an engine, not a linked Chain of Responsibility. Only reach for linked handlers when each one actually consumes or escalates the request, like ATM cash denominations or a multi-level approval workflow.
 - **Strategy**: it comes in three shapes, a comparator cascade (rank candidates, e.g. driver matching by distance then rating), a first-success cascade (try each until one works, e.g. payment gateway fallback, coupon eligibility checks), or a contributor list (combine results from all of them, e.g. total pricing = base fare + surge + taxes, each a separate strategy).
 
-**Note on Singleton**: good to have, but it costs time. Do it when the problem actually needs it, or when you have ample time to spare. Otherwise just instantiate once in Main, and mention thread-safe lazy initialization only if asked.
+### Note on Singleton:
 
-Where it's actually needed: a ParkingLot in the Parking Lot problem, only one lot exists, every Level/Slot/Ticket must resolve against the same instance, and if two threads race to construct it you'd end up with two lots silently tracking separate slot states. Same shape shows up for a shared IDGenerator or a Logger, one physical resource, accessed from many services, where a second instance is a correctness bug, not just waste.
+Good to have, but costs time, use it only when the problem needs it or you have time to spare. Otherwise just instantiate once in Main, and mention thread-safe lazy initialization only if asked.
 
-## 4. Concurrency playbook (this is the Uber L5 differentiator)
+Needed when: a second instance would be a bug, not just waste. E.g. a ParkingLot, every Level/Slot/Ticket must resolve against the same instance, two racing threads shouldn't create two lots tracking separate slot states. Same for a shared IDGenerator or Logger.
+
+## 5. Concurrency playbook (Senior Engineer differentiator)
 
 Senior engineer machine-coding round expects thread-safe code.
 
@@ -177,13 +181,17 @@ Start from invariants, not from tools. The method:
 - **Per-entity ordering without locks**: one queue + one consumer per entity (per-device commands, per-conversation messages, per-symbol order book). Ordering comes from the single consumer, not from locking, say that.
 - **Pick-then-claim retry**: when a strategy picks a candidate from a snapshot (driver, agent, worker), claim it atomically (compute() on its status) and re-pick if you lost the race. The pick can be stale; the claim cannot.
 
-On coarse synchronized: a synchronized service method is not automatically wrong, it's correct, simple, and a legitimate first move under time pressure. The L5 move is to use it, say "this is correct but serializes all bookings; if the interviewer cares about throughput I'd narrow it to a per-resource lock", and narrow it only if asked or if time permits. Wrong is silent coarse locking with no awareness of the trade-off, or fine-grained locking that breaks an invariant.
+On **synchronized**: a synchronized service method is not automatically wrong, it's correct, simple, and a legitimate first move under time pressure. Present this option to the interviewer &, say "this is correct but serializes all bookings". If the interviewer cares about throughput narrow it down to a per-resource lock, and narrow it only if asked or if time permits. What's actually wrong: locking everything without saying why, or splitting locks so fine you break an invariant.
 
-Genuine anti-signals: Collections.synchronizedMap (CHM exists), sprinkling synchronized without naming the race it prevents, ignoring concurrency until prompted.
+Red flags:
+
+- **Collections.synchronizedMap**: locks the whole map on every call and still isn't iteration-safe, plus you lose atomic ops like putIfAbsent/compute that you actually need. ConcurrentHashMap gives you all of that for free, reaching for synchronizedMap instead signals you don't know it exists.
+- **Adding synchronized without naming the race it prevents**: if you can't say which invariant breaks without the lock, the interviewer can't tell if you understood the problem or just pattern-matched "concurrency = add synchronized".
+- **Ignoring concurrency until prompted**: thread-safety is expected to be raised proactively, waiting to be asked reads as junior.
 
 Narrate every choice: "booking a specific slot is single-key check-then-act, so compute() on the slot map covers the invariant."
 
-## 5. Time budget (60 min)
+## 6. Time budget (60 min)
 
 | Min | Activity |
 |---|---|
@@ -197,7 +205,7 @@ Narrate every choice: "booking a specific slot is single-key check-then-act, so 
 
 If you get 90 minutes instead: keep the same proportions, spend the extra ~30 min on a second working flow, a real concurrency test in Main (spawn threads, assert the invariant held), and 2-3 quick edge-case checks. Don't spend it on more patterns.
 
-## 6. What is looked at each stage ?
+## 7. What is looked at each stage ?
 
 | Dimension | Mid Level answer | Senior Level answer |
 |---|---|---|
@@ -207,6 +215,6 @@ If you get 90 minutes instead: keep the same proportions, spend the extra ~30 mi
 | Follow-ups | Rewrites code | Extension = new class only, no edits to existing code (Open/Closed of SOLID principle in action) |
 | Communication | Codes silently | Narrates trade-offs continuously |
 
-## 7. Preparation Plan
+## 8. Preparation Plan
 
 Divide problems into patterns first, then do 2 problems per pattern deeply rather than skimming through 200 problems. Once you've done your initial preparation, keep a timer with you and time yourself regularly.
