@@ -218,3 +218,24 @@ If you get 90 minutes instead: keep the same proportions, spend the extra ~30 mi
 ## 8. Preparation Plan
 
 Divide problems into patterns first, then do 2 problems per pattern deeply rather than skimming through 200 problems. Once you've done your initial preparation, keep a timer with you and time yourself regularly.
+
+## 9. Pattern examples: what to actually practice
+
+Almost every LLD question you'll get asked collapses into one of these. Pick 2 per row, work through them with the full framework above, timed.
+
+| Problem shape | Entities + pattern + concurrency | Practice problem |
+|---|---|---|
+| Resource booking | Resource, Booking, Slot + Strategy (pricing/allocation) + putIfAbsent on the slot | Parking Lot |
+| Board game | Board, Cell, Player, Piece + State/Factory + turn loop, win-check | Chess, Snake & Ladder |
+| Order & payment | Order, Item, Cart, Payment + State (order lifecycle) + Strategy (discount/payment) + per-order lock | Food delivery |
+| Matching/dispatch | Rider, Driver, Trip + Strategy (matching) + Observer (notify) + concurrent assignment | Ride sharing |
+| Cache/KV store | Node, DoublyLinkedList + Strategy (eviction) + ConcurrentHashMap + per-segment lock | LRU with pluggable eviction |
+| Pub-sub/infra | Message, Topic, Subscriber + Observer + BlockingQueue + retry/backoff | Notification service, rate limiter |
+| Splitting/ledger | User, Expense, Split, Balance + Strategy (equal/exact/percent) + simplify-debts graph | Splitwise |
+| State-machine device | Machine, Inventory, Coin/Card + State + single-lock transactions | Vending machine, elevator |
+| Feed/social | User, Post, Comment, Follow + Observer + merged-feed iterator | Twitter-like feed |
+| Editor/undo | Document, command history (two stacks) + Command pattern | Text editor |
+
+## 10. Closing thought
+
+None of this replaces getting your hands dirty. Read the framework once, then go code a Parking Lot, badly, in 60 minutes, and see where you got stuck. That's the real syllabus, this doc just tells you what to pay attention to while you're stuck.
