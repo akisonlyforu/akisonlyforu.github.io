@@ -1,0 +1,11 @@
+key,value
+collector_version,otelcol-contrib version 0.156.0
+image,otel/opentelemetry-collector-contrib@sha256:125bdbeb7590cc1952c5b3430ecf14063568980c2c93d5b38676cc0446ed8108
+otlp_endpoint,127.0.0.1:4317
+metrics_url,http://127.0.0.1:8888/metrics
+pad_bytes_per_trace,2500
+slow_ms,800
+latency_threshold_ms,500
+host_platform,Darwin 24.6.0 arm64
+host_cpus,10
+timestamp_utc,2026-07-19T09:54:03Z

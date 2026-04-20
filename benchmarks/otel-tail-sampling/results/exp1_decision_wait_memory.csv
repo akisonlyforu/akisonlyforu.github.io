@@ -1,0 +1,5 @@
+decision_wait_s,target_rate,traces_in_memory_peak,mem_mb_peak,predicted_num_traces_rate_x_wait_x2
+5,1000,10000,133.5,10000
+15,1000,30000,220.0,30000
+30,1000,30000,320.9,60000
+60,1000,85000,576.0,120000

@@ -1,0 +1,37 @@
+OTel Collector tail_sampling memory harness -- key numbers
+============================================================
+collector: otelcol-contrib version 0.156.0
+image:     otel/opentelemetry-collector-contrib@sha256:125bdbeb7590cc1952c5b3430ecf14063568980c2c93d5b38676cc0446ed8108
+host:      Darwin 24.6.0 arm64  cpus=10
+per-trace attribute padding: 2500 bytes
+
+Exp1 -- memory scales with decision_wait (num_traces = rate x wait x 2):
+  wait_s  rate  traces_in_mem_peak  RSS_MB_peak  predicted_num_traces
+  5       1000  10000               133.5        10000
+  15      1000  30000               220.0        30000
+  30      1000  30000               320.9        60000
+  60      1000  85000               576.0        120000
+  => peak RSS grows monotonically with decision_wait. At the
+     larger configs the generator can't sustain the full rate once
+     the collector is under memory pressure (gRPC backpressure), so
+     measured in-memory count falls below the formula-sized ring cap
+     -- the buffer never fully fills. Growth is still clearly linear-ish.
+
+Exp2 -- undersized num_traces evicts the OLDEST (error) traces:
+  config               num_traces  err_sent  err_kept  err_lost%  dropped_too_early
+  small_num_traces     2000        500       0         100.0      6500
+  adequate_num_traces  200000      500       500       0.0        0
+  => small ring loses most error traces before their decision fires;
+     adequate ring keeps ~all of them.
+
+Exp3 -- storage savings (keep ERROR or slow):
+  spans received=30000  exported=600  reduction=98.0%
+  policy=keep ERROR OR latency>500ms  (error_ratio=0.01, slow_ratio=0.01)
+
+Exp4 -- OOMKill attempt (results/):
+  mem_limit=400MB decision_wait=90s rate=3000  oomkilled=true restart_count=1 seconds_to_oom=67.2
+  (kill inferred from RestartCount>0 under the cap while RSS was
+   climbing to ~357MB/400MB; the post-restart .State.OOMKilled flag
+   resets to false, so RestartCount is the durable evidence.)
+
+Laptop measurements demonstrating the mechanism, not capacity planning.

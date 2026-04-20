@@ -1,0 +1,27 @@
+# Digest-pinned OTel Collector (contrib distro -- has tailsamplingprocessor).
+# Loopback-only port binds. This compose file is for the manual `gen` path:
+#   docker compose up -d --wait
+#   python benchmark.py gen
+# The experiment orchestrator (python benchmark.py all) manages its own
+# containers via `docker run` so it can vary decision_wait / num_traces /
+# mem_limit per experiment; it does not use this file.
+services:
+  collector:
+    image: otel/opentelemetry-collector-contrib@sha256:125bdbeb7590cc1952c5b3430ecf14063568980c2c93d5b38676cc0446ed8108
+    container_name: otel-tailbench-compose
+    command: ["--config", "/etc/otelcol-contrib/config.yaml"]
+    environment:
+      DECISION_WAIT: "${DECISION_WAIT:-10s}"
+      NUM_TRACES: "${NUM_TRACES:-200000}"
+      EXPECTED_NEW_TPS: "${EXPECTED_NEW_TPS:-2000}"
+      LATENCY_THRESHOLD_MS: "${LATENCY_THRESHOLD_MS:-500}"
+    volumes:
+      - ./collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "127.0.0.1:4317:4317"   # OTLP gRPC receiver
+      - "127.0.0.1:8888:8888"   # internal Prometheus telemetry
+    healthcheck:
+      test: ["CMD", "/otelcol-contrib", "--version"]
+      interval: 2s
+      timeout: 3s
+      retries: 30

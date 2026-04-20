@@ -1,0 +1,2 @@
+spans_received,spans_exported,storage_reduction_pct,error_ratio,slow_ratio,policy
+30000,600,98.0,0.01,0.01,keep ERROR OR latency>500ms
