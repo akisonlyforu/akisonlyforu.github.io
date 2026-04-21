@@ -239,4 +239,4 @@ Almost every LLD question you'll get asked collapses into one of these. Pick 2 p
 
 ## 10. Closing thought
 
-None of this replaces getting your hands dirty. Read the framework once, then go code a Parking Lot, badly, in 60 minutes, and see where you got stuck. That's the real syllabus, this doc just tells you what to pay attention to while you're stuck.
+None of this replaces getting your hands dirty. Read the framework until you understand it thoroughly, then go code something badly, the first time, maybe in 2 hours, and analyze your strengths and weaknesses. Do it a couple of times until you can code something out in 60 minutes.
