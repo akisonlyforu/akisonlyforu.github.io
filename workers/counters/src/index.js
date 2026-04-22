@@ -1,4 +1,4 @@
-const PATH_RE = /^\/(blog|thoughts)\/[A-Za-z0-9-]+\/$/;
+const PATH_RE = /^\/(blog|thoughts)\/[A-Za-z0-9-]+\/$|^\/interview\/[A-Za-z0-9-]+\/[A-Za-z0-9-]+\/$/;
 
 async function sha256Hex(message) {
   const data = new TextEncoder().encode(message);
