@@ -2,7 +2,7 @@
 layout: post
 title: Structure-Driven Problems Playbook
 date: 2026-07-12
-description: When the data structure IS the design — 15 recurring structures, how OO still shows up when there's no variation package, and five concurrency disciplines for dense shared state.
+description: When the data structure is the design, 15 recurring structures, how OO still shows up when there's no variation package, and five concurrency disciplines for dense shared state.
 categories: interview lld patterns
 ---
 
@@ -12,9 +12,9 @@ Deep dive on structure-driven problems, companion to [What do you actually do in
 
 The tell is in the requirements, not the domain. When the problem statement contains **complexity bounds**, "O(1) get and put", "O(log n) insert and cancel", "top-k efficiently", "query any time range fast", or a **grammar** ("parse this JSON subset", "validate this cron expression"), the interviewer is not grading your class diagram. They are grading whether you can pick the one structure that meets the bound and keep its invariants intact under mutation. A second tell: the entity list is embarrassingly short. An LRU cache has a Node and a list; an order book has a PriceLevel; a median store has two heaps. If your entity pass produces two thin classes and you feel the urge to invent more, stop, you're in this category.
 
-The win condition here is: correct structure + articulated invariants + working code, NOT patterns. A `Strategy` interface wrapped around a broken doubly-linked list scores zero; a hand-rolled map+DLL whose map and list provably always agree scores full marks. Invariants do double duty exactly as always: they are your validation checks AND, later, your lock boundaries ("map and list always agree" is precisely the thing a lock must protect).
+What wins here is correct structure, articulated invariants, and working code. Not patterns. A `Strategy` interface wrapped around a broken doubly-linked list scores zero. A hand-rolled map+DLL whose map and list provably always agree scores full marks. Invariants do double duty exactly as always: they're your validation checks, and later, your lock boundaries ("map and list always agree" is precisely the thing a lock must protect).
 
-The senior move is to declare the category out loud early: **"The design here is the structure itself; I'm not adding pattern scaffolding. The variation, if it comes, will be a swap of the structure behind a stable API, so I'll keep the API clean and the structure private."** That sentence is the same signal as correctly placing a Strategy elsewhere, you identified where the variation lives (nowhere in code) and declined the folder.
+The senior move is to declare the category out loud early: **"The design here is the structure itself; I'm not adding pattern scaffolding. The variation, if it comes, will be a swap of the structure behind a stable API, so I'll keep the API clean and the structure private."** That sentence is the same signal as correctly placing a Strategy elsewhere. You identified where the variation lives (nowhere in code) and declined the folder.
 
 One nuance: some problems live next to structure-driven ones without being structure-driven themselves. A pluggable-eviction cache genuinely has an eviction Strategy axis; a rate limiter has an algorithm-family axis (token bucket vs sliding window). The test: if the interviewer's likely follow-up is "swap the algorithm," you want the interface; if it's "now make it O(1)" or "now make it thread-safe," you're structure-driven.
 
@@ -33,7 +33,7 @@ Fifteen structures cover the entire category. Learn each as: the structure, the 
 | 7 | **Inverted index inside sealed time segments** | term → posting list per bucket; AND = intersection, OR = merge; active segment takes writes, sealed segments are immutable | Search engine, log search |
 | 8 | **DAG + topological recompute (in-degree/DFS)** | Edges = dependencies; cycle check at edge-insert (reject with path); change propagates in topo order from dirty node | Spreadsheet, workflow engine, task planners |
 | 9 | **Adjacency graph + BFS/Dijkstra** | Graph immutable snapshot; traversal parametrized by edge filter + weight function so the router never branches on mode | Maps navigation, connection suggestions, delivery routing |
-| 10 | **Bit array + hash family** | k probes via double hashing (h1 + i·h2); bits set-only, so no false negatives, the monotonicity IS the invariant | Bloom filter, seen-URL filters |
+| 10 | **Bit array + hash family** | k probes via double hashing (h1 + i·h2); bits set-only, so no false negatives, the monotonicity is the invariant | Bloom filter, seen-URL filters |
 | 11 | **Overlay stacks (layered maps)** | Read walks layers top-down (null marker = delete); write goes to top layer; commit merges into parent, rollback pops | KV store with transactions, layered config/feature flags |
 | 12 | **Recursive descent / explicit state machine** | Grammar functions mirror productions OR enumerate states out loud; errors carry position; never partial output | JSON parser, CSV parser, markdown parser, cron parser, regex compile phase |
 | 13 | **Geo grid buckets (cell → entity set)** | Hash lat/lng to a cell; radius query = candidate cells (including neighbors, the boundary bug) then exact-distance filter; moves are per-entity atomic bucket swaps | Nearby search, geo lookups under heatmaps; grid vs geohash vs quadtree is the discussion |
@@ -56,13 +56,13 @@ Composites exist: an LSM store is rows 14+10+7 stacked (memtable + blooms + seal
 
 Concurrency lands hardest in this category, because the shared state is dense and hot. Five recurring disciplines, each with its narration:
 
-**1. Single-writer discipline.** An order book and an LSM write-ahead log are the exemplars: one writer thread owns the structure; the append/match order IS the truth. Say: "matching engines are single-writer per book in real exchanges, if you force multi-writer on me, I'll talk about level-lock granularity and why it's painful." Honesty about what production systems actually do scores above heroic fine-grained locking.
+**1. Single-writer discipline.** An order book and an LSM write-ahead log are the exemplars. One writer thread owns the structure, and the append/match order is the truth. Say: "matching engines are single-writer per book in real exchanges. If you force multi-writer on me, I'll talk about level-lock granularity and why it's painful." Honesty about what production systems actually do scores above heroic fine-grained locking.
 
-**2. Seal-and-freeze (name the idea).** For read-hot, append-mostly systems, logs, search, LSM, the recurring move is: one active segment takes writes (single-writer or one lock), and once a segment seals it becomes **immutable, so queries over it need no locks at all**. Its cousin is the **volatile snapshot swap**: build an immutable ring/frame/graph, publish by swapping one volatile reference, a consistent-hash ring (rare membership changes, hot lookups), heatmap frames (double-buffered, no torn reads), a navigation graph. One sentence covers all of them: "readers are lock-free because they only ever see immutable, atomically-published state."
+**2. Seal-and-freeze (name the idea).** For read-hot, append-mostly systems, logs, search, LSM, the recurring move is: one active segment takes writes (single-writer or one lock), and once a segment seals it becomes **immutable, so queries over it need no locks at all**. Its cousin is the **volatile snapshot swap**: build an immutable ring/frame/graph, publish by swapping one volatile reference. Think a consistent-hash ring (rare membership changes, hot lookups), heatmap frames (double-buffered, no torn reads), a navigation graph. One sentence covers all of them: "readers are lock-free because they only ever see immutable, atomically-published state."
 
-**3. CAS loops on packed state.** When the whole state fits in one immutable object or one word, `AtomicReference` + compareAndSet retry loop beats any lock: a token bucket (tokens + lastRefill packed in a BucketState), bloom filter bits (AtomicLongArray CAS-or, legal only because bits are set-only and monotonic, say that's WHY no lock is needed). Placement judgment matters: CAS wins on ONE hot shared bucket; per-client buckets rarely contend, so a lock is fine there.
+**3. CAS loops on packed state.** When the whole state fits in one immutable object or one word, `AtomicReference` + compareAndSet retry loop beats any lock. A token bucket packs tokens + lastRefill in a BucketState. Bloom filter bits use AtomicLongArray CAS-or, and that's legal only because bits are set-only and monotonic, say so out loud. Placement judgment matters too: CAS wins on a single hot shared bucket, but per-client buckets rarely contend, so a lock is fine there.
 
-**4. "Make the LRU thread-safe" is a trap, walk in with the trade-off named.** The naive answers both lose: a coarse lock is correct but serializes everything; naive striping corrupts the DLL because a get on stripe A reorders a list shared with stripe B. The senior answer is a fork you present: **V1 exact**, one ReentrantLock around map+list, correct, honest, low throughput; **V2 approximate**, a concurrent map + per-entry access timestamps, evict the oldest of K random samples (name Redis's actual design) or buffered reads applied in batches (name Caffeine's). The sentence that wins: "I keep the size bound EXACT and relax recency order to APPROXIMATE, I can state exactly which invariant I traded and what I bought." Being able to say which invariant you relaxed is the entire point.
+**4. "Make the LRU thread-safe" is a trap, walk in with the trade-off named.** The naive answers both lose. A coarse lock is correct but serializes everything. Naive striping corrupts the DLL because a get on stripe A reorders a list shared with stripe B. The senior answer is a fork you present: **V1 exact**, one ReentrantLock around map+list, correct, honest, low throughput. **V2 approximate**, a concurrent map + per-entry access timestamps, evict the oldest of K random samples (name Redis's actual design) or buffered reads applied in batches (name Caffeine's). The sentence that wins: "I keep the size bound exact and relax recency order to approximate, I can state exactly which invariant I traded and what I bought." Being able to say which invariant you relaxed is the entire point.
 
 **5. Multi-key moves stay per-entity-atomic.** Geo index updates (remove from old cell + add to new) ride a per-entity `compute()`; money-transfer-style multi-entity invariants take sorted-order per-entity locks.
 
@@ -73,11 +73,11 @@ Concurrency lands hardest in this category, because the shared state is dense an
 The two shapes you will hand-write most often. Rehearse until the declarations pour out.
 
 ```java
-// Shape 1 — HashMap + intrusive doubly-linked list (LRU family)
+// Shape 1: HashMap + intrusive doubly-linked list (LRU family)
 class LruCache<K, V> {
     private static final class Node<K, V> {
         final K key; V value;
-        Node<K, V> prev, next;              // intrusive links — no wrapper list
+        Node<K, V> prev, next;              // intrusive links, no wrapper list
         Node(K key, V value);
     }
     private final int capacity;
@@ -93,7 +93,7 @@ class LruCache<K, V> {
     private Node<K, V> evictLru();
 }
 
-// Shape 2 — TreeMap ladder + handle map (order book / anything sorted with O(1) cancel)
+// Shape 2: TreeMap ladder + handle map (order book / anything sorted with O(1) cancel)
 class BookSide {
     private static final class OrderNode {           // intrusive FIFO node inside a level
         final String orderId; long qty;
@@ -120,8 +120,8 @@ A consistent-hash ring is Shape 2 minus the handles: `TreeMap<Long, VNode>` + `c
 
 ## 6. Anti-signals
 
-- **Pattern scaffolding around a data structure.** A factory, a service interface, and a repository wrapped around a 40-line LRU tells the interviewer you have one hammer. Interfaces go where a second implementation is credible TODAY, nowhere else.
-- **Library magic you can't open up.** `LinkedHashMap(cap, 0.75f, true)` with `removeEldestEntry` solves LRU in five lines, and invites "so how does it work inside?" Use it only if you can explain access-order relinking; otherwise hand-roll and SAY you're hand-rolling because the internals are the question. Same for `PriorityQueue` (know sift-up/down costs), `DelayQueue` (know the leader-follower trick), `TreeMap` (red-black, O(log n), floor/ceiling).
+- **Pattern scaffolding around a data structure.** A factory, a service interface, and a repository wrapped around a 40-line LRU tells the interviewer you have one hammer. Interfaces go where a second implementation is credible today, nowhere else.
+- **Library magic you can't open up.** `LinkedHashMap(cap, 0.75f, true)` with `removeEldestEntry` solves LRU in five lines, and invites "so how does it work inside?" Use it only if you can explain access-order relinking. Otherwise hand-roll it and say you're hand-rolling because the internals are the question. Same for `PriorityQueue` (know sift-up/down costs), `DelayQueue` (know the leader-follower trick), `TreeMap` (red-black, O(log n), floor/ceiling).
 - **Ignoring stated complexity bounds.** Scanning a list for the LRU victim, recomputing the median by sorting, linear-scanning orders to cancel, each violates the bound the problem stated in sentence one. Restate the bounds up front and let them choose the structure.
 - **Skipping invariants because "it's just a data structure".** "Map and list always agree" unstated becomes the bug where you evict from the list but not the map. The invariant block is cheaper than the debugging.
 - **Bluffing on the hard variants.** Lock-free medians, catastrophic-backtracking-proof regex with captures, exact concurrent LRU with striping, the honest "that's research territory / a different engine shape; here's what production systems do instead" beats a confident wrong sketch every time.

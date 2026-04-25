@@ -2,7 +2,7 @@
 layout: post
 title: Data-Driven Variation Playbook
 date: 2026-07-12
-description: When a follow-up is answered by adding data instead of adding classes — the four rungs of config, the promotion path to Strategy, and hot-reload without locks.
+description: When a follow-up is answered by adding data instead of adding classes. The four rungs of config, the promotion path to Strategy, and hot-reload without locks.
 categories: interview lld patterns
 ---
 
@@ -23,10 +23,10 @@ Deep dive on the data-driven variation type, companion to [What do you actually 
 
 In a 60-minute round, rung 2 is your default: seed the table in `Main` (or a small `Config` class) and narrate "in production this loads from a file, the table shape is identical, only the source changes." Climb to rung 3/4 only if the problem demands it. Building a file parser mid-round is a time sink unless parsing IS the question.
 
-**When to STOP, the promotion path.** The moment two variants need different *behavior*, a different algorithm, a branch that exists for one variant only, data has hit its ceiling. Promote in this order:
+**When to STOP, the promotion path.** The moment two variants need genuinely different behavior, not just different numbers, data has hit its ceiling. Promote in this order:
 
 1. **Value in a table**, variants differ in numbers. (Every beverage brews identically: check ingredients, deduct all-or-nothing, pour. A latte vs a mocha is purely a different `Map<Ingredient, Integer>`. Recipes STAY data forever.)
-2. **Table row carries a key that selects a strategy**, variants share structure but one field picks behavior. (A fee schedule's `category × tier` rates are data, but a "first 10 listings free" promo needs a counter, a fee *rule* class keyed by event type, parameterized by the table.)
+2. **Table row carries a key that selects a strategy**, variants share structure but one field picks behavior. (A fee schedule's `category × tier` rates are data, but a "first 10 listings free" promo is different. That needs a counter and a fee *rule* class keyed by event type, with the table just feeding it parameters.)
 3. **Full Strategy**, variants ARE algorithms. (A flat rate table is data; surge pricing that multiplies by live demand is a `PricingStrategy`. Some problems make both moves at once: rate table data + congestion strategy.)
 
 The judgment call the interviewer is probing: recipes never leave rung 1-2, but the ingredient-check *policy* (fail-fast vs wait-for-refill) is behavior → strategy. One problem, both answers, and you must draw the line out loud.
@@ -40,7 +40,7 @@ The judgment call the interviewer is probing: recipes never leave rung 1-2, but 
 - **`EnumMap` keyed tables**, when the key is an enum, `EnumMap<Regime, List<SlabRow>>` is dense, ordered, and reads as documentation.
 - **Record rows**, `record SlabRow(BigDecimal upTo, BigDecimal rate) {}`. Tax slabs are a `List<SlabRow>` sorted ascending; computing tax is one fold over the list per regime. Records give you `equals`/`hashCode`/immutability for free, the ideal config-row type.
 - **Composite-key tables**, `record TransitionKey(State from, Event event) {}` → `Map<TransitionKey, State>`. This is the **FSM-as-data** form: a transition table `Map<(state, event), Transition>` inside an immutable `Definition` shared by many mutable instances. Adding a workflow state = table rows, no code.
-- **The property map** (anti-subclassing). Naive design: a base type with subclasses per variant, each duplicating fields and forcing a new class per type. The lesson: those subclasses differ only in *attributes*, so replace the hierarchy with a `Spec` holding `Map<Property, Object>`; search is map comparison that ignores unset keys; new type = data, not code. Rule: subclass when behavior differs, property-map when only attributes differ.
+- **The property map** (anti-subclassing). Naive design: a base type with subclasses per variant, each duplicating fields and forcing a new class per type. The lesson: those subclasses differ only in *attributes*, so replace the hierarchy with a `Spec` holding `Map<Property, Object>`. Searching becomes a map comparison that ignores unset keys, and a new type is now a data entry instead of a class. Rule of thumb: subclass when behavior differs, property-map when only attributes differ.
 - **Effective-dated rows**, fee schedules, payroll revisions, time-banded rates: give rows `validFrom`/`validTo` and make lookup filter by date. Old invoices recompute against old rows, never overwrite history, append new rows.
 
 **Seeding vs loading.** Seed in `Main` during the round; keep construction behind one factory method (`RateTable.of(rows)`) so "load from file" later touches one call site.
@@ -53,14 +53,14 @@ The judgment call the interviewer is probing: recipes never leave rung 1-2, but 
 
 Tables are read-hot and write-rare, the easiest concurrency story in the framework if you say it right:
 
-- **Immutable after load = thread-safe by construction.** `Map.copyOf`/`List.copyOf` into `final` fields; safe publication via final-field semantics; unlimited concurrent readers, no locks, nothing to narrate beyond "it's immutable, so it's free." This is the definition/instance split: one immutable shared `Definition`, per-instance mutable `current` guarded separately.
+- **Immutable after load = thread-safe by construction.** `Map.copyOf`/`List.copyOf` into `final` fields gets you safe publication for free via final-field semantics. Readers run concurrently with no locks needed, there's nothing to narrate beyond "it's immutable, so it's free." This is the definition/instance split: one immutable shared `Definition`, per-instance mutable `current` guarded separately.
 - **Hot reload = volatile swap of the WHOLE table, never mutate in place.** Build the new table off to the side, validate it (fail fast, a bad reload must not take down live traffic), then one write to a `volatile` reference. Readers grab the reference once per operation so a single request sees one consistent table, never a torn mix of old and new rows. In-place mutation of a live map is the classic wrong answer.
 - **Runtime-editable registries** (rung 4): `ConcurrentHashMap<Key, VersionedEntry>` when entries change independently (per-key atomic `compute`, versioned entries for rollback); copy-on-write when the table is small and read-massively. If changes notify listeners, snapshot the listener list and invoke *outside* the lock, never call foreign code holding your lock.
 
 ## 4. Skeletons (declarations only)
 
 ```java
-// Rate/slab table — immutable, validated at construction
+// Rate/slab table (immutable, validated at construction)
 public record SlabRow(BigDecimal upTo, BigDecimal ratePercent) {}
 public final class SlabTable {
     private final List<SlabRow> rows;                        // sorted ascending; last row upTo = MAX
@@ -69,15 +69,15 @@ public final class SlabTable {
     public BigDecimal taxOn(BigDecimal income);
 }
 
-// Recipe registry — new beverage = one entry
+// Recipe registry, new beverage = one entry
 public record Recipe(String beverage, Map<Ingredient, Integer> amounts) {}
 public final class RecipeBook {
-    private final Map<String, Recipe> byName;                // Map.copyOf — immutable after build
+    private final Map<String, Recipe> byName;                // Map.copyOf, immutable after build
     public static RecipeBook of(Collection<Recipe> recipes); // validates ingredients known, amounts > 0
     public Optional<Recipe> find(String beverage);
 }
 
-// Transition table — FSM as data
+// Transition table (FSM as data)
 public record TransitionKey(TaskStatus from, TaskEvent event) {}
 public final class TransitionTable {
     private final Map<TransitionKey, TaskStatus> table;      // validated: all endpoints are defined states
@@ -85,7 +85,7 @@ public final class TransitionTable {
     public Optional<TaskStatus> next(TaskStatus from, TaskEvent event);  // empty = illegal transition
 }
 
-// Hot-reload holder — swap whole immutable tables, never mutate in place
+// Hot-reload holder, swap whole immutable tables, never mutate in place
 public final class ConfigHolder<T> {
     private volatile T current;                              // T is an immutable table type
     public T get();                                          // callers read ONCE per operation (consistent snapshot)
