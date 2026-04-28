@@ -349,6 +349,11 @@ a {
 
   code {
     color: #cdd6f4 !important;
+    background-color: #313244 !important;
+  }
+
+  pre code {
+    background-color: transparent !important;
   }
 
   .highlight .c,
