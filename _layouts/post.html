@@ -41,7 +41,7 @@ layout: default
   <span class="post-meta small">
     {% if page.minutes %} {{ page.minutes }} {{ site.text.post.minute_read }} {%
     else %} {{ minutes }} {{ site.text.post.minute_read }} {% endif %}
-    {% if site.show_post_stats %} · <span id="view-stat"><span id="view-count">–</span> views</span>{% endif %}
+    {% if site.show_post_stats and page.post_stats != false %} · <span id="view-stat"><span id="view-count">–</span> views</span>{% endif %}
   </span>
 </div>
 
