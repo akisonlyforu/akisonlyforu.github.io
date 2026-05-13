@@ -22,3 +22,6 @@ vendor/
 **/media
 
 **/__pycache__
+.handoff-*.md
+_to_delete/
+.agents/
