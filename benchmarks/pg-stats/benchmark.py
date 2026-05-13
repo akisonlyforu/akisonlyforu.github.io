@@ -9,6 +9,7 @@ import platform
 import re
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 from datetime import datetime, timezone
@@ -33,6 +34,10 @@ UUID_SQL = """
     substr(md5(session_number::text), 21, 12)
 )::uuid
 """
+POSTGRES_IMAGE = (
+    "postgres:16.14@sha256:"
+    "33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20"
+)
 
 
 def db_connect():
@@ -187,6 +192,22 @@ def validate_seed(connection, row_count, events_per_session, block_size):
         minimum, maximum, grouped_sessions = cursor.fetchone()
         cursor.execute(
             """
+            SELECT count(*)
+            FROM (
+                SELECT session_id, count(*) AS event_count,
+                       min(id) AS first_id, max(id) AS last_id
+                FROM audit_events
+                WHERE session_id IS NOT NULL
+                GROUP BY session_id
+            ) AS sessions
+            WHERE event_count <> %s
+               OR last_id - first_id + 1 <> %s
+            """,
+            (events_per_session, events_per_session),
+        )
+        non_contiguous_sessions = cursor.fetchone()[0]
+        cursor.execute(
+            """
             SELECT indisvalid, indisready
             FROM pg_index
             WHERE indexrelid = 'idx_audit_events_session_id'::regclass
@@ -204,6 +225,10 @@ def validate_seed(connection, row_count, events_per_session, block_size):
         expected_sessions,
     ):
         raise RuntimeError("session burst validation failed")
+    if non_contiguous_sessions:
+        raise RuntimeError(
+            "%s sessions are not physically contiguous" % non_contiguous_sessions
+        )
     if not index_valid or not index_ready:
         raise RuntimeError("session_id index is not valid and ready")
     return distinct_sessions
@@ -335,7 +360,7 @@ def write_metadata(results_dir, args, connection, real_distinct, seed_seconds):
         {"key": "python", "value": platform.python_version()},
         {"key": "docker", "value": command_version(["docker", "--version"])},
         {"key": "docker_compose", "value": command_version(["docker", "compose", "version"])},
-        {"key": "postgres_image", "value": "postgres:16.14"},
+        {"key": "postgres_image", "value": POSTGRES_IMAGE},
         {"key": "postgres_server", "value": server_version},
         {"key": "seed_rows", "value": str(args.rows)},
         {"key": "block_size", "value": str(args.block_size)},
@@ -350,14 +375,33 @@ def write_metadata(results_dir, args, connection, real_distinct, seed_seconds):
     write_csv(results_dir / "run_metadata.csv", ["key", "value"], rows)
 
 
-def run_all(args):
+def validate_args(args):
     allowed_results = DEFAULT_RESULTS.resolve()
     requested_results = args.results.resolve()
     if requested_results != allowed_results and allowed_results not in requested_results.parents:
         raise RuntimeError("--results must stay under benchmarks/pg-stats/results")
     if not args.reset:
         raise RuntimeError("all truncates benchmark tables; rerun with --reset")
-    args.results.mkdir(parents=True, exist_ok=True)
+    if args.rows <= 0 or args.block_size <= 1:
+        raise ValueError("--rows must be positive and --block-size must be greater than 1")
+    if args.rows % args.block_size:
+        raise ValueError("--rows must be divisible by --block-size")
+    if not 0 < args.events_per_session < args.block_size:
+        raise ValueError("--events-per-session must be between 1 and block-size - 1")
+    session_count = args.rows // args.block_size
+    if not 1 <= args.target_session <= session_count:
+        raise ValueError("--target-session must name one of the generated sessions")
+    if not args.statistics_targets or len(set(args.statistics_targets)) != len(
+        args.statistics_targets
+    ):
+        raise ValueError("--statistics-targets must be a non-empty unique list")
+    if any(target < 1 or target > 10000 for target in args.statistics_targets):
+        raise ValueError("statistics targets must be between 1 and 10000")
+
+
+def run_all(args):
+    validate_args(args)
+    args.results.parent.mkdir(parents=True, exist_ok=True)
     wait_for_postgres()
     connection = db_connect()
     try:
@@ -371,25 +415,34 @@ def run_all(args):
         target_session = deterministic_uuid(args.target_session)
         stats_rows = []
         query_rows = []
-        for target in args.statistics_targets:
-            analyze_runs = 2 if target == 5000 else 1
-            stats_rows.extend(
-                capture_stats(connection, target, analyze_runs, real_distinct)
+        with tempfile.TemporaryDirectory(
+            prefix=".pg-stats-run-", dir=str(args.results.parent)
+        ) as staging_name:
+            staging_results = Path(staging_name)
+            for target in args.statistics_targets:
+                analyze_runs = 2 if target == 5000 else 1
+                stats_rows.extend(
+                    capture_stats(connection, target, analyze_runs, real_distinct)
+                )
+                query_rows.append(
+                    explain_query(connection, target_session, target, staging_results)
+                )
+            write_csv(
+                staging_results / "statistics.csv",
+                list(stats_rows[0].keys()),
+                stats_rows,
             )
-            query_rows.append(
-                explain_query(connection, target_session, target, args.results)
+            write_csv(
+                staging_results / "query_results.csv",
+                list(query_rows[0].keys()),
+                query_rows,
             )
-        write_csv(
-            args.results / "statistics.csv",
-            list(stats_rows[0].keys()),
-            stats_rows,
-        )
-        write_csv(
-            args.results / "query_results.csv",
-            list(query_rows[0].keys()),
-            query_rows,
-        )
-        write_metadata(args.results, args, connection, real_distinct, seed_seconds)
+            write_metadata(
+                staging_results, args, connection, real_distinct, seed_seconds
+            )
+            args.results.mkdir(parents=True, exist_ok=True)
+            for source in staging_results.iterdir():
+                os.replace(str(source), str(args.results / source.name))
 
         query_by_target = {row["statistics_target"]: row for row in query_rows}
         first = query_by_target.get(100)

@@ -1,6 +1,6 @@
 # pg_stats benchmark harness
 
-This is the harness behind [The Lie in pg_stats](../../collections/_posts/2026-07-18-the-130x-lie-in-pg-stats.md). It runs PostgreSQL 16.14 locally and reproduces the `ORDER BY id LIMIT 1` planner trap discussed in the post.
+This is the harness behind [The Lie in pg_stats](../../collections/_posts/2026-07-18-the-130x-lie-in-pg-stats.md). It runs a digest-pinned PostgreSQL 16.14 image locally and reproduces the `ORDER BY id LIMIT 1` planner trap discussed in the post.
 
 The seed is deterministic: 20,000,000 append-ordered audit events, 82% with a NULL `session_id`, and 20,000 non-null sessions with 180 physically adjacent events apiece. A 5,000,000-row seed with 18-event bursts did not reproduce the bad plan, and neither did 20,000,000 rows with 18-event bursts, so the checked-in run follows the post's disclosed escalation and tightens the clustering naturally. The benchmark measures the same query at per-column statistics targets 100, 2000, and 5000. `ANALYZE` sampling is random, and both target-5000 samples are kept in the CSV instead of pretending the seed makes statistics sampling deterministic.
 
@@ -28,7 +28,7 @@ PostgreSQL is bound to loopback on host port `55433`. Override the connection wi
 export PG_STATS_BENCH_DSN='dbname=pg_stats_bench user=stats_bench password=stats_bench host=127.0.0.1 port=55433'
 ```
 
-The checked-in defaults are the ones used for the post. The 20-million-row table and its indexes need several gigabytes of Docker disk space; check your Docker allocation before running it. `--reset` is mandatory because the command truncates the dedicated benchmark tables. The harness also verifies the database name and an identity marker before it does that work, and it refuses result paths outside this benchmark's `results/` directory.
+The checked-in defaults are the ones used for the post. The 20-million-row table and its indexes use about 2.1 GB in the checked-in run; leave extra Docker disk space for index construction and temporary work. `--reset` is mandatory because the command truncates the dedicated benchmark tables. The harness validates every workload argument first, then verifies the database name and an identity marker before it does that work. It refuses result paths outside this benchmark's `results/` directory and stages a complete run before replacing older evidence files.
 
 `--rows`, `--block-size`, `--events-per-session`, `--target-session`, and `--statistics-targets` are available for investigation, but changing them produces a different experiment.
 
