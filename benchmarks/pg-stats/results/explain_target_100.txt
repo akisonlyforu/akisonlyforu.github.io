@@ -1,0 +1,20 @@
+Limit  (cost=0.72..1386.49 rows=1 width=92) (actual time=1409.718..1409.719 rows=1 loops=1)
+  Buffers: shared read=223880
+  I/O Timings: shared read=228.696
+  ->  Nested Loop  (cost=0.72..763557.35 rows=551 width=92) (actual time=1409.717..1409.718 rows=1 loops=1)
+        Buffers: shared read=223880
+        I/O Timings: shared read=228.696
+        ->  Index Scan using audit_events_pkey on audit_events ae  (cost=0.44..763542.15 rows=551 width=61) (actual time=1409.693..1409.693 rows=1 loops=1)
+              Filter: (session_id = 'c92b26f6-8689-c7af-56b0-b08721897732'::uuid)
+              Rows Removed by Filter: 17999000
+              Buffers: shared read=223877
+              I/O Timings: shared read=228.689
+        ->  Materialize  (cost=0.29..8.31 rows=1 width=47) (actual time=0.021..0.021 rows=1 loops=1)
+              Buffers: shared read=3
+              I/O Timings: shared read=0.008
+              ->  Index Scan using admin_sessions_pkey on admin_sessions s  (cost=0.29..8.30 rows=1 width=47) (actual time=0.017..0.017 rows=1 loops=1)
+                    Index Cond: (id = 'c92b26f6-8689-c7af-56b0-b08721897732'::uuid)
+                    Buffers: shared read=3
+                    I/O Timings: shared read=0.008
+Planning Time: 0.062 ms
+Execution Time: 1409.730 ms

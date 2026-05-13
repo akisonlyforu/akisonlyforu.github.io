@@ -2,13 +2,77 @@
 layout:     post
 title:      Everything I Got Wrong About Rate Limiting
 date:       2026-07-18
-description:    A rate limiter is three lines and everyone writes the same fixed-window counter, myself included. Then it lets a client through at double the limit on the window edge, hands out free quota when Redis evicts a key, and rejects a request while the headers swear the client has a full tank left. Here's the algorithm menu, the atomic Lua the counter actually needs, and every sharp edge that has personally bitten me.
+description:    A rate limiter is three lines and everyone writes the same fixed-window counter, myself included. Then a boundary burst walks through, Redis eviction hands out free quota, and a stale replica makes the decision disagree with the headers. Here's the algorithm menu, the atomic Lua the counter actually needs, and every sharp edge that has personally bitten me.
 categories: rate-limiting redis distributed-systems api
 ---
 
-The first rate limiter I ever shipped was three lines and I was quietly proud of it. It ran fine for months. Then one morning a single client pushed through double the limit inside two seconds and walked away clean, and around the same time another client got a `429` while the response headers I handed back cheerfully told it there was a full tank of quota left. I spent that morning staring at two facts that couldn't both be true and slowly realising the three lines had been lying to me the whole time.
+The first rate limiter I ever shipped was three lines and I was quietly proud of it. It ran fine for months. Then one morning a single client pushed far more traffic through a window edge than the limit was meant to allow, and around the same time another client got a `429` while the response headers I handed back cheerfully told it there was quota left. I spent that morning staring at two facts that couldn't both be true and slowly realising the three lines had been lying to me the whole time.
 
 A rate limiter is three lines. Increment a counter, put a TTL on it, reject the request if the counter is over the limit. You'll write it, I wrote it, everyone writes the same three lines and they all pass in the demo. Then a real client with a real burst shows up, then you put Redis behind it and add a replica, and you find out the three lines were hiding about eight different ways to be wrong. This is the stuff I wish someone had handed me before I learned it the expensive way, one support ticket at a time.
+
+I wanted numbers before keeping any of the dramatic ones in this post, so I put a Redis primary and replica in Docker and ran all five failures on this laptop. The [limiter implementations, harness, raw CSVs, and exact command are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/rate-limiter). These are comparisons on one machine, not production capacity numbers. The two-command race is swept across an injected 0/5/10/25 ms gap, and the replica test deliberately pauses replication for 0/10/25/50 ms. Both timing knobs are in the charts because hiding the amplification would make the numbers useless.
+
+<style>
+.rl-bench {
+  --rl-bg: #f7f9fb;
+  --rl-text: #333333;
+  --rl-muted: #666666;
+  --rl-grid: rgba(0, 0, 0, 0.12);
+  --rl-blue: #0076df;
+  --rl-orange: #d65f3c;
+  --rl-green: #23856d;
+  --rl-purple: #7b5bb5;
+  margin: 1.8rem 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rl-grid);
+  border-radius: 8px;
+  background: var(--rl-bg);
+  color: var(--rl-text);
+}
+.rl-bench h3 { margin: 0 0 1rem; color: var(--rl-text); font-size: 1rem; }
+.rl-bench figcaption { margin-top: 0.9rem; color: var(--rl-muted); font-size: 0.82rem; line-height: 1.45; }
+.rl-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.rl-panel-title { margin: 0 0 0.55rem; color: var(--rl-muted); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.rl-bar-row { display: grid; grid-template-columns: minmax(7rem, 1.3fr) minmax(7rem, 4fr) minmax(4.4rem, 0.9fr); gap: 0.55rem; align-items: center; margin: 0.45rem 0; font-size: 0.78rem; }
+.rl-track { position: relative; height: 0.72rem; overflow: hidden; border-radius: 999px; background: var(--rl-grid); }
+.rl-track.reference::after { content: ""; position: absolute; left: var(--reference); top: -2px; bottom: -2px; width: 2px; background: var(--rl-text); opacity: 0.8; }
+.rl-fill { display: block; width: var(--value); min-width: 2px; height: 100%; border-radius: inherit; background: var(--bar, var(--rl-blue)); }
+.rl-value { color: var(--rl-muted); text-align: right; font-variant-numeric: tabular-nums; }
+.rl-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.rl-svg text { fill: var(--rl-muted); font: 12px system-ui, sans-serif; }
+.rl-svg .grid { stroke: var(--rl-grid); stroke-width: 1; }
+.rl-svg .series-a { fill: none; stroke: var(--rl-orange); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.rl-svg .series-b { fill: none; stroke: var(--rl-blue); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.rl-svg .series-c { fill: none; stroke: var(--rl-green); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.rl-legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; color: var(--rl-muted); font-size: 0.78rem; }
+.rl-swatch { width: 0.8rem; height: 0.22rem; margin-right: 0.3rem; display: inline-block; vertical-align: middle; background: var(--swatch); }
+@media (prefers-color-scheme: dark) {
+  .rl-bench {
+    --rl-bg: #252525;
+    --rl-text: #e0e0e0;
+    --rl-muted: #b0b0b0;
+    --rl-grid: rgba(255, 255, 255, 0.14);
+    --rl-blue: #4dabf7;
+    --rl-orange: #ff8a65;
+    --rl-green: #51cf66;
+    --rl-purple: #b197fc;
+  }
+}
+:root[data-theme="dark"] .rl-bench {
+  --rl-bg: #252525;
+  --rl-text: #e0e0e0;
+  --rl-muted: #b0b0b0;
+  --rl-grid: rgba(255, 255, 255, 0.14);
+  --rl-blue: #4dabf7;
+  --rl-orange: #ff8a65;
+  --rl-green: #51cf66;
+  --rl-purple: #b197fc;
+}
+@media (max-width: 620px) {
+  .rl-panels { grid-template-columns: 1fr; }
+  .rl-bar-row { grid-template-columns: minmax(6.5rem, 1.3fr) minmax(5rem, 3fr) minmax(4rem, 0.9fr); gap: 0.4rem; }
+}
+</style>
 
 ## What it actually is
 
@@ -53,14 +117,23 @@ If you take one line from this section, it's that the algorithm is a staleness-v
 The fixed-window counter has one flaw baked into its shape, and it's the first thing that bit me. The window resets on a hard boundary. So a client that's paying attention sends its whole limit at the very end of one window and its whole limit again at the very start of the next:
 
 ```
-limit = 100 / minute
+benchmark limit = 100 / 2 seconds
 
-10:00:59   ├─ 100 requests ─┤          window A counter → 100, allowed
-10:01:00   ├─ 100 requests ─┤          window B counter → 100, allowed
-           └──── 200 requests in about 2 seconds ────┘
+1.990s   ├─ 100 requests ─┤          window A counter → 100, allowed
+2.010s   ├─ 100 requests ─┤          window B counter → 100, allowed
+         └──── 200 admitted inside one rolling 2s interval ────┘
 ```
 
-You promised 100 a minute and you just served 200 in two seconds, right across the seam. For an abuse limit that's the difference between "protected" and "not." The sliding-window counter fixes this without a full log, you keep this window's count and last window's count and blend them by how much of the previous window is still in view:
+That is what the harness measured: all 200 got through the fixed window, a 100% overshoot. The sliding counter admitted 101, a 1% overshoot from the approximation. Under the uniform stream, both peaked at exactly 100. For an abuse limit, that seam-aware client is the whole reason the algorithm choice matters.
+
+<figure class="rl-bench">
+  <h3>Peak admits in any rolling two-second interval</h3>
+  <div class="rl-bar-row"><span>Fixed window</span><span class="rl-track reference" style="--reference:50%"><span class="rl-fill" style="--value:100%;--bar:var(--rl-orange)"></span></span><span class="rl-value">200</span></div>
+  <div class="rl-bar-row"><span>Sliding counter</span><span class="rl-track reference" style="--reference:50%"><span class="rl-fill" style="--value:50.5%;--bar:var(--rl-blue)"></span></span><span class="rl-value">101</span></div>
+  <figcaption>Limit 100 per two seconds; the black marker is the promised limit. Both algorithms peaked at 100 under the uniform stream, so this chart shows the seam-aware burst.</figcaption>
+</figure>
+
+The sliding-window counter fixes most of this without a full log, you keep this window's count and last window's count and blend them by how much of the previous window is still in view:
 
 ```python
 def allowed_sliding(key, limit=100, window=60, now=None):
@@ -73,7 +146,42 @@ def allowed_sliding(key, limit=100, window=60, now=None):
     return estimate < limit
 ```
 
-It's an approximation, but the error is small and it's *smooth*, no seam to game. Two keys instead of one, both with a short TTL. Worth it almost every time you're limiting something adversarial.
+It is smooth. After its first warm-up second, the fixed counter admitted `8, 8, 8, 8, 8, 8, 2, 0, 0, 0` in each set of 100 ms buckets. The sliding counter settled at five every bucket. The approximation error was not small in this workload, though. Against the exact log, it disagreed on 1,102 of 2,400 individual decisions, 45.92%, even though both algorithms admitted the same 1,500 requests overall. They spent the same quota at different moments.
+
+<figure class="rl-bench">
+  <h3>Admits per 100 ms under 80 offered requests/second</h3>
+  <svg class="rl-svg" viewBox="0 0 700 270" role="img" aria-labelledby="smooth-title smooth-desc">
+    <title id="smooth-title">Fixed-window sawtooth compared with a sliding counter</title>
+    <desc id="smooth-desc">After warm-up, fixed window repeatedly admits eight requests in early buckets and zero in late buckets. Sliding counter admits five in every bucket.</desc>
+    <line class="grid" x1="50" y1="45" x2="680" y2="45"></line>
+    <line class="grid" x1="50" y1="132" x2="680" y2="132"></line>
+    <line class="grid" x1="50" y1="220" x2="680" y2="220"></line>
+    <line class="grid" x1="260" y1="35" x2="260" y2="220"></line>
+    <line class="grid" x1="470" y1="35" x2="470" y2="220"></line>
+    <text x="42" y="49" text-anchor="end">8</text>
+    <text x="42" y="136" text-anchor="end">4</text>
+    <text x="42" y="224" text-anchor="end">0</text>
+    <text x="50" y="243">0s</text>
+    <text x="260" y="243" text-anchor="middle">1s</text>
+    <text x="470" y="243" text-anchor="middle">2s</text>
+    <text x="680" y="243" text-anchor="end">3s</text>
+    <polyline class="series-a" points="50,45 71,45 92,45 113,45 134,45 155,45 176,176 197,220 218,220 239,220 260,45 281,45 302,45 323,45 344,45 365,45 386,176 407,220 428,220 449,220 470,45 491,45 512,45 533,45 554,45 575,45 596,176 617,220 638,220 659,220"></polyline>
+    <polyline class="series-b" points="50,45 71,45 92,45 113,45 134,45 155,45 176,176 197,220 218,220 239,220 260,111 281,111 302,111 323,111 344,111 365,111 386,111 407,111 428,111 449,111 470,111 491,111 512,111 533,111 554,111 575,111 596,111 617,111 638,111 659,111"></polyline>
+  </svg>
+  <div class="rl-panels">
+    <div class="rl-legend">
+      <span><i class="rl-swatch" style="--swatch:var(--rl-orange)"></i>Fixed window</span>
+      <span><i class="rl-swatch" style="--swatch:var(--rl-blue)"></i>Sliding counter</span>
+    </div>
+    <div>
+      <p class="rl-panel-title">Counter vs exact log</p>
+      <div class="rl-bar-row"><span>Disagreement</span><span class="rl-track"><span class="rl-fill" style="--value:45.917%;--bar:var(--rl-purple)"></span></span><span class="rl-value">45.92%</span></div>
+    </div>
+  </div>
+  <figcaption>Thirty virtual seconds, limit 50/second, eight offered requests per 100 ms. The exact log and counter each admitted 1,500; the disagreement bar measures which individual requests got different answers.</figcaption>
+</figure>
+
+Two keys instead of one, both with a short TTL. I still reach for it when smooth output matters, but I no longer describe the approximation as small without measuring the traffic shape first.
 
 ## Two commands, one race
 
@@ -94,7 +202,43 @@ INCR count → 1
                                    INCR count → 1
 ```
 
-Two requests went through and the counter says `1`. Every racing pair leaks a little, and under real concurrency on a hot key that's constant. The limiter quietly under-counts and clients sail past the limit you swore you set. Nothing throws. You find out from a graph, not an exception.
+Two requests went through and the counter says `1`. The limiter quietly under-counts and clients sail past the limit you swore you set. Nothing throws. You find out from a graph, not an exception.
+
+I forced 30 expired-window rollovers with eight clients colliding on each one, then filled whatever quota the counter claimed was left. With no injected delay, the naive pair admitted 3,018 against a budget of 3,000, a 0.60% leak. At a disclosed 25 ms gap between reading the reset and writing the new state, it admitted 3,100, a 3.33% leak. The Lua version admitted exactly 3,000 at every point in the sweep.
+
+<figure class="rl-bench">
+  <h3>Quota leaked by the two-command reset race</h3>
+  <div class="rl-panels">
+    <div>
+      <p class="rl-panel-title">At the 25 ms injected gap</p>
+      <div class="rl-bar-row"><span>Two commands</span><span class="rl-track"><span class="rl-fill" style="--value:83.325%;--bar:var(--rl-orange)"></span></span><span class="rl-value">3.33%</span></div>
+      <div class="rl-bar-row"><span>Atomic Lua</span><span class="rl-track"><span class="rl-fill" style="--value:0%;--bar:var(--rl-green)"></span></span><span class="rl-value">0.00%</span></div>
+    </div>
+    <div>
+      <svg class="rl-svg" viewBox="0 0 700 250" role="img" aria-labelledby="race-title race-desc">
+        <title id="race-title">Overshoot versus injected read-to-reset gap</title>
+        <desc id="race-desc">Naive overshoot rises from 0.6 percent at zero gap to 3.33 percent at 25 milliseconds. Atomic Lua stays at zero.</desc>
+        <line class="grid" x1="60" y1="50" x2="650" y2="50"></line>
+        <line class="grid" x1="60" y1="125" x2="650" y2="125"></line>
+        <line class="grid" x1="60" y1="200" x2="650" y2="200"></line>
+        <text x="52" y="54" text-anchor="end">4%</text>
+        <text x="52" y="129" text-anchor="end">2%</text>
+        <text x="52" y="204" text-anchor="end">0%</text>
+        <text x="60" y="224">0ms</text>
+        <text x="178" y="224" text-anchor="middle">5</text>
+        <text x="296" y="224" text-anchor="middle">10</text>
+        <text x="650" y="224" text-anchor="end">25ms</text>
+        <polyline class="series-a" points="60,178 178,155 296,141 650,75"></polyline>
+        <polyline class="series-c" points="60,200 178,200 296,200 650,200"></polyline>
+      </svg>
+      <div class="rl-legend">
+        <span><i class="rl-swatch" style="--swatch:var(--rl-orange)"></i>Two commands</span>
+        <span><i class="rl-swatch" style="--swatch:var(--rl-green)"></i>Atomic Lua</span>
+      </div>
+    </div>
+  </div>
+  <figcaption>Limit 100 per window, 30 controlled rollovers, eight racing clients. The gap is deliberate timing amplification; the 0 ms point is the localhost baseline.</figcaption>
+</figure>
 
 The fix is to make the read-decide-reset-increment sequence one atomic step, and Redis gives you exactly that with a Lua script — it runs to completion with nothing interleaved:
 
@@ -139,10 +283,37 @@ GET count → 100   (at the limit —
 decide: REJECT, 429
                                      INCR count on primary → window's
                                      actually fresh, count = 1
-                                     build headers → Remaining: 99
+                                     build headers → Remaining: at least 80
 ```
 
-You rejected off stale data and reported off fresh data, and the client gets a `429` next to `Remaining: 99`. Two fixes, both needed. Make the decision and the headers come from the *same* atomic result — the script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. The presence of a key is not the truth. The stored reset time is.
+I measured the contradiction as a rejection where the fresh primary result still reported at least 80 of 100 requests remaining. Even the localhost baseline produced 3 contradictions in 120 decisions, 2.50%. With replication deliberately paused for 50 ms, that became 44 in 120, 36.67%. Making the decision and headers from the primary's one atomic result produced zero contradictions at every lag.
+
+<figure class="rl-bench">
+  <h3>Rejected while the fresh result still showed ≥80 remaining</h3>
+  <svg class="rl-svg" viewBox="0 0 700 260" role="img" aria-labelledby="replica-title replica-desc">
+    <title id="replica-title">Contradiction rate versus injected replica lag</title>
+    <desc id="replica-desc">Replica-based decisions rise from 2.5 percent contradictions at zero injected lag to 36.67 percent at 50 milliseconds. Atomic primary decisions stay at zero.</desc>
+    <line class="grid" x1="60" y1="50" x2="650" y2="50"></line>
+    <line class="grid" x1="60" y1="125" x2="650" y2="125"></line>
+    <line class="grid" x1="60" y1="200" x2="650" y2="200"></line>
+    <text x="52" y="54" text-anchor="end">40%</text>
+    <text x="52" y="129" text-anchor="end">20%</text>
+    <text x="52" y="204" text-anchor="end">0%</text>
+    <text x="60" y="225">0ms</text>
+    <text x="178" y="225" text-anchor="middle">10</text>
+    <text x="355" y="225" text-anchor="middle">25</text>
+    <text x="650" y="225" text-anchor="end">50ms</text>
+    <polyline class="series-a" points="60,191 178,166 355,131 650,63"></polyline>
+    <polyline class="series-c" points="60,200 178,200 355,200 650,200"></polyline>
+  </svg>
+  <div class="rl-legend">
+    <span><i class="rl-swatch" style="--swatch:var(--rl-orange)"></i>Decide from replica</span>
+    <span><i class="rl-swatch" style="--swatch:var(--rl-green)"></i>Decide + report from primary Lua</span>
+  </div>
+  <figcaption>Three cycles and 120 decisions per point. The harness detaches replication for 0/10/25/50 ms to make localhost lag observable, then reattaches and verifies the replica after every cycle.</figcaption>
+</figure>
+
+Two fixes, both needed. Make the decision and the headers come from the *same* atomic result — the script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. The presence of a key is not the truth. The stored reset time is.
 
 ## Free quota from the eviction gods
 
@@ -170,6 +341,25 @@ Shard by hashing the rate-limit key to one of N clusters, so a given key always 
 
 The trap in sharding by key: it does nothing for a single hot key. One abusive client hammering one token is one key, which is one shard, and sharding spread everyone *else* out but left that shard carrying the whole storm. Sharding fixes aggregate throughput, not a hot spot. A hot key needs local shedding at the edge before it ever reaches Redis, or its own fatter box — spreading the *other* keys around doesn't help the one that's actually on fire.
 
+On this laptop, one primary handled 283,791 Lua decisions/second with keys spread across the keyspace. Promoting the replica to a second primary and splitting those keys reached 400,032/second, a 41% gain. Both containers share the same laptop, so I did not get a clean 2× and I would not size production from this number. The hot key made the point more cleanly: 318,595/second on one shard and 299,301/second with two. The second shard sat there looking decorative while every request still landed on shard zero.
+
+<figure class="rl-bench">
+  <h3>Lua limiter decisions/second as shards are added</h3>
+  <div class="rl-panels">
+    <div>
+      <p class="rl-panel-title">Keys spread by CRC32</p>
+      <div class="rl-bar-row"><span>1 primary</span><span class="rl-track"><span class="rl-fill" style="--value:70.94%;--bar:var(--rl-blue)"></span></span><span class="rl-value">283,791</span></div>
+      <div class="rl-bar-row"><span>2 primaries</span><span class="rl-track"><span class="rl-fill" style="--value:100%;--bar:var(--rl-green)"></span></span><span class="rl-value">400,032</span></div>
+    </div>
+    <div>
+      <p class="rl-panel-title">Every request on one hot key</p>
+      <div class="rl-bar-row"><span>1 primary</span><span class="rl-track"><span class="rl-fill" style="--value:79.64%;--bar:var(--rl-orange)"></span></span><span class="rl-value">318,595</span></div>
+      <div class="rl-bar-row"><span>2 primaries</span><span class="rl-track"><span class="rl-fill" style="--value:74.82%;--bar:var(--rl-purple)"></span></span><span class="rl-value">299,301</span></div>
+    </div>
+  </div>
+  <figcaption>Sixteen spawned processes, pipelines of 256 <code>EVALSHA</code> calls, three-second runs. The replica is promoted only for the two-primary cases and restored afterward. Host timing is the noisiest measurement in this post.</figcaption>
+</figure>
+
 ## Charge before or after?
 
 Last one, and it's a genuine judgment call, not a bug. Do you count the request when it *arrives* or when it *finishes*?
@@ -184,14 +374,14 @@ The answer I've settled on is reserve-then-refund: charge a token on the way in 
 
 Everything above, squeezed into the list I'd actually paste into a review:
 
-- **Fixed window on an adversarial limit** → 2× the limit straddles the boundary. Use a sliding-window counter.
-- **Counter and reset in two commands, no atomicity** → racing requests reset each other and the limit leaks. One Lua script.
+- **Fixed window on an adversarial limit** → my 100-request limit admitted 200 across the boundary. Use a sliding-window counter.
+- **Counter and reset in two commands, no atomicity** → the naive version leaked 3.33% at the disclosed 25 ms gap. One Lua script.
 - **Two keys with different (or missing) expiries** → half-a-window of corrupt state. Expire both at the same absolute time.
 - **Reset header computed as `now + TTL`** → it wobbles across two clocks. Store the absolute reset time and return that.
-- **Deciding off a replica** → reject-with-full-tank, because replicas lag and expire lazily. Decide and report from the same atomic result.
+- **Deciding off a replica** → 36.67% contradictory responses at the disclosed 50 ms lag. Decide and report from the same atomic result.
 - **Rate-limiter keys sharing a cache's LRU pool** → eviction hands out free windows and partial evictions corrupt state. Own instance, eviction off on purpose.
 - **No fallback when Redis is down** → blanket fail-open drops the shield, blanket fail-closed drops the API. Local fallback limiter, alarm on it.
-- **Sharding by key and calling a hot key solved** → it isn't; one key is one shard. Shed hot keys at the edge.
+- **Sharding by key and calling a hot key solved** → two primaries did no better than one for the hot key. Shed hot keys at the edge.
 - **Silent about the charging model** → clients rage about quota spent on `304`s. Reserve, refund the free ones, document which are free.
 
 ## So is it worth it

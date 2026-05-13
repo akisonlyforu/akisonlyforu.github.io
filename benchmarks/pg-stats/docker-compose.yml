@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16.14
+    environment:
+      POSTGRES_DB: pg_stats_bench
+      POSTGRES_USER: stats_bench
+      POSTGRES_PASSWORD: stats_bench
+    command:
+      - postgres
+      - -c
+      - max_connections=20
+      - -c
+      - track_io_timing=on
+    ports:
+      - "127.0.0.1:55433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stats_bench -d pg_stats_bench"]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
