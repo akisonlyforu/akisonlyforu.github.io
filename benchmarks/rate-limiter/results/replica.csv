@@ -1,0 +1,9 @@
+strategy,injected_lag_ms,decisions,rejected,contradictions,contradiction_pct,full_tank_threshold
+decide_from_replica,0,120,3,3,2.5,80
+atomic_primary,0,120,0,0,0.0,80
+decide_from_replica,10,120,11,11,9.167,80
+atomic_primary,10,120,0,0,0.0,80
+decide_from_replica,25,120,22,22,18.333,80
+atomic_primary,25,120,0,0,0.0,80
+decide_from_replica,50,120,44,44,36.667,80
+atomic_primary,50,120,0,0,0.0,80

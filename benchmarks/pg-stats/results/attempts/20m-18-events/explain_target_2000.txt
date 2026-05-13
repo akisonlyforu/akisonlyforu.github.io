@@ -1,0 +1,16 @@
+Limit  (cost=85.46..85.46 rows=1 width=93) (actual time=0.017..0.018 rows=1 loops=1)
+  Buffers: shared hit=8
+  ->  Sort  (cost=85.46..85.50 rows=18 width=93) (actual time=0.017..0.017 rows=1 loops=1)
+        Sort Key: ae.id
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=8
+        ->  Nested Loop  (cost=0.86..85.37 rows=18 width=93) (actual time=0.009..0.013 rows=18 loops=1)
+              Buffers: shared hit=8
+              ->  Index Scan using admin_sessions_pkey on admin_sessions s  (cost=0.42..8.44 rows=1 width=48) (actual time=0.005..0.005 rows=1 loops=1)
+                    Index Cond: (id = 'b7b449cb-b985-fa7f-65b1-a372265c1e7e'::uuid)
+                    Buffers: shared hit=4
+              ->  Index Scan using idx_audit_events_session_id on audit_events ae  (cost=0.44..76.75 rows=18 width=61) (actual time=0.003..0.005 rows=18 loops=1)
+                    Index Cond: (session_id = 'b7b449cb-b985-fa7f-65b1-a372265c1e7e'::uuid)
+                    Buffers: shared hit=4
+Planning Time: 0.049 ms
+Execution Time: 0.027 ms

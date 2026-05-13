@@ -1,0 +1,5 @@
+load_shape,limiter,offered,admitted,peak_rolling_window_admits,peak_rolling_2s_admits,overshoot_pct
+seam_aware,fixed_window,200,200,200,200,100.0
+seam_aware,sliding_counter,200,101,101,101,1.0
+uniform,fixed_window,200,200,100,100,0.0
+uniform,sliding_counter,200,199,100,100,0.0
