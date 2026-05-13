@@ -92,7 +92,7 @@ def allowed(key, limit=100, window=60):
 
 ## Pick the algorithm on purpose
 
-Here's the thing nobody tells you at the start, "rate limiting" isn't one algorithm, it's about five, and they trade accuracy for memory and smoothness in different places. People say "rate limit" and mean any of these:
+The thing that caught me off guard early is that "rate limiting" isn't one algorithm, it's about five, and they trade accuracy for memory and smoothness in different places. People say "rate limit" and mean any of these:
 
 | Algorithm | How it counts | I reach for it when |
 |---|---|---|
@@ -110,7 +110,7 @@ The rules I actually use, stripped down:
 - **A downstream that falls over on spikes** → GCRA / leaky bucket, admit at a flat rate no matter how bursty the input.
 - **Per-user *and* per-endpoint *and* per-IP** → you're not picking one limiter, you're running three and rejecting if *any* of them trips. Say that out loud, it's a design decision, not an accident.
 
-If you take one line from this section, it's that the algorithm is a staleness-vs-memory-vs-smoothness call, same as caching is a staleness-vs-freshness call. Fixed window is the default because it's cheap, not because it's right.
+The point of the section is that picking the algorithm is an accuracy-vs-memory-vs-smoothness call, the same way caching is a staleness-vs-freshness call. Fixed window ends up being everyone's default because it's the cheapest to run, and cheap is about the only thing it's automatically good at.
 
 ## The window that lets through double
 
@@ -265,7 +265,7 @@ APIs hand the client a header saying when its window resets — `X-RateLimit-Res
 
 The cause was that I was computing the reset time as `now + TTL(key)`. The TTL came from Redis over the network; `now` came from the app process. Two different clocks, two different moments, a few milliseconds and a rounding boundary apart. Every so often they landed on different seconds and the header twitched.
 
-The fix is to never *derive* the reset time, store it. Write the absolute reset timestamp as a value (that's what the Lua script above does), and return that exact number to the client every time. It costs you one more key's worth of memory and it makes the header rock-steady, because it's a stored fact now, not a subtraction across two clocks. Don't recompute a thing you can just remember.
+The fix is to never *derive* the reset time, store it. Write the absolute reset timestamp as a value (that's what the Lua script above does), and return that exact number to the client every time. It costs you one more key's worth of memory and it makes the header rock-steady, because you're reading back a stored fact instead of subtracting across two clocks every time.
 
 ## Rejected, with a full tank
 
@@ -313,7 +313,7 @@ I measured the contradiction as a rejection where the fresh primary result still
   <figcaption>Three cycles and 120 decisions per point. The harness detaches replication for 0/10/25/50 ms to make localhost lag observable, then reattaches and verifies the replica after every cycle.</figcaption>
 </figure>
 
-Two fixes, both needed. Make the decision and the headers come from the *same* atomic result — the script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. The presence of a key is not the truth. The stored reset time is.
+Two fixes, both needed. Make the decision and the headers come from the *same* atomic result — the script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. Whether the key is still sitting there tells you nothing you can rely on; the reset time you stored does.
 
 ## Free quota from the eviction gods
 
@@ -321,7 +321,7 @@ Here's a subtle one. If your rate-limiter keys live in the same Redis (or Memcac
 
 Worse is the partial eviction. Counter and reset are two keys; the eviction policy doesn't know they're a pair. It evicts one and keeps the other, and now you've got a counter with no expiry, or a reset time pointing at a window whose count is gone. Corrupt, half-alive state that behaves differently depending on which half survived, and good luck reproducing it.
 
-The rate limiter is not a cache and must not share a memory pool with one. Give it its own instance (or at least its own logical DB) with an eviction policy set on purpose — `noeviction`, or `volatile-ttl` so only genuinely-expiring keys ever go. A cache is a thing you can afford to lose; a rate-limiter counter that vanishes is free abuse. Don't let them fight over the same bytes.
+The rate limiter is not a cache and must not share a memory pool with one. Give it its own instance (or at least its own logical DB) with an eviction policy set on purpose — `noeviction`, or `volatile-ttl` so only genuinely-expiring keys ever go. You can afford to lose a cache entry, that's the whole point of a cache, but a rate-limiter counter that gets evicted mid-window is just free abuse, so don't make the two of them compete for the same memory.
 
 ## When Redis is down
 
@@ -339,7 +339,7 @@ The reason any of the sharding stuff exists is a fact people forget about Redis:
 
 Shard by hashing the rate-limit key to one of N clusters, so a given key always lands on the same cluster — the state for one user stays in one place and stays consistent — but the *load* spreads across clusters. Each cluster is a primary plus replicas: increments (the decisions) go to the primary, and genuinely read-only traffic that doesn't gate anything — a usage dashboard, a "remaining" number on a page — can come off replicas, as long as you never make the actual *limit decision* from a lagging replica (see three sections up for how that goes).
 
-The trap in sharding by key: it does nothing for a single hot key. One abusive client hammering one token is one key, which is one shard, and sharding spread everyone *else* out but left that shard carrying the whole storm. Sharding fixes aggregate throughput, not a hot spot. A hot key needs local shedding at the edge before it ever reaches Redis, or its own fatter box — spreading the *other* keys around doesn't help the one that's actually on fire.
+The trap in sharding by key: it does nothing for a single hot key. One abusive client hammering one token is one key, which is one shard, and sharding spread everyone *else* out but left that shard carrying the whole storm. It buys you aggregate throughput and does nothing for a single hot spot. A hot key needs local shedding at the edge before it ever reaches Redis, or its own fatter box — spreading the *other* keys around doesn't help the one that's actually on fire.
 
 On this laptop, one primary handled 283,791 Lua decisions/second with keys spread across the keyspace. Promoting the replica to a second primary and splitting those keys reached 400,032/second, a 41% gain. Both containers share the same laptop, so I did not get a clean 2× and I would not size production from this number. The hot key made the point more cleanly: 318,595/second on one shard and 299,301/second with two. The second shard sat there looking decorative while every request still landed on shard zero.
 
