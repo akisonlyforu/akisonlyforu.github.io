@@ -1,0 +1,6 @@
+phase,used_memory,used_memory_human,used_memory_rss,used_memory_rss_human,mem_fragmentation_ratio,mem_allocator,maxmemory,maxmemory_human,maxmemory_policy,evicted_keys,allocator_allocated,allocator_active,allocator_resident,allocator_frag_ratio,allocator_frag_bytes,number_of_keys,cgroup_memory,cgroup_limit,time_sec
+empty_settle,1000000,1.00M,4000000,4.00M,4.0,libc,1073741824,1.00G,noeviction,0,1000000,1200000,4000000,1.2,200000,0,4100000,0,0.100
+loading,13212992,12.00M,22398976,20.00M,1.6,libc,1073741824,1.00G,noeviction,0,13212992,13312992,22398976,1.1,100000,25000,22498976,0,0.500
+loaded_settle,26425984,25.00M,44797952,41.00M,1.7,libc,1073741824,1.00G,noeviction,0,26425984,26625984,44797952,1.7,18371968,50000,44897952,0,1.000
+churn,28425984,27.00M,47797952,44.00M,1.7,libc,1073741824,1.00G,noeviction,0,28425984,28625984,47797952,1.7,18371968,50000,47897952,0,2.000
+churn_settle,26425984,25.00M,44797952,41.00M,1.7,libc,1073741824,1.00G,noeviction,0,26425984,26625984,44797952,1.7,18371968,50000,44897952,0,3.000

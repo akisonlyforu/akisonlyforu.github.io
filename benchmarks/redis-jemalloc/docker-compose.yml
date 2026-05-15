@@ -1,0 +1,52 @@
+services:
+  redis-je:
+    build:
+      context: .
+      args:
+        MALLOC: jemalloc
+    container_name: redis-jemalloc-je
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --maxmemory
+      - "1gb"
+      - --maxmemory-policy
+      - noeviction
+      - --activedefrag
+      - "no"
+    ports:
+      - "127.0.0.1:56380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  redis-lc:
+    build:
+      context: .
+      args:
+        MALLOC: libc
+    container_name: redis-jemalloc-libc
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --maxmemory
+      - "1gb"
+      - --maxmemory-policy
+      - noeviction
+      - --activedefrag
+      - "no"
+    ports:
+      - "127.0.0.1:56381:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
