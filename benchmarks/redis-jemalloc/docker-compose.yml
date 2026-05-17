@@ -4,6 +4,8 @@ services:
       context: .
       args:
         MALLOC: jemalloc
+        REDIS_VERSION: 7.4.0
+        REDIS_SHA256: 74effebe3d0e3ac582f5248492c13e7ca4918949b58b45873d37fc870a4b1fc6
     container_name: redis-jemalloc-je
     command:
       - redis-server
@@ -16,6 +18,8 @@ services:
       - --maxmemory-policy
       - noeviction
       - --activedefrag
+      - "no"
+      - --protected-mode
       - "no"
     ports:
       - "127.0.0.1:56380:6379"
@@ -30,6 +34,8 @@ services:
       context: .
       args:
         MALLOC: libc
+        REDIS_VERSION: 7.4.0
+        REDIS_SHA256: 74effebe3d0e3ac582f5248492c13e7ca4918949b58b45873d37fc870a4b1fc6
     container_name: redis-jemalloc-libc
     command:
       - redis-server
@@ -42,6 +48,8 @@ services:
       - --maxmemory-policy
       - noeviction
       - --activedefrag
+      - "no"
+      - --protected-mode
       - "no"
     ports:
       - "127.0.0.1:56381:6379"
