@@ -1,3 +1,3 @@
 phase,used_memory,used_memory_human,used_memory_rss,used_memory_rss_human,mem_fragmentation_ratio,mem_allocator,maxmemory,maxmemory_human,maxmemory_policy,evicted_keys,allocator_allocated,allocator_active,allocator_resident,allocator_frag_ratio,allocator_frag_bytes,number_of_keys,process_rss,cgroup_memory,cgroup_limit
-jemalloc,116961672,111.54M,127627264,121.71M,1.09,jemalloc-5.3.0,1073741824,1.00G,noeviction,0,117620328,118759424,123957248,1.01,1063064,200000,127627264,127733760,0
-libc,102464768,97.72M,112513024,107.30M,1.1,libc,1073741824,1.00G,noeviction,0,102464512,112513024,112513024,1.0,0,200000,112513024,111702016,0
+jemalloc,116777968,111.37M,126476288,120.62M,1.08,jemalloc-5.3.0,1073741824,1.00G,noeviction,0,117425008,117784576,122916864,1.0,283536,200000,126476288,125915136,0
+libc,101801632,97.09M,112513024,107.30M,1.11,libc,1073741824,1.00G,noeviction,0,101801376,112513024,112513024,1.0,0,200000,112513024,112021504,0

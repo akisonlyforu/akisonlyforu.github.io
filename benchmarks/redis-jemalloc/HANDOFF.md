@@ -1,7 +1,7 @@
 # Benchmark handoff: redis-jemalloc (for Gemini)
 
 You are building the benchmark harness behind the post **"Redis Brings Its Own malloc, and Here's Why"**
-(`collections/_posts/2026-07-20-redis-brings-its-own-malloc.md`). The post is drafted with placeholder
+(`collections/_posts/2026-07-18-redis-brings-its-own-malloc.md`). The post is drafted with placeholder
 tokens `[[BENCH:*]]`; your job is to produce the real measurements that replace them, plus the
 checked-in evidence, following the exact conventions already used by `benchmarks/redis-oom/` and
 `benchmarks/pg-stats/`.
@@ -13,6 +13,12 @@ layout. Do not invent a house style; copy this one.
 The core difference from redis-oom: that harness ran **one** Redis and watched a delete. This harness
 runs the **same Redis compiled two ways** and compares them on identical work. The variable under test
 is the allocator, nothing else.
+
+> Execution note (2026-07-18): the run completed, and the first claim below did not reproduce.
+> `used_memory` differed by 12.39% even though both builds consumed the same SHA-256-identified
+> 800,000-operation plan and finished with 200,000 keys. The failed assumption is preserved under
+> `results/attempts/used-memory-assumption-*`; the final runner verifies workload identity directly
+> instead of treating allocator-reported usable bytes as an input fingerprint.
 
 ---
 
@@ -107,7 +113,7 @@ benchmarks/redis-jemalloc/
 
 ## 3. Token map — what fills each `[[BENCH:*]]` in the post
 
-Replace tokens in `collections/_posts/2026-07-20-redis-brings-its-own-malloc.md` from these sources.
+Replace tokens in `collections/_posts/2026-07-18-redis-brings-its-own-malloc.md` from these sources.
 Use `_human` forms for the value labels (e.g. `71.61M`); the `_pct` tokens are bar widths in percent
 (e.g. `66%`).
 
@@ -132,7 +138,7 @@ Use `_human` forms for the value labels (e.g. `71.61M`); the `_pct` tokens are b
   `rss_libc_pct: 100%`, `rss_je_pct: 72%`.
 
 When done, leave no `[[BENCH:*]]` token behind. Grep to confirm:
-`grep -n 'BENCH:' collections/_posts/2026-07-20-redis-brings-its-own-malloc.md` = empty.
+`grep -n 'BENCH:' collections/_posts/2026-07-18-redis-brings-its-own-malloc.md` = empty.
 
 ---
 
@@ -160,7 +166,7 @@ Dockerfile (ARG MALLOC), docker-compose.yml building both redis variants, benchm
 requirements.txt, README.md, and the results/ tree. Verify mem_allocator differs between the
 two builds before trusting any number. Run the identical churn workload against both, capture
 real measurements into results/, then fill every [[BENCH:*]] token in
-collections/_posts/2026-07-20-redis-brings-its-own-malloc.md using the token map in section 3,
+collections/_posts/2026-07-18-redis-brings-its-own-malloc.md using the token map in section 3,
 including the normalized figure bar widths. Preserve the no-churn control and any non-separating
 shapes under results/attempts/. Do not fabricate any number. Report the honest outcome even if
 jemalloc does not win — the post is written to accept a null result."
