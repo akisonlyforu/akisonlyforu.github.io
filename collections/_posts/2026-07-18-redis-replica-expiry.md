@@ -101,6 +101,23 @@ I walked in expecting to catch the replica red-handed returning a live-looking l
 
 What the masking does not cover is the count. `DBSIZE` still reports the ghost, because it's counting physical keys in the keyspace, not asking each one whether it's still alive. So the danger moved. It used to be "the replica lies to your `GET`"; on a modern Redis it's "the replica's count includes the dead," and anything that reasons about keyspace size off a replica, a `DBSIZE` gauge, a running-jobs number, a cleanup that counts before it acts, is quietly counting expired keys as live ones.
 
+## Proving the "used to be"
+
+I didn't want to hand-wave the "used to be," so I pinned an actual pre-masking Redis, 3.0.7, and ran the exact same script against it. Same primary, same replica, same expired key. Here's the replica on 3.0:
+
+```
+DBSIZE (counts it?)                         1
+GET job:solo                            owner
+EXISTS job:solo                             1
+TTL job:solo                                0
+SCAN finds job:solo?                    False
+DBSIZE again (reads deleted it?)            1
+```
+
+There it is, the bug the folklore is actually about. `GET` on the replica hands back `owner`, the value of a lock that expired seconds ago, and `EXISTS` says yes. A dedup guard doing its cheap pre-check against this replica would see a live lock and skip a job that nothing is actually holding. Run the thousand-key version and all 1,000 come back with their stored value, where 7.4 masked every single one. (`SCAN` is its own inconsistent story across versions and I'm not going to untangle it here; the two reads a lock check actually uses, `GET` and `EXISTS`, both hand you the ghost on 3.0.)
+
+So the read path really is fixed on a modern Redis in the way that matters most: the replica will not lie to your `GET` anymore. What it still does is count the dead, which is why the `DBSIZE` half of this outlived the fix and the `GET` half didn't.
+
 ## About that "replica DBSIZE runs higher" claim
 
 The other thing people say is that a replica's `DBSIZE` sits consistently above the primary's. I went looking for that gap on purpose, with the primary's active-expire cycle on and 5,000 keys expiring at once, sampling both counts every 200 milliseconds. The peak replica-minus-primary gap was zero. The keys expire, the primary's active cycle sweeps them, the `DEL`s land on the replica right behind, and the two counts fall together.
@@ -110,7 +127,7 @@ That drift is real when replication is lagging or the primary's expire cycle is 
 ## Stuff worth remembering
 
 - A replica never expires a key on its own. It holds the key until the primary sends a `DEL`, so a replica can physically contain keys that expired a while ago.
-- On a modern Redis (this run was 7.4.9), the replica masks expired keys on `GET`, `EXISTS`, `TTL`, and `SCAN`, so those all correctly say "gone." `DBSIZE` does not, it counts the ghosts.
+- On a modern Redis (this run was 7.4.9), the replica masks expired keys on `GET`, `EXISTS`, `TTL`, and `SCAN`, so those all correctly say "gone." `DBSIZE` does not, it counts the ghosts. On a pre-3.2 Redis (I checked against 3.0.7) even `GET` and `EXISTS` handed back the ghost, which is the older, scarier version of this bug and the reason the folklore exists.
 - Don't make a TTL-sensitive correctness call off a replica's key presence or its counts. A replica pre-check is a fine optimization, but the source of truth for a lock or an idempotency guard has to be the primary.
 - If you need a "how many are running" number off a replica, store an explicit `expires_at` in the value and filter by it yourself, or treat the count as an upper bound that includes ghosts.
-- The whole thing is reproducible in a couple of minutes, [primary, replica, and the script are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/redis-replica-expiry). Watch the replica count a thousand keys that every read swears are gone.
+- The whole thing is reproducible in a couple of minutes, [primary, replica, and the script are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/redis-replica-expiry). The default compose runs 7.4 (watch the replica count a thousand keys that every read swears are gone); a second `docker-compose.legacy.yml` runs 3.0 against the same script so you can watch the old unmasked-read version too.

@@ -1,0 +1,8 @@
+command,primary,replica
+DBSIZE (counts it?),,1
+GET job:solo,,owner
+EXISTS job:solo,,1
+TTL job:solo,,0
+SCAN finds job:solo?,,False
+DBSIZE again (reads deleted it?),,1
+PRIMARY GET lazy-delete,,1->0

@@ -4,16 +4,16 @@ EXPERIMENT A  ghost keyspace on the replica
   set 1000 keys with EX 2 on primary, waited 3s (all expired)
   primary DBSIZE : 1000
   replica DBSIZE : 1000
-  of those 1000 replica keys, 0 still return a value on GET
-  => 1000 read back as gone (masked), 0 returned their stored value
+  of those 1000 replica keys, 1000 still return a value on GET
+  => 0 read back as gone (masked), 1000 returned their stored value
 
 ==============================================================
 EXPERIMENT B  one expired key, all queried on the REPLICA
 ==============================================================
   DBSIZE (counts it?)                         1
-  GET job:solo                             None
-  EXISTS job:solo                             0
-  TTL job:solo                               -2
+  GET job:solo                            owner
+  EXISTS job:solo                             1
+  TTL job:solo                                0
   SCAN finds job:solo?                    False
   DBSIZE again (reads deleted it?)            1
   --- contrast on the PRIMARY ---
@@ -23,7 +23,7 @@ EXPERIMENT B  one expired key, all queried on the REPLICA
 EXPERIMENT C  DBSIZE drift as a batch expires (active-expire ON)
 ==============================================================
   set 5000 keys EX 2, sampled DBSIZE on both every 200ms for 10s
-  peak replica-minus-primary keyspace gap: 2231 keys
+  peak replica-minus-primary keyspace gap: 0 keys
   wrote 49 samples to results/dbsize_timeline.csv
 
-  redis 7.4.9 | artifacts in results/
+  redis 3.0.7 | artifacts in results/
