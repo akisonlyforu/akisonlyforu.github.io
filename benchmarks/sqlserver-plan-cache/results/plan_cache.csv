@@ -1,0 +1,3 @@
+scenario,cached_plans,cache_kb,wall_ms
+adhoc,500,68000,1861
+parameterized,1,136,1168
