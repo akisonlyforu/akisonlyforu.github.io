@@ -1,0 +1,7 @@
+  redis 7.4.9 | 64 workers, 12s, recompute 300ms, TTL 2.0s
+  herd           reqs= 36897  p50=    0.6  p95=     1.6  p99=   301.6  max=   359.0  (ms)
+  lock           reqs= 37354  p50=    0.6  p95=     1.5  p99=   286.1  max=   316.6  (ms)
+  lock_crash     reqs= 29147  p50=    0.6  p95=     1.6  p99=   295.5  max=  3515.8  (ms)
+  probabilistic  reqs= 42489  p50=    0.6  p95=     1.5  p99=     2.3  max=   316.4  (ms)
+  jitter: synchronized peak herd=300  jittered peak=47
+  artifacts in results/
