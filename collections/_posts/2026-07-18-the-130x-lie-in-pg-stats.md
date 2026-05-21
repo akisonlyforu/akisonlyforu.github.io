@@ -8,6 +8,10 @@ categories: postgres query-planner databases performance
 
 If you've ever stared at a Postgres plan and wondered why it walked straight past the index you built for that exact query, this is for you. I wanted to reproduce one of the nastier versions of that failure, the `ORDER BY ... LIMIT 1` trap, small enough that anyone could run it locally and argue with the same planner I was arguing with.
 
+## The problem
+
+Postgres had an index built for exactly this lookup and refused to use it, scanning about eighteen million rows in primary-key order to answer a query that returns one. The reason was a single number in the planner's statistics that was wrong by 130x, and under a `LIMIT` that one wrong number is enough to turn a sub-millisecond query into a four-second one. This is me reproducing that failure from scratch and following the bad estimate back to where it lives.
+
 My first 5 million rows behaved perfectly. Slightly rude when you're trying to write a post about a broken plan, but good news for the benchmark. I pushed it to 20 million rows, still fine. The trap finally fired when I kept the column 82% NULL and tightened each session into bursts of 180 events. No planner cost knobs, no disabled scan types, no hand-written plan. Postgres 16 looked at a real index, chose the primary key anyway, and removed 17,999,000 rows by filter before finding the one I asked for.
 
 The [Docker harness, deterministic seed, raw CSVs, and untouched EXPLAIN output are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/pg-stats). These are laptop numbers from one Docker container, the mechanism transfers, the absolute timings do not. I left the two failed shapes in the README too, because quietly pretending the 5 million row version worked would make for a cleaner story and a useless benchmark.
@@ -276,5 +280,7 @@ Execution Time: 0.050 ms
 - Treat a major-version upgrade as a statistics reset even if your migration tooling carries the column setting across. Verify the per-column target and run `ANALYZE` before traffic comes back, otherwise you can reintroduce the same plan after a maintenance window and spend a morning wondering why history has a sense of humour.
 - Run `ANALYZE` more than once while diagnosing this. It resamples, and one clean estimate can be luck. I care about whether the plan is stable across samples, not whether one run made my chart prettier.
 - This failure shape is not exclusive to Postgres. Any cost-based optimizer working from sampled cardinality estimates can get talked into a bad plan when equal values are physically clustered. Append-only data grouped by a foreign key is where I now check the estimate before blaming the index.
+
+## The takeaway
 
 The bit I keep coming back to is `Rows Removed by Filter`. When that number is enormous under a `LIMIT`, the index may be fine, the query may be fine, and the planner may simply believe it will get lucky much earlier than the data allows. Check the estimated rows, check `pg_stats`, then fix the estimate it is actually using.

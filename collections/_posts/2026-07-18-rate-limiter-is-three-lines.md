@@ -8,6 +8,10 @@ categories: rate-limiting redis distributed-systems api
 
 The first rate limiter I ever shipped was three lines and I was quietly proud of it. It ran fine for months. Then one morning a single client pushed far more traffic through a window edge than the limit was meant to allow, and around the same time another client got a `429` while the response headers I handed back cheerfully told it there was quota left. I spent that morning staring at two facts that couldn't both be true and slowly realising the three lines had been lying to me the whole time.
 
+## The problem
+
+A rate limiter is three lines, and those three lines are wrong in about eight different ways the moment real traffic hits them. A client empties its whole allowance across a window boundary, a two-command check races itself into letting extra requests through, the reset header wobbles, a lagging replica disagrees with the decision it just made, and cache eviction hands out free quota under load. This is each of those failures, measured, and the version that survives them.
+
 A rate limiter is three lines. Increment a counter, put a TTL on it, reject the request if the counter is over the limit. You'll write it, I wrote it, everyone writes the same three lines and they all pass in the demo. Then a real client with a real burst shows up, then you put Redis behind it and add a replica, and you find out the three lines were hiding about eight different ways to be wrong. This is the stuff I wish someone had handed me before I learned it the expensive way, one support ticket at a time.
 
 I wanted numbers before keeping any of the dramatic ones in this post, so I put a Redis primary and replica in Docker and ran all five failures on this laptop. The [limiter implementations, harness, raw CSVs, and exact command are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/rate-limiter). These are comparisons on one machine, not production capacity numbers. The two-command race is swept across an injected 0/5/10/25 ms gap, and the replica test deliberately pauses replication for 0/10/25/50 ms. Both timing knobs are in the charts because hiding the amplification would make the numbers useless.
@@ -387,5 +391,7 @@ Everything above, squeezed into the list I'd actually paste into a review:
 ## So is it worth it
 
 After all that, yeah, I still start every new limiter as a fixed-window counter, three lines, and I still think that's right. Reach for the fancy algorithm the day the boundary burst or the memory or the smoothness actually bites, not before. What the three lines leave out isn't the counting — `INCR` and a TTL genuinely handle the counting — it's everything around the counting: the seam in the window, the two-command race, the wobbling clock, the lagging replica, the eviction that shouldn't touch you, the outage you didn't plan for, the single thread you'll outgrow, the token you charged for nothing.
+
+## The takeaway
 
 And every one of those traces back to the same boring fact, the one caching taught me too: the instant you keep shared state and put it behind a network, you own its concurrency, its clocks, its failures, and its lies. No algorithm fixes that, you just pay for the state you keep. What I've come to like about the plain counter is that it doesn't pretend otherwise — all the bookkeeping sits right there in a Lua script you can read, where the sharp edges are yours to see instead of the framework's to hide. Delete-on-write has its six-item discipline; rate limiting has this one. Do these and the three lines hold up under the traffic that would otherwise find every edge for you, on a Monday, the expensive way. Ask me how I know.

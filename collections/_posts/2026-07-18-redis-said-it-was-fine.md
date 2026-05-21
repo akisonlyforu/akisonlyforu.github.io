@@ -8,6 +8,10 @@ categories: redis memory jemalloc operations
 
 If you've ever watched `used_memory` sit there calm and reasonable while the OOM killer took the process anyway, and everyone in the channel immediately said leak, this is for you. The OOM killer, if you haven't met it, is the Linux kernel's out-of-memory killer, the thing that picks a process and terminates it when the machine (or the cgroup) runs out of memory. Most of the time it isn't a leak, it's fragmentation, and the reason nobody believes that at first is that the number they're all staring at genuinely does look fine.
 
+## The problem
+
+A Redis process gets killed by the kernel for running out of memory while `used_memory` still reads comfortably under its limit, so the whole channel assumes a leak. It usually isn't one. After a big delete `used_memory` drops but the memory the kernel actually counts stays high, `maxmemory` never reacts because it's watching the wrong number, and the process walks into the OOM killer looking healthy the whole way. This is the reproduction and the three memory numbers that tell them apart.
+
 I wanted to reproduce this the same way I reproduce anything I don't fully trust myself to explain, small enough to run on a laptop and argue with the same allocator that's doing it to you in production. The setup is a queue-shaped workload: load a pile of small keys, pretend to batch-process them, then delete millions of them at once, which is the part that matters. That mass delete is where `used_memory` and the actual resident footprint stop agreeing.
 
 Every memory behavior and cgroup OOM rule reproduced perfectly on the first attempt. I left the shapes that didn't move RSS in the repo too, because a version where the memory quietly comes back on its own would make for a tidier post and a dishonest one.
@@ -185,5 +189,7 @@ And if you can, don't delete everything in one shot. The spike is the bulk free,
 - `maxmemory` only ever looks at `used_memory`, so it will happily let RSS climb after a mass delete without evicting a thing. Under a hard memory limit, minding that gap is on you.
 - Deleting a lot of keys at once can cost you more resident memory for a while, not less. Batch it with `UNLINK` when you can.
 - These are laptop-scale numbers, here to show the mechanism, not to size anything. What matters is which `INFO` field is telling the truth and which limit is actually load-bearing.
+
+## The takeaway
 
 The reason this one is worth keeping in your head is that it's a ten-minute fix once you know to look at RSS, and I've watched it turn into a two-day "we have a leak" hunt when nobody did. `used_memory` is what Redis asked for. `used_memory_rss` is what the OS is holding. When those two disagree by a lot, trust RSS, because that's the number the kernel is about to act on.
