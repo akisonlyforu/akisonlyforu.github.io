@@ -206,7 +206,7 @@ INCR count → 1
                                    INCR count → 1
 ```
 
-Two requests went through and the counter says `1`. The limiter quietly under-counts and clients sail past the limit you swore you set. Nothing throws. You find out from a graph, not an exception.
+Two requests went through and the counter says `1`. The limiter quietly under-counts and clients sail past the limit you swore you set. Nothing throws, so you find out from a graph instead of an exception.
 
 I forced 30 expired-window rollovers with eight clients colliding on each one, then filled whatever quota the counter claimed was left. With no injected delay, the naive pair admitted 3,018 against a budget of 3,000, a 0.60% leak. At a disclosed 25 ms gap between reading the reset and writing the new state, it admitted 3,100, a 3.33% leak. The Lua version admitted exactly 3,000 at every point in the sweep.
 
@@ -317,7 +317,7 @@ I measured the contradiction as a rejection where the fresh primary result still
   <figcaption>Three cycles and 120 decisions per point. The harness detaches replication for 0/10/25/50 ms to make localhost lag observable, then reattaches and verifies the replica after every cycle.</figcaption>
 </figure>
 
-Two fixes, both needed. Make the decision and the headers come from the *same* atomic result — the script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. Whether the key is still sitting there tells you nothing you can rely on; the reset time you stored does.
+Two fixes, both needed. Make the decision and the headers come from the *same* atomic result — the script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. Whether the key is still sitting there on a lazy, lagging replica tells you nothing reliable, so compare against the reset time you stored instead.
 
 ## Free quota from the eviction gods
 
@@ -394,4 +394,4 @@ After all that, yeah, I still start every new limiter as a fixed-window counter,
 
 ## The takeaway
 
-And every one of those traces back to the same boring fact, the one caching taught me too: the instant you keep shared state and put it behind a network, you own its concurrency, its clocks, its failures, and its lies. No algorithm fixes that, you just pay for the state you keep. What I've come to like about the plain counter is that it doesn't pretend otherwise — all the bookkeeping sits right there in a Lua script you can read, where the sharp edges are yours to see instead of the framework's to hide. Delete-on-write has its six-item discipline; rate limiting has this one. Do these and the three lines hold up under the traffic that would otherwise find every edge for you, on a Monday, the expensive way. Ask me how I know.
+And every one of those traces back to the same boring fact, the one caching taught me too: the instant you keep shared state and put it behind a network, you own its concurrency, its clocks, and its failures. No algorithm fixes that, you just pay for the state you keep. What I've come to like about the plain counter is that it doesn't pretend otherwise, all the bookkeeping sits right there in a Lua script you can read, where the sharp edges are in your own code where you can see them instead of buried in a framework. Do these and the three lines hold up under the traffic that would otherwise find every edge for you, on a Monday, the expensive way. Ask me how I know.

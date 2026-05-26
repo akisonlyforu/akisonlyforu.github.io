@@ -6,7 +6,7 @@ description:    used_memory sat there calm while RSS climbed to the cgroup limit
 categories: redis memory jemalloc operations
 ---
 
-If you've ever watched `used_memory` sit there calm and reasonable while the OOM killer took the process anyway, and everyone in the channel immediately said leak, this is for you. The OOM killer, if you haven't met it, is the Linux kernel's out-of-memory killer, the thing that picks a process and terminates it when the machine (or the cgroup) runs out of memory. Most of the time it isn't a leak, it's fragmentation, and the reason nobody believes that at first is that the number they're all staring at genuinely does look fine.
+If you've ever watched `used_memory` sit there calm and reasonable while the OOM killer took the process anyway, and everyone in the channel immediately said leak, this is for you. The OOM killer, if you haven't met it, is the Linux kernel's out-of-memory killer, the thing that picks a process and terminates it when the machine (or the cgroup) runs out of memory. Most of the time it's fragmentation rather than a leak, and the reason nobody believes that at first is that the number they're all staring at genuinely does look fine.
 
 ## The problem
 
@@ -14,7 +14,7 @@ A Redis process gets killed by the kernel for running out of memory while `used_
 
 I wanted to reproduce this the same way I reproduce anything I don't fully trust myself to explain, small enough to run on a laptop and argue with the same allocator that's doing it to you in production. The setup is a queue-shaped workload: load a pile of small keys, pretend to batch-process them, then delete millions of them at once, which is the part that matters. That mass delete is where `used_memory` and the actual resident footprint stop agreeing.
 
-Every memory behavior and cgroup OOM rule reproduced perfectly on the first attempt. I left the shapes that didn't move RSS in the repo too, because a version where the memory quietly comes back on its own would make for a tidier post and a dishonest one.
+Every memory behavior and cgroup OOM rule reproduced perfectly on the first attempt. I left the shapes that didn't move RSS in the repo too, because a version where the memory quietly comes back on its own would make for a neater story than the one that actually happened.
 
 The [Docker harness, deterministic workload, Redis config, and the raw `INFO memory` dumps are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/redis-oom). These are laptop numbers from one container with a hard memory limit, the mechanism transfers, the absolute megabytes do not. Redis 7.4.0, jemalloc 5.3.0.
 
@@ -146,15 +146,15 @@ When you delete a key, Redis frees it back to jemalloc. That is not the same as 
 
 On top of that, jemalloc doesn't rush to hand pages back even when it can. It keeps freed-but-dirty pages around on purpose so it can reuse them fast instead of going back to the kernel for every allocation, and it only decays them back over time. So immediately after a big delete you're in the worst spot: the keys are gone from `used_memory`, but the pages are still resident in `used_memory_rss`, and they'll only trickle back slowly if nothing forces the issue.
 
-This is why it reads as a leak when it isn't one. Nothing is actually lost, the memory is still accounted for and still reusable, and jemalloc does hand it back eventually. Eventually just runs a lot slower than the OOM killer's patience.
+This is why it reads as a leak when it isn't one. Nothing is actually lost, the memory is still accounted for and still reusable, and jemalloc does hand it back eventually, just a lot slower than the OOM killer is willing to wait.
 
 ## Why maxmemory watched it happen
 
-This is where it stops being an ugly graph and starts paging people. `maxmemory` is checked against `used_memory`, never against RSS. Eviction fires when the number Redis asked for crosses the limit, and nothing else moves it.
+This is the part that actually pages someone. `maxmemory` is checked against `used_memory`, never against RSS. Eviction fires when the number Redis asked for crosses the limit, and nothing else moves it.
 
 So through all of this `used_memory` is low, sometimes very low right after a delete. Redis looks at it, compares it to `maxmemory`, and correctly decides there's nothing to evict. `evicted_keys` sat at 0 the whole time. Meanwhile the resident footprint is climbing toward the container's 95MB limit, and the cgroup could not care less what `used_memory` says, it measures RSS. When RSS crossed 95MB the kernel OOM-killed the container, exit code 137, which is its way of not leaving a note.
 
-So the thing you put there to protect you, `maxmemory`, is watching a number that's fine, and the number that actually ends the process is one you never set a limit on.
+So `maxmemory`, the thing you set to protect yourself, is checking `used_memory`, which looks fine the whole time, and nobody ever put a limit on RSS, which is the number that actually gets the process killed.
 
 <figure class="cache-bench">
   <h3>maxmemory was measuring the wrong number</h3>
@@ -192,4 +192,4 @@ And if you can, don't delete everything in one shot. The spike is the bulk free,
 
 ## The takeaway
 
-The reason this one is worth keeping in your head is that it's a ten-minute fix once you know to look at RSS, and I've watched it turn into a two-day "we have a leak" hunt when nobody did. `used_memory` is what Redis asked for. `used_memory_rss` is what the OS is holding. When those two disagree by a lot, trust RSS, because that's the number the kernel is about to act on.
+The reason this one is worth keeping in your head is that it's a ten-minute fix once you know to look at RSS, and I've watched it turn into a two-day "we have a leak" hunt when nobody did. `used_memory` is the number Redis asked for and `used_memory_rss` is what the OS is actually holding, so when the two disagree by a lot, trust RSS, because that's the number the kernel is about to act on.

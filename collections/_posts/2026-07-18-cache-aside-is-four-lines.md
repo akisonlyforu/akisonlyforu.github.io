@@ -113,7 +113,7 @@ Write path:
 - Write the database.
 - Delete the cache entry.
 
-That's the whole thing. Two nice properties fall straight out of it. Only data someone actually asked for ends up cached, that's the "lazy" part, you never waste memory on rows nobody reads. And the cache is never the source of truth, so if it's cold, empty, or the whole Redis box is on fire, your app still works, it just gets slower and leans on the database. That second property is the real reason cache-aside is the default almost everywhere, the cache is an optimization you can lose, not a dependency you can't.
+That's the whole thing. Two nice properties fall straight out of it. Only data someone actually asked for ends up cached, that's the "lazy" part, you never waste memory on rows nobody reads. And the cache is never the source of truth, so if it's cold, empty, or the whole Redis box is on fire, your app still works, it just gets slower and leans on the database. That second property is the real reason cache-aside is the default almost everywhere, the cache is an optimization the app can live without.
 
 ```python
 def get_user(user_id):
@@ -130,11 +130,11 @@ def update_user(user_id, changes):
     r.delete(f"user:{user_id}")                                     # invalidate, don't update
 ```
 
-Ship that and it mostly works. The rest of this post is about the word "mostly."
+Ship that and it mostly works. Everything below is where "mostly" starts to hurt.
 
 ## When I actually reach for it
 
-Here's the thing nobody tells you when you're starting out, "caching" isn't one decision, it's five, and they have different names and different failure modes. People say cache and mean any of these:
+One thing that took me a while to get is that "caching" isn't one decision, it's five, and they have different names and different failure modes. People say cache and mean any of these:
 
 | Strategy | On a write | I reach for it when |
 |---|---|---|
@@ -154,7 +154,7 @@ The rules I actually use, stripped down:
 - **Write-heavy, rarely re-read** → don't cache it at all. Every write invalidates, every read repopulates something that gets invalidated before the next read even shows up. You pay the full cost of a cache for a hit rate near zero.
 - **Read-once data** (a one-off report, a paginated scan) → skip it. You'll fill the cache with entries that never get a second hit and evict the things that would have.
 
-If you take one line from this section, it's this, the question is never "should I add a cache." It's "how stale can *this specific read* be before someone's angry, and is it read enough to be worth the trouble." Caching is not free and it is not automatic correctness, I've made both of those assumptions and paid for both.
+The question is never "should I add a cache." It's "how stale can *this specific read* be before someone's angry, and is it read enough to be worth the trouble." Caching is not free and it is not automatic correctness, I've made both of those assumptions and paid for both.
 
 ## Delete on write. Not update.
 
@@ -182,7 +182,7 @@ Read that top to bottom. The reader missed, went to the database, and got the ol
 
 I used a one-second TTL in the harness because I have only so much life left to spend watching a deliberately broken cache. At a 5 ms injected DB-to-`SET` delay, the naive cache disagreed with Postgres for 96.98% of the measured three-second run. At 20 ms it was 91.41%. The exact percentage depends on how expiry, reads, and writes interleave; the important part is how long the late stale value survives after it wins.
 
-Nothing throws. Nothing logs. The write "succeeded." You find out when a customer swears up and down they changed a setting and it didn't take, and you can't reproduce it because the TTL already expired and the cache healed itself. That bug is a ghost.
+Nothing throws, nothing logs, the write "succeeded." You find out when a customer swears up and down they changed a setting and it didn't take, and you can't reproduce it because the TTL already expired and the cache healed itself. That bug is a ghost.
 
 <figure class="cache-bench">
   <h3>Stale wall-clock time as the reader's DB-to-SET gap grows</h3>
@@ -225,7 +225,7 @@ The window is tiny, it's just the gap between the reader's DB read and its cache
   It's ugly and it only shrinks the window instead of closing it, but it's cheap, needs zero coordination, and it's all over high-write systems for exactly that reason.
 - **Version the set.** The reader grabs a version token before it reads the DB, the writer bumps the version, and the reader's `SET` only lands if the version hasn't moved (Redis `WATCH`/`MULTI`, or a Lua script). This actually closes the window. It also makes every single read carry a version check to fix a race that hits a handful of keys, so I reserve it for the specific keys where stale is genuinely not allowed, and let the plain TTL cover everything else.
 
-One more thing on ordering that took me too long to get right, **invalidate after the DB commit, never before.** Delete the cache before you commit and a reader can slip in, miss, read the *still-old* uncommitted value, and repopulate it, then your commit lands and the cache is stale again. Same family of bug, different door. And never, ever populate the cache from inside an open transaction, if that transaction rolls back the cache is now holding a value that never existed in the database, and good luck ever explaining that one in a postmortem.
+One more thing on ordering that took me too long to get right, **invalidate after the DB commit, never before.** Delete the cache before you commit and a reader can slip in, miss, read the *still-old* uncommitted value, and repopulate it, then your commit lands and the cache is stale again, the same race reached from a different direction. And never, ever populate the cache from inside an open transaction, if that transaction rolls back the cache is now holding a value that never existed in the database, and good luck ever explaining that one in a postmortem.
 
 ## The stampede
 
@@ -383,4 +383,4 @@ After all that, yeah, I still reach for cache-aside first and it's still the rig
 
 ## The takeaway
 
-So the actual discipline is small and kind of boring. Delete on write, keep a jittered TTL running underneath as a backstop, single-flight your hot keys, cache your misses, version your keys, set an eviction policy on purpose. Do those six things and the four lines hold up under the traffic that would otherwise find every one of these edges for you, on a Monday, the expensive way. Ask me how I know.
+So the actual discipline is small and kind of boring. Delete on write, keep a jittered TTL running underneath as a backstop, single-flight your hot keys, cache your misses, version your keys, set an eviction policy on purpose. Do those six things and the four lines hold up fine. Skip them and the traffic finds every one of these edges for you, and it usually picks a Monday to do it.

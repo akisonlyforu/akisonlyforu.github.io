@@ -14,9 +14,9 @@ A read replica will report keys that expired a while ago. Expiring a key is the 
 
 The setup is the usual idempotency guard. You take a lock per job with `SET job:{id} owner NX EX 30` so two workers can't run the same job, and because that lock lives in Redis you also point a read replica at it to power a "currently running jobs" dashboard and a cheap pre-check, the kind of thing where you glance at the replica before bothering the primary. The pre-check and the dashboard are both reading key state off a node that, it turns out, has opinions about expiry that differ from the primary's.
 
-## Replicas don't expire keys, they wait to be told
+## Replicas don't expire keys on their own
 
-Here's the piece that explains everything else. In Redis, expiring a key is the primary's job, not the replica's. The primary decides a key is dead one of two ways: its background active-expire cycle samples keys and notices this one's TTL has passed, or a client touches the key and the primary lazily removes it on access. Either way, the moment the primary removes it, it writes an explicit `DEL` into the replication stream. The replica never looks at a key's TTL and decides on its own to drop it. It holds the key until that `DEL` arrives.
+The whole thing comes down to whose job expiry is. In Redis, expiring a key is the primary's job, not the replica's. The primary decides a key is dead one of two ways: its background active-expire cycle samples keys and notices this one's TTL has passed, or a client touches the key and the primary lazily removes it on access. Either way, the moment the primary removes it, it writes an explicit `DEL` into the replication stream. The replica never looks at a key's TTL and decides on its own to drop it. It holds the key until that `DEL` arrives.
 
 So at any given moment a replica can be physically sitting on keys that are, by the clock, long gone. It isn't broken and nothing is leaking. It's doing exactly what it's built to do, which is wait for instructions.
 
@@ -76,7 +76,7 @@ I wanted to see what that actually looks like from the outside, so I ran a pinne
   <figcaption>Every one of the 1,000 keys had expired. The replica's DBSIZE still counts all 1,000, but GET returns a value for none of them. The count is looking at physical keys; the read is checking the clock. Measured on Redis 7.4.9, results in benchmarks/redis-replica-expiry/results/.</figcaption>
 </figure>
 
-The replica's `DBSIZE` came back `1000`. Every single one of those thousand keys had expired, and reading any of them returned nil. The count and the reality had completely parted ways.
+The replica's `DBSIZE` came back `1000`. Every single one of those thousand keys had expired, and reading any of them returned nil, so the count said 1000 while the number of actually-live keys was 0.
 
 ## What each command actually does
 
@@ -103,7 +103,7 @@ On the primary, touching the expired key lazily removes it and drops the count t
 
 I walked in expecting to catch the replica red-handed returning a live-looking lock to a `GET`, the version of this bug that gets quoted around. On Redis 7.4 that doesn't happen. Since Redis 3.2 the replica masks expired keys on reads, and by now that masking covers `GET`, `EXISTS`, `TTL`, and `SCAN`. So your dedup pre-check reading the lock off the replica gets nil, exactly like it should, and the scary version of this bug is already handled for you.
 
-What the masking does not cover is the count. `DBSIZE` still reports the ghost, because it's counting physical keys in the keyspace, not asking each one whether it's still alive. So the danger moved. It used to be "the replica lies to your `GET`"; on a modern Redis it's "the replica's count includes the dead," and anything that reasons about keyspace size off a replica, a `DBSIZE` gauge, a running-jobs number, a cleanup that counts before it acts, is quietly counting expired keys as live ones.
+What the masking does not cover is the count. `DBSIZE` still reports the ghost, because it's counting physical keys in the keyspace, not asking each one whether it's still alive. So the risk is in a different place now. It used to be that the replica would lie to your `GET`; on a modern Redis the reads are honest and it's the count that includes the dead, and anything that reasons about keyspace size off a replica, a `DBSIZE` gauge, a running-jobs number, a cleanup that counts before it acts, is quietly counting expired keys as live ones.
 
 ## Proving the "used to be"
 
@@ -120,7 +120,7 @@ DBSIZE again (reads deleted it?)            1
 
 There it is, the bug the folklore is actually about. `GET` on the replica hands back `owner`, the value of a lock that expired seconds ago, and `EXISTS` says yes. A dedup guard doing its cheap pre-check against this replica would see a live lock and skip a job that nothing is actually holding. Run the thousand-key version and all 1,000 come back with their stored value, where 7.4 masked every single one. (`SCAN` is its own inconsistent story across versions and I'm not going to untangle it here; the two reads a lock check actually uses, `GET` and `EXISTS`, both hand you the ghost on 3.0.)
 
-So the read path really is fixed on a modern Redis in the way that matters most: the replica will not lie to your `GET` anymore. What it still does is count the dead, which is why the `DBSIZE` half of this outlived the fix and the `GET` half didn't.
+So the read path really is fixed on a modern Redis in the way that matters most: the replica will not lie to your `GET` anymore. What it still does is count the dead, so the `GET` version of this bug got fixed and the `DBSIZE` version didn't.
 
 ## About that "replica DBSIZE runs higher" claim
 
@@ -138,4 +138,4 @@ That drift is real when replication is lagging or the primary's expire cycle is 
 
 ## The takeaway
 
-A replica holds expired keys until the primary tells it to drop them, so its key counts include the dead even when modern reads correctly say they're gone. The rule that falls out of that: don't make a TTL-sensitive decision, a lock check, an idempotency guard, a count, from a replica. Read those off the primary, or store an explicit `expires_at` in the value and judge it against your own clock. Keep the replica for the load you can afford to be a little wrong about.
+A replica holds expired keys until the primary tells it to drop them, so its key counts include the dead even when modern reads correctly say they're gone. The rule that falls out of that: don't make a TTL-sensitive decision, a lock check, an idempotency guard, a count, from a replica. Read those off the primary, or store an explicit `expires_at` in the value and judge it against your own clock. Use the replica for reads where a little staleness or an over-count doesn't actually hurt.
