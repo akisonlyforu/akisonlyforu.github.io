@@ -110,7 +110,7 @@ The thing that makes this confusing is that "how much memory is Redis using" isn
 
 - **`used_memory`** is what Redis asked jemalloc for. Keys, values, overhead. This is what your dashboard graphs and what people mean when they say we're at 60% and we're fine.
 - **`used_memory_rss`** is the resident set size, RSS, which is the amount of physical memory the OS is actually keeping resident for the process. The OOM killer and your cgroup only ever look at this one, which is what makes it the one that pages you at 3am.
-- **`mem_fragmentation_ratio`** is just `rss / used`. A bit over 1 is normal and healthy. Sitting at 19 right after you deleted a few hundred thousand keys is the whole post.
+- **`mem_fragmentation_ratio`** is just `rss / used`. A bit over 1 is normal and healthy. Sitting at 19 right after you deleted a few hundred thousand keys is what this whole post is chasing.
 
 So the trouble is that pretty much everything you'd naturally watch is built on the first number, and the one that actually kills the process is the second.
 

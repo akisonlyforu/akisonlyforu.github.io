@@ -6,7 +6,7 @@ description:    Run the same query five hundred times with a different literal e
 categories: sql-server plan-cache parameterization databases
 ---
 
-If you've ever opened a SQL Server plan cache expecting a tidy handful of plans and found thousands instead, each with a use count of exactly one, this is for you. I wanted to make that happen on purpose, see how bad it gets, and then see what parameterizing the queries actually buys you, because it fixes the bloat and then hands you a different problem.
+Open a SQL Server plan cache expecting a tidy handful of plans, and you can find thousands sitting there instead, each one used exactly once. I wanted to make that happen on purpose, see how bad it gets, and then see what parameterizing the queries actually buys you, because it fixes the bloat and then hands you a different problem.
 
 ## The problem
 
