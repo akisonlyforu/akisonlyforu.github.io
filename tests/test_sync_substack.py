@@ -76,6 +76,22 @@ class SyncSubstackTests(unittest.TestCase):
             self.assertEqual(len(images), 1)
             self.assertIn("/images/substack/test-post/", generated)
 
+    def test_skips_placeholder_posts(self):
+        placeholder = sync_substack.FeedPost(**{
+            **self.posts[0].__dict__,
+            "identifier": "placeholder-guid",
+            "url": "https://akisonlyforu.substack.com/p/a",
+            "body_html": "<p>A</p>",
+            "description_html": "A",
+        })
+        self.assertTrue(sync_substack.is_placeholder(placeholder))
+        self.assertFalse(sync_substack.is_placeholder(self.posts[0]))
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            posts_dir = root / "posts"
+            self.assertEqual(sync_substack.sync([placeholder], posts_dir, root / "images", False), 0)
+            self.assertEqual(list(posts_dir.glob("*.md")), [])
+
     def test_parses_rss_proxy_response(self):
         item = self.posts[0]
         payload = json.dumps({
