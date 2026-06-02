@@ -1,0 +1,34 @@
+RabbitMQ 4.0.9  |  x-consistent-hash exchange  |  image sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3
+
+==================================================================
+EXPERIMENT A  distribution evenness (8 equal-weight queues)
+==================================================================
+  published 100000 messages over 43126 distinct routing keys
+  routed (sum of queue depths): 100000
+  ideal per queue (total/8)   : 12500.0
+    chx.a.q0        12963   ( +3.70% vs ideal)
+    chx.a.q1        12208   ( -2.34% vs ideal)
+    chx.a.q2        12571   ( +0.57% vs ideal)
+    chx.a.q3        12795   ( +2.36% vs ideal)
+    chx.a.q4        12393   ( -0.86% vs ideal)
+    chx.a.q5        12468   ( -0.26% vs ideal)
+    chx.a.q6        12373   ( -1.02% vs ideal)
+    chx.a.q7        12229   ( -2.17% vs ideal)
+  min=12208  max=12963  stdev=248.4
+  max deviation from ideal    : 463 msgs (3.70%)
+
+==================================================================
+EXPERIMENT B  rebalance cost, 8 -> 9 queues
+==================================================================
+  keys: 10000 distinct (routed to both the 8- and 9-queue ring)
+  consistent hash :   1090 keys remapped  (10.90%)
+  naive modulo    :   8873 keys remapped  (88.73%)
+    (ideal for consistent hash is ~1/9 = 11.1%; modulo churns almost everything)
+
+==================================================================
+EXPERIMENT C  affinity (same key -> same queue)
+==================================================================
+  3 copies of each of 10000 keys published on the 8-queue ring
+  keys checked           : 10000
+  keys in >1 queue       : 0
+  affinity holds         : yes
