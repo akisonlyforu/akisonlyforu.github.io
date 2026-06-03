@@ -1,0 +1,2 @@
+memcached_version,image_digest,pymemcache_version,n_items,worst_value_bytes,snug_value_bytes,item_overhead_bytes,exp1_worst_waste_pct,exp1_snug_waste_pct
+1.6.45,sha256:dc561d52bb8ad3c038867123ed2dc8357c4c128f047cdbd526cd65cf39408cbd,4.0.0,400000,870,1109,75,20.19,0.0

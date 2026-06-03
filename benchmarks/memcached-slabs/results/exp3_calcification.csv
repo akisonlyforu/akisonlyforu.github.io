@@ -1,0 +1,5 @@
+automove,phase,evictions_global,large_class_pages,small_class_free_chunks,large_class_evicted
+0,A_small,20957,1,0,0
+0,B_large,95839,1,0,74882
+2,A_small,20957,1,0,0
+2,B_large,257756,44,0,1976
