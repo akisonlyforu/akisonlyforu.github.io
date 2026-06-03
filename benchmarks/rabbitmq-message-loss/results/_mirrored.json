@@ -1,0 +1,12 @@
+{
+  "loss": {
+    "model": "mirrored",
+    "rabbitmq_version": "3.13.7",
+    "image_digest": "sha256:e582c0bc7766f3342496d8485efb5a1df782b5ce3886ad017e2eaae442311f69",
+    "messages_confirmed": 5000,
+    "messages_recovered": 0,
+    "messages_lost": 5000,
+    "lost_pct": 100.0
+  },
+  "summary": "======================================================================\nEXPERIMENT A  classic MIRRORED queue, confirmed-message loss (RabbitMQ 3.13)\n======================================================================\n  cluster whole, RabbitMQ 3.13.7, connected via rmq0\n  policy ha-all set: ha-mode=all, ha-sync-mode=manual, ha-promote-on-failure=always, ha-promote-on-shutdown=always\n  declared durable classic queue 'ha.q' on rmq0 (master=rabbit@rmq0)\n  docker kill rmq1 rmq2  (mirrors go down)\n  publishing 5000 persistent messages with publisher confirms...\n  broker positively confirmed: 5000 / 5000   (master depth now 5000)\n  docker start rmq1 rmq2  (mirrors rejoin, but UNSYNCHRONISED under manual sync)\n  rabbitmqctl list_queues name messages slave_pids synchronised_slave_pids:\n      ha.q\t5000\t[<rabbit@rmq2.1784393907.623.0>, <rabbit@rmq1.1784393907.613.0>]\t[]\n  docker kill rmq0  (crash the master; an UNSYNCHRONISED mirror is promoted)\n  promoted new master: rabbit@rmq2\n\n  >>> confirmed = 5000   recovered = 0   LOST = 5000  (100.0% of confirmed messages)\n"
+}

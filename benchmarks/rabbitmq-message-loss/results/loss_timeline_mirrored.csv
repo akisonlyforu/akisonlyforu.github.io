@@ -1,0 +1,6 @@
+event,queue_message_count
+declared,0
+publish_done,5000
+mirrors_rejoined_unsynced,5000
+master_killed_promoted,0
+drained,0

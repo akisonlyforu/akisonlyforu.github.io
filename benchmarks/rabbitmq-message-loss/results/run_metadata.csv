@@ -1,0 +1,2 @@
+messages_per_run,mirrored_rabbitmq_version,mirrored_image_digest,mirrored_confirmed,mirrored_recovered,mirrored_lost,mirrored_lost_pct,quorum_rabbitmq_version,quorum_image_digest,quorum_confirmed,quorum_recovered,quorum_lost,quorum_lost_pct,availability_3up_pct,availability_2up_pct,availability_1up_pct
+5000,3.13.7,sha256:e582c0bc7766f3342496d8485efb5a1df782b5ce3886ad017e2eaae442311f69,5000,0,5000,100.0,4.0.9,sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3,5000,5000,0,0.0,100.0,100.0,0.0

@@ -1,0 +1,11 @@
+This folder holds runs that did NOT reproduce the expected shape, if any.
+
+It is empty: every experiment reproduced cleanly and repeatably on the first
+proper run (and again on a second run) with the config documented in the README.
+
+The only thing that "needed tuning" was making the loss DETERMINISTIC rather than
+probabilistic -- see the README's "exact failover sequence" section. The classic
+mirrored-queue loss depends on the mirrors being unsynchronised at the moment the
+master crashes; we force that state on purpose (ha-sync-mode=manual + take the
+mirrors down while publishing) instead of racing a live sync. That is a real
+operational scenario, not a contrivance, and it is disclosed in full.

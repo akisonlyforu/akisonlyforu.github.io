@@ -1,0 +1,4 @@
+nodes_up,majority,confirms_attempted,confirms_succeeded,confirm_success_pct
+3,true,50,50,100.0
+2,true,50,50,100.0
+1,false,50,0,0.0

@@ -1,0 +1,45 @@
+# Experiments B & C: RabbitMQ 4.0, a 3-node cluster for QUORUM (Raft) queues.
+# 4.x removed classic mirrored queues; quorum queues are the replacement.
+#
+# Same shape as the mirrored file: digest-pinned, multi-arch (native arm64), host
+# ports on 127.0.0.1 at 57xx / 157xx, shared cookie + classic_config discovery,
+# pinned container names so benchmark.py can kill a node by name. Run the two files
+# ONE AT A TIME (the harness tears the previous one down first) since they reuse the
+# same container names and host ports.
+x-node: &node
+  image: rabbitmq:4.0-management@sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3
+  environment:
+    RABBITMQ_ERLANG_COOKIE: benchpost-quorum-cookie
+    RABBITMQ_DEFAULT_USER: guest
+    RABBITMQ_DEFAULT_PASS: guest
+  volumes:
+    - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+  healthcheck:
+    test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+    interval: 3s
+    timeout: 10s
+    retries: 40
+    start_period: 20s
+
+services:
+  rmq0:
+    <<: *node
+    hostname: rmq0
+    container_name: rmq0
+    ports:
+      - "127.0.0.1:5772:5672"     # AMQP
+      - "127.0.0.1:15772:15672"   # management HTTP API
+  rmq1:
+    <<: *node
+    hostname: rmq1
+    container_name: rmq1
+    ports:
+      - "127.0.0.1:5773:5672"
+      - "127.0.0.1:15773:15672"
+  rmq2:
+    <<: *node
+    hostname: rmq2
+    container_name: rmq2
+    ports:
+      - "127.0.0.1:5774:5672"
+      - "127.0.0.1:15774:15672"

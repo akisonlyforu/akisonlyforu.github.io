@@ -1,0 +1,22 @@
+{
+  "loss": {
+    "model": "quorum",
+    "rabbitmq_version": "4.0.9",
+    "image_digest": "sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3",
+    "messages_confirmed": 5000,
+    "messages_recovered": 5000,
+    "messages_lost": 0,
+    "lost_pct": 0.0,
+    "members": 3
+  },
+  "availability": {
+    "3": 100.0,
+    "2": 100.0,
+    "1": 0.0
+  },
+  "availability_meta": {
+    "attempts": 50,
+    "timeout": 6
+  },
+  "summary": "======================================================================\nEXPERIMENT B  QUORUM queue survives leader loss (RabbitMQ 4.0)\n======================================================================\n  cluster whole, RabbitMQ 4.0.9, connected via rmq0\n  declared quorum queue 'qq' (x-queue-type=quorum)\n  quorum members: 3 -> ['rabbit@rmq0', 'rabbit@rmq1', 'rabbit@rmq2']\n  publishing 5000 persistent messages with publisher confirms...\n  broker positively confirmed: 5000 / 5000   (queue depth 5000)\n  current leader: rabbit@rmq0  ->  docker kill rmq0\n  new leader elected: rabbit@rmq1\n\n  >>> confirmed = 5000   recovered = 5000   LOST = 0  (0.0% of confirmed messages)\n\n======================================================================\nEXPERIMENT C  QUORUM queue availability vs surviving-node count (RabbitMQ 4.0)\n======================================================================\n  quorum queue 'qq.avail' declared, members=3\n  3 nodes up (majority)  : 50/50 confirmed\n  2 nodes up (majority)  : 50/50 confirmed\n  1 node up  (MINORITY)  : 0/50 confirmed  (expected 0: no quorum -> consistency over availability)\n"
+}
