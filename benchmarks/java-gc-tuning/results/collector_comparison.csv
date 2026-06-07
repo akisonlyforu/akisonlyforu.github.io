@@ -1,0 +1,4 @@
+label,heap,gc_pause_count,gc_pause_total_ms,gc_pause_max_ms,gc_pause_p99_ms,req_p50_us,req_p99_us,req_p999_us,req_max_us,throughput_ops_s,pct_time_in_gc,wall_s
+ParallelGC,4g,108,9646.51,136.348,126.111,0.0,3.0,35.0,136545.8,196768,95.45,10.164
+G1GC,4g,661,9819.54,114.207,97.092,0.0,4.0,16.0,117187.2,191255,92.75,10.457
+ZGC-gen,4g,2481,41.51,0.554,0.073,1.0,87.0,364.0,21827.4,103713,0.22,19.284

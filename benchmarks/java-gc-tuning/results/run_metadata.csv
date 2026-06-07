@@ -1,0 +1,23 @@
+key,value
+java_version,"openjdk version ""21.0.11"" 2026-04-21 LTS | OpenJDK Runtime Environment Temurin-21.0.11+10 (build 21.0.11+10-LTS) | OpenJDK 64-Bit Server VM Temurin-21.0.11+10 (build 21.0.11+10-LTS, mixed mode, sharing)"
+image,eclipse-temurin:21-jdk@sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+image_digest,sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+image_arch,arm64
+runs_per_config,3
+seed,42
+col_collector_heap,4g
+col_ops,2000000
+col_warmup_ops,300000
+col_live_entries,10000
+col_payload_kb,256
+col_garbage_kb,16
+col_churn_every,8
+col_live_mb,2500.0
+heap_sizes,256m;320m;384m;512m;1g
+heap_ops,4000000
+heap_warmup_ops,500000
+heap_live_entries,3000
+heap_payload_kb,48
+heap_garbage_kb,16
+heap_churn_every,6
+heap_live_mb,140.6

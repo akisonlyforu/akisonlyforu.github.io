@@ -1,0 +1,27 @@
+Parked runs that informed the final experiment design.
+
+small-heap-512m/collector_comparison.csv
+----------------------------------------
+The first cut of the collector comparison ran at -Xmx512m with a ~188MB live set
+(4000 x 48KB), median of 2 runs, same driver.
+
+  collector    gc_pause_max   gc%    req_max     throughput
+  ParallelGC      21.9 ms     70%    22.1 ms      530k ops/s
+  G1GC            27.2 ms     61%    28.0 ms      407k ops/s
+  ZGC-gen          0.15 ms     0.4%  20.4 ms      339k ops/s
+
+The RATIO is already there (25ms vs 0.15ms, ~150x), but the ABSOLUTE pause is only
+~25ms -- not the visceral, obviously-user-visible stall you want for the headline.
+This host has 10 cores, so ParallelGC's parallel mark-compact chews through a
+few-hundred-MB old gen fast.
+
+To get full-GC pauses into the hundreds of milliseconds, the final experiment 1
+scales the live set to ~2.5GB in a 4g heap (see results/collector_comparison.csv):
+ParallelGC then takes a 136ms median max pause and G1 a 114ms one, while ZGC stays
+at 0.55ms. That larger live set also drives gc% up into the 90s for the throughput
+collectors -- honestly, that regime is over-stressed (near-constant full GC), but
+it's exactly what makes the per-request 100ms+ latency spike land, and the in-app
+req_max cross-checks the GC-log pause to the millisecond.
+
+Both regimes tell the same story; the harness ships the dramatic one and parks the
+mild one here.

@@ -1,0 +1,29 @@
+==============================================================
+JVM GC / heap-tuning benchmark
+==============================================================
+image  : eclipse-temurin:21-jdk@sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+java   : openjdk version "21.0.11" 2026-04-21 LTS | OpenJDK Runtime Environment Temurin-21.0.11+10 (build 21.0.11+10-LTS) | OpenJDK 64-Bit Server VM Temurin-21.0.11+10 (build 21.0.11+10-LTS, mixed mode, sharing)
+arch   : arm64   runs/config: 3 (median reported)
+
+--------------------------------------------------------------
+EXPERIMENT 1  collector comparison (heap fixed at 4g)
+  workload: ops=2000000 live_entries=10000 payload=256KB churn_every=8 (~2500MB live)
+--------------------------------------------------------------
+  collector   max_pause   gc_p99  tot_pause   gc_n  req_p99.9    req_max   thr_ops/s
+  ParallelGC   136.348ms 126.111ms   9646.51ms    108     35.0us 136545.8us      196768
+  G1GC         114.207ms  97.092ms   9819.54ms    661     16.0us 117187.2us      191255
+  ZGC-gen        0.554ms   0.073ms     41.51ms   2481    364.0us  21827.4us      103713
+
+--------------------------------------------------------------
+EXPERIMENT 2  heap sizing thrash (collector fixed at G1GC)
+  workload: ops=4000000 live_entries=3000 payload=48KB churn_every=6 (~141MB live)
+--------------------------------------------------------------
+  heap      %time_gc    gc_n  tot_pause  req_p99.9   thr_ops/s
+  256m        78.22%    5327  13163.89ms    353.0us      237667
+  320m        68.13%    3493   8228.46ms     25.0us      330771
+  384m        63.28%    2574   5569.04ms     16.0us      446446
+  512m        54.81%    1464   4655.74ms     15.0us      472611
+  1g          35.57%     361   1999.16ms     11.0us      709008
+
+laptop numbers demonstrating the mechanism, not capacity planning.
+artifacts in results/  |  digest sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a

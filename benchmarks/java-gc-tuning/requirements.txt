@@ -1,0 +1,3 @@
+# benchmark.py uses only the Python 3 standard library (subprocess, csv, re,
+# statistics). Nothing to install. This file is kept for parity with the other
+# harnesses in benchmarks/.
