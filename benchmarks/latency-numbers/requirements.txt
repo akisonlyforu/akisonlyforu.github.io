@@ -1,0 +1,2 @@
+# compress_bench.py uses only the Python standard library (zlib, time, random).
+# No third-party packages required. System python3 is sufficient.

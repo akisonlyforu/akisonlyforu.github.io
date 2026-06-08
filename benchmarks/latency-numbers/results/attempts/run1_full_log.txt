@@ -1,0 +1,48 @@
+== building ==
+cc -O2 -Wall -o latency latency.c -lpthread -lz
+== run_metadata ==
+  wrote /Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/latency-numbers/results/run_metadata.csv
+== C experiments (A, B, C-partial) ==
+[A] memory latency ladder...
+           4 KB ->   1.245 ns
+           8 KB ->   1.319 ns
+          16 KB ->   1.316 ns
+          32 KB ->   1.211 ns
+          64 KB ->   1.311 ns
+         128 KB ->   1.675 ns
+         256 KB ->   5.139 ns
+         512 KB ->   5.835 ns
+        1024 KB ->   7.123 ns
+        2048 KB ->   8.657 ns
+        4096 KB ->  17.795 ns
+        8192 KB -> 116.680 ns
+       16384 KB -> 174.272 ns
+       24576 KB -> 187.638 ns
+       32768 KB ->  89.282 ns
+       49152 KB ->  97.442 ns
+       65536 KB -> 102.739 ns
+      131072 KB -> 206.854 ns
+      262144 KB -> 108.619 ns
+[B] sequential vs random...
+    seq: 0.945 ns/line (64598 MB/s)  rnd: 3.712 ns/line (16442 MB/s)
+[C] canonical rows (mutex, branch, ram-1mb, ssd, socket)...
+    mutex lock/unlock: 4.24 ns
+    branch mispredict: 0.00 ns
+    read 1MB from RAM: 49000 ns
+    ssd random 4K: 67000 ns (fallback=0)
+    ssd seq 1MB: 56000 ns (fallback=0)
+    socket RTT: 13000 ns
+done. sink=50602683540
+== python compress bench ==
+[compress] 1024 bytes, median 7625 ns, ratio 3.64x -> /Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/latency-numbers/results/compress.csv
+== merge canonical_table.csv ==
+  wrote canonical_table.csv
+== assemble summary.txt ==
+== done. results in /Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/latency-numbers/results ==
+attempts
+canonical_table.csv
+compress.csv
+mem_latency.csv
+run_metadata.csv
+seq_vs_random.csv
+summary.txt
