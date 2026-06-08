@@ -1,0 +1,19 @@
+key,value
+run_at_utc,2026-07-18T17:20:22Z
+platform,macOS-15.7.3-arm64-arm-64bit
+python,3.9.6
+docker,"Docker version 28.3.2, build 578ccf6"
+image,java-gc-offheap:latest
+base_image_digest,eclipse-temurin@sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+jdk_version,"openjdk version ""21.0.11"" 2026-04-21 LTS"
+gc,G1GC
+jvm_extra_flags,-XX:-G1UseAdaptiveIHOP -XX:InitiatingHeapOccupancyPercent=40
+heap,-Xmx1500m -Xms1500m
+container_memory,3g
+container_cpus,4
+n_entries,3500000
+payload_bytes,192
+workload_iterations,40000000
+garbage_bytes_per_iter,2048
+seed,-7046029254386353131
+latency_samples,2000000

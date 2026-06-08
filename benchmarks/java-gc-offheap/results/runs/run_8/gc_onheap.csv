@@ -1,0 +1,12 @@
+metric,count,total_ms
+concurrent_mark_cycle,34,4968.289
+pause_young_normal,61,131.69
+pause_young_concurrent_start,34,48.665
+pause_young_prepare_mixed,15,20.323
+pause_young_mixed,15,23.017
+pause_remark,34,17.771
+pause_cleanup,33,6.374
+pause_full,0,0.0
+pause_other,0,0.0
+total_pause,192,247.84
+total_gc,,5216.129

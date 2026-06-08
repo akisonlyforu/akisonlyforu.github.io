@@ -1,0 +1,7 @@
+[GcBench] mode=onheap N=3500000 payload=192 iters=40000000 garbage=2048 seed=0x9e3779b97f4a7c15 samples=2000000
+[GcBench] approx payload bytes of live set: 640.9 MB
+[GcBench] built population in 241 ms
+[GcBench] checksum=-3831101248 garbageSink=-38963200
+[GcBench] wall=13.653s throughput=2929818 ops/sec
+[GcBench] lookup ns p50=292 p90=417 p99=625 p999=875 min=0 max=1759958 mean=326.6
+[GcBench] wrote /results/latency_onheap.csv and /results/perf_onheap.csv
