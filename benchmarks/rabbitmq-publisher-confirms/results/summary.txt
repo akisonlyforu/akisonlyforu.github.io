@@ -1,0 +1,40 @@
+======================================================================
+RabbitMQ publisher-confirm in-flight window vs publish throughput
+======================================================================
+  broker            : rabbitmq 4.0.9 (container rabbitmq-publisher-confirms-rabbitmq-1)
+  load generator    : pivotalrabbitmq/perf-test@sha256:b803911d60fdf6885fc6313f0d56a0c2c743bfdd27ac118f5e4b320c36c7b8c9
+  producers (-x)    : 30
+  consumers (-y)    : 4
+  msg size (-s)     : 1000 bytes
+  duration (-z)     : 12 s   (interval -i 1, settle 2s)
+  queue             : quorum, persistent (-f persistent)
+  rate              : unlimited (no -r flag; -r 0 would mean ZERO in PerfTest 2.25)
+  repeats per point : 2 (fresh queue each run; report median [min-max])
+
+EXPERIMENT A  in-flight confirm-window sweep
+----------------------------------------------------------------------
+
+  confirm_window   send msg/s (median [min-max])        recv msg/s
+         1             9520  [   9106-   9933]                9522
+         2            26196  [  25555-  26836]               26080
+         4            31592  [  29176-  34009]               31594
+         8            34838  [  34114-  35562]               34856
+        16            36598  [  36411-  36785]               36631  <-- peak
+        32            36124  [  35861-  36388]               36190
+        64            33168  [  32912-  33425]               33269
+       128            27624  [  27562-  27686]               27820
+       256            24060  [  23220-  24899]               22991
+      1000            28336  [  28149-  28524]               17270
+
+  peak sustained publish throughput at confirm_window = 16 (36598 msg/s median)
+
+EXPERIMENT B  confirms on vs off (fire-and-forget vs -c 2)
+----------------------------------------------------------------------
+
+  mode                 send msg/s (median [min-max])     recv msg/s
+    fire-and-forget       47790  [  47413-  48166]            29322
+    confirms -c 2         23628  [  23035-  24220]            23632
+
+  fire-and-forget send/recv gap: 18468 msg/s (publish accepted into a growing backlog consumers can't drain)
+  confirms -c 2 send/recv gap:   -4 msg/s (bounded in-flight keeps send ~= receive)
+
