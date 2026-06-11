@@ -1,0 +1,2 @@
+# benchmark.py needs zstandard for the zstd codec; gzip/zlib are stdlib.
+zstandard==0.23.0
