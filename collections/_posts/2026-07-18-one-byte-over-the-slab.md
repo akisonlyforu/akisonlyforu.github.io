@@ -148,4 +148,4 @@ memcached decides how to cut up memory before you store anything, and it rounds 
 
 Neither of these shows up as an error. The cache just quietly holds less than you paid for, and the only way to know is to measure the chunk your items actually land in.
 
-The harness — digest-pinned memcached, the slab probe, and every number above — is at [github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/memcached-slabs](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/memcached-slabs). These are laptop numbers meant to show the mechanism, not your cluster's capacity — the percentages are the point, not the megabytes.
+The harness — digest-pinned memcached, the slab probe, and every number above — is [on GitHub](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/memcached-slabs). These are laptop numbers meant to show the mechanism, not your cluster's capacity — the percentages are the point, not the megabytes.
