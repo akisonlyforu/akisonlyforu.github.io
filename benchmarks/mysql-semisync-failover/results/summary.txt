@@ -1,0 +1,51 @@
+
+==================================================================
+EXPERIMENT C  per-commit latency, async vs semi-sync (replica applying)
+==================================================================
+  M = 2000 single-row insert transactions per mode
+
+  mode           p50_ms     p95_ms     p99_ms     max_ms
+  async           1.060      1.483      1.961     13.060
+  semisync        1.094      1.478      1.787      6.692
+
+  note: primary and replica are on the same host, so the replica's receipt
+        ack round-trip is sub-millisecond and the semi-sync latency cost is
+        in the noise here. On a real network the gap is what widens.
+
+==================================================================
+EXPERIMENT A  async failover loss
+==================================================================
+  async replication, then STOP REPLICA IO_THREAD on the replica
+  (models a replica whose receipt has fallen behind -- disclosed honestly)
+  burst of 1000 single-row inserts on primary, all returned success (acked)
+  docker kill mysql-semisync-primary  (hard crash, not a clean shutdown)
+  promoted replica: STOP REPLICA; RESET REPLICA ALL; made writable
+
+  acked on primary   : 1000
+  present on replica : 0
+  LOST on failover   : 1000
+
+==================================================================
+EXPERIMENT B  semi-sync failover, zero loss
+==================================================================
+  semi-sync ON (AFTER_SYNC): Rpl_semi_sync_source_status=ON clients=1
+  STOP REPLICA SQL_THREAD on replica (IO still running -> still acks receipt)
+  burst of 1000 inserts: each commit blocked until replica acked receipt
+  docker kill mysql-semisync-primary  (hard crash)
+  promoted replica: START REPLICA SQL_THREAD drained the relay log, then detached
+
+  acked on primary   : 1000
+  present on replica : 1000
+  LOST on failover   : 0
+
+==================================================================
+EXPERIMENT D  semi-sync timeout fallback
+==================================================================
+  semi-sync ON, rpl_semi_sync_source_timeout = 10000 ms
+  STOP REPLICA IO_THREAD -> no replica can acknowledge
+
+  commit stalled     : 10008 ms before falling back to async
+  status after       : Rpl_semi_sync_source_status = OFF
+
+  mysql 8.0.46 | image sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b | N=1000 M=2000 wait_point=AFTER_SYNC
+  artifacts in results
