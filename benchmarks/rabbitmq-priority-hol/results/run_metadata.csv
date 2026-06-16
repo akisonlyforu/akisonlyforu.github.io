@@ -1,0 +1,2 @@
+rabbitmq_version,image_digest,amqp_port,mgmt_port,backlog,otp_count,service_time_ms,warmup,otp_gap_ms,x_max_priority,bulk_priority,otp_priority,a_prefetch,a_p50_ms,a_p99_ms,a_max_ms,a_drain_msg_s,b_prefetch,b_p50_ms,b_p99_ms,b_max_ms,b_drain_msg_s,c_prefetch,c_p50_ms,c_p99_ms,c_max_ms,c_drain_msg_s
+4.0.9,sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3,6672,16672,20000,200,0.5,500,4.0,10,0,9,5000,14857.7,15282.7,15290.7,1272.9,5000,3740.2,3813.2,3815.2,1309.1,1,2.1,3.6,4.1,823.0
