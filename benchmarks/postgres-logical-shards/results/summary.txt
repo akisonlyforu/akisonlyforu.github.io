@@ -1,0 +1,54 @@
+PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu
+params: n_workspaces=200000  total_rows=1202279  max_rows_per_ws=20  L=480  seed=1234
+hash: blake2b(str(workspace_id), digest_size=8) -> int; physical=hash%P, logical=hash%L
+
+EXPERIMENT A  modulo resharding tax (hash % P)
+  transition  rows_moved / total        pct     workspaces_moved   pct
+  4->5           961006 / 1202279      79.9%     159822 / 200000    79.9%
+  4->6           802972 / 1202279      66.8%     133461 / 200000    66.7%
+  4->8           599328 / 1202279      49.8%      99865 / 200000    49.9%
+  8->12          800977 / 1202279      66.6%     133176 / 200000    66.6%
+
+EXPERIMENT B  logical shards + lookup table (real data movement)
+  4->6: logical_shards_moved=160  rows_moved=401550 / 1202279 (33.4%)  key->logical churn=0.0%
+         balance after: rows/machine 198126..201935 (max/min=1.019)
+         checksum(count,sum_id) before=(1202279, 722737998060) after=(1202279, 722737998060) identical=True
+  8->12: logical_shards_moved=160  rows_moved=403506 / 1202279 (33.6%)  key->logical churn=0.0%
+         balance after: rows/machine 97521..102729 (max/min=1.053)
+         checksum(count,sum_id) before=(1202279, 722737998060) after=(1202279, 722737998060) identical=True
+
+EXPERIMENT C  why L should be highly composite (480=2^5*3*5 vs 479 prime vs 500)
+  L    P   even?  shards_spread  row_ratio  source
+  480  3   True   0             1.0122    derived
+  480  4   True   0             1.0130    derived
+  480  5   True   0             1.0208    derived
+  480  6   True   0             1.0308    measured
+  480  8   True   0             1.0181    derived
+  480  10  True   0             1.0433    derived
+  480  12  True   0             1.0534    derived
+  480  15  True   0             1.0466    derived
+  480  16  True   0             1.0550    measured
+  480  24  True   0             1.0786    derived
+  480  32  True   0             1.0639    derived
+  479  3   False  1             1.0091    derived
+  479  4   False  1             1.0163    derived
+  479  5   False  1             1.0138    derived
+  479  6   False  1             1.0128    measured
+  479  8   False  1             1.0291    derived
+  479  10  False  1             1.0280    derived
+  479  12  False  1             1.0341    derived
+  479  15  False  1             1.0472    derived
+  479  16  False  1             1.0429    measured
+  479  24  False  1             1.0797    derived
+  479  32  False  1             1.0950    derived
+  500  3   False  1             1.0061    derived
+  500  4   True   0             1.0193    derived
+  500  5   True   0             1.0201    derived
+  500  6   False  1             1.0313    derived
+  500  8   False  1             1.0334    derived
+  500  10  True   0             1.0372    derived
+  500  12  False  1             1.0385    derived
+  500  15  False  1             1.0757    derived
+  500  16  False  1             1.0635    derived
+  500  24  False  1             1.0789    derived
+  500  32  False  1             1.1375    derived

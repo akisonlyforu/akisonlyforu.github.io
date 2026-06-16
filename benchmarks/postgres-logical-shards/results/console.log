@@ -1,0 +1,59 @@
+building catalog: 200000 workspaces (seed=1234) ...
+  generated 1202279 rows across 200000 workspaces (avg 6.01 rows/ws, L=480)
+====================================================================
+EXPERIMENT A  modulo resharding tax (hash % P)
+====================================================================
+  4->5: rows_moved=   961006 / 1202279 ( 79.9%)  workspaces_moved= 159822 / 200000 ( 79.9%)
+  4->6: rows_moved=   802972 / 1202279 ( 66.8%)  workspaces_moved= 133461 / 200000 ( 66.7%)
+  4->8: rows_moved=   599328 / 1202279 ( 49.8%)  workspaces_moved=  99865 / 200000 ( 49.9%)
+  8->12: rows_moved=   800977 / 1202279 ( 66.6%)  workspaces_moved= 133176 / 200000 ( 66.6%)
+
+====================================================================
+EXPERIMENT B  logical shards + lookup table (real data movement)
+====================================================================
+  4->6: logical_shards_moved=160  rows_moved=401550 / 1202279 (33.4%)  key->logical churn=0.0%
+         balance before P=4 (rows/machine 298247..302115, max/min=1.013)  after P=6 (198126..201935, max/min=1.019)
+         checksum before=(1202279, 722737998060) after=(1202279, 722737998060)  identical=True
+  8->12: logical_shards_moved=160  rows_moved=403506 / 1202279 (33.6%)  key->logical churn=0.0%
+         balance before P=8 (rows/machine 148719..151416, max/min=1.018)  after P=12 (97521..102729, max/min=1.053)
+         checksum before=(1202279, 722737998060) after=(1202279, 722737998060)  identical=True
+
+====================================================================
+EXPERIMENT C  why the logical count should be highly composite
+====================================================================
+     L   P  even?   shards[min..max]  spread       rows[min..max]  row_ratio     source
+   480   3   True           160..160       0       398650..403519     1.0122    derived
+   480   4   True           120..120       0       298247..302115     1.0130    derived
+   480   5   True             96..96       0       237291..242235     1.0208    derived
+   480   6   True             80..80       0       197015..203091     1.0308   measured
+   480   8   True             60..60       0       148719..151416     1.0181    derived
+   480  10   True             48..48       0       117530..122623     1.0433    derived
+   480  12   True             40..40       0        97521..102731     1.0534    derived
+   480  15   True             32..32       0         78388..82038     1.0466    derived
+   480  16   True             30..30       0         73204..77233     1.0550   measured
+   480  24   True             20..20       0         48456..52264     1.0786    derived
+   480  32   True             15..15       0         36446..38774     1.0639    derived
+   479   3  False           159..160       1       398895..402530     1.0091    derived
+   479   4  False           119..120       1       297968..302828     1.0163    derived
+   479   5  False             95..96       1       238698..241997     1.0138    derived
+   479   6  False             79..80       1       198933..201474     1.0128   measured
+   479   8  False             59..60       1       147740..152032     1.0291    derived
+   479  10  False             47..48       1       118022..121329     1.0280    derived
+   479  12  False             39..40       1        98013..101354     1.0341    derived
+   479  15  False             31..32       1         78117..81805     1.0472    derived
+   479  16  False             29..30       1         73111..76244     1.0429   measured
+   479  24  False             19..20       1         47505..51290     1.0797    derived
+   479  32  False             14..15       1         35447..38813     1.0950    derived
+   500   3  False           166..167       1       399423..401877     1.0061    derived
+   500   4   True           125..125       0       297085..302820     1.0193    derived
+   500   5   True           100..100       0       238106..242883     1.0201    derived
+   500   6  False             83..84       1       196638..202785     1.0313    derived
+   500   8  False             62..63       1       147285..152205     1.0334    derived
+   500  10   True             50..50       0       117307..121668     1.0372    derived
+   500  12  False             41..42       1        97949..101722     1.0385    derived
+   500  15  False             33..34       1         76957..82781     1.0757    derived
+   500  16  False             31..32       1         72664..77278     1.0635    derived
+   500  24  False             20..21       1         47347..51082     1.0789    derived
+   500  32  False             15..16       1         34826..39616     1.1375    derived
+
+  PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu | artifacts in /Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/postgres-logical-shards/results
