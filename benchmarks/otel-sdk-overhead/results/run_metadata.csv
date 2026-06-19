@@ -1,0 +1,14 @@
+key,value
+python_version,3.9.6
+opentelemetry_sdk_version,1.29.0
+collector_image_digest,otel/opentelemetry-collector-contrib@sha256:125bdbeb7590cc1952c5b3430ecf14063568980c2c93d5b38676cc0446ed8108
+otlp_endpoint,127.0.0.1:4317
+metrics_url,http://127.0.0.1:8888/metrics
+host_platform,Darwin 24.6.0 arm64
+host_cpus,10
+exp1_iterations,300000
+exp2_requests,5000
+export_rtt_ms,5.0
+exp3_iterations,300000
+fixed_work_unit,sum of 64 float multiplies
+timestamp_utc,2026-07-19T10:10:22Z

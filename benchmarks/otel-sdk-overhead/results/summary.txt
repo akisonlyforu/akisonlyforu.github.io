@@ -1,0 +1,33 @@
+OTel Python SDK instrumentation-overhead harness -- key numbers
+==============================================================
+python:    3.9.6
+otel-sdk:  1.29.0
+collector: otel/opentelemetry-collector-contrib@sha256:125bdbeb7590cc1952c5b3430ecf14063568980c2c93d5b38676cc0446ed8108
+host:      Darwin 24.6.0 arm64  cpus=10
+
+Exp1 -- span-creation cost vs attribute count (in-process no-export processor, AlwaysOn):
+  arm                     ns/op        ops/s   overhead_ns_vs_baseline
+  baseline_no_tracing       1211.4     825466.0  0.0
+  span_0_attrs              9631.7     103824.0  8420.3
+  span_5_attrs             13650.6      73257.0  12439.2
+  span_20_attrs            24885.0      40185.0  23673.6
+  => a span is cheap vs the network but not free; each attribute
+     adds a roughly fixed increment on top of span start/end.
+
+Exp2 -- Simple vs Batch processor, per-request latency (modeled RTT=5.0ms):
+  arm                  p50_ms   p90_ms   p99_ms    max_ms       rps
+  SimpleSpanProcessor    6.372    6.495    6.615    10.079     159.8
+  BatchSpanProcessor     0.016    0.029    0.046     4.096   49476.1
+  => Simple pays the RTT on EVERY request (p99 ~ RTT + work);
+     Batch moves export off the hot path (p99 ~ work only).
+
+Exp3 -- head-sampling ratio vs hot-path throughput (BatchSpanProcessor -> live collector, OTLP gRPC):
+  ratio  iterations   duration_s      ops/s   spans_exported
+  1.0        300000       9.395      31932.0  138766
+  0.1        300000       2.442     122831.0  29748
+  0.01       300000       1.351     222024.0  3022
+  0.0        300000       1.277     234866.0  0
+  => unsampled spans are non-recording (no attribute recording,
+     no export), so throughput rises as the sample ratio falls.
+
+Laptop measurements demonstrating the mechanism, not capacity planning.

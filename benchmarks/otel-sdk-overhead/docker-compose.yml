@@ -1,0 +1,22 @@
+# Digest-pinned OTel Collector (contrib distro; same image as the
+# otel-tail-sampling harness). Loopback-only port binds. Only Exp3 uses a live
+# collector -- the hot path exports over OTLP gRPC to 127.0.0.1:4317 and we read
+# the received-span counter from the Prometheus telemetry endpoint on :8888.
+# Exp1 and Exp2 need no collector at all (they isolate SDK cost with in-process
+# processors), so `benchmark.py all` brings this up only for Exp3 and tears it
+# down when Exp3 ends.
+services:
+  collector:
+    image: otel/opentelemetry-collector-contrib@sha256:125bdbeb7590cc1952c5b3430ecf14063568980c2c93d5b38676cc0446ed8108
+    container_name: otel-sdkbench-collector
+    command: ["--config", "/etc/otelcol-contrib/config.yaml"]
+    volumes:
+      - ./collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "127.0.0.1:4317:4317"   # OTLP gRPC receiver
+      - "127.0.0.1:8888:8888"   # internal Prometheus telemetry
+    healthcheck:
+      test: ["CMD", "/otelcol-contrib", "--version"]
+      interval: 2s
+      timeout: 3s
+      retries: 30

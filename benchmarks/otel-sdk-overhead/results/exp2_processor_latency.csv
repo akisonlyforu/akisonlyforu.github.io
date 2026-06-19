@@ -1,0 +1,3 @@
+arm,requests,rtt_ms,p50_ms,p90_ms,p99_ms,max_ms,throughput_rps
+SimpleSpanProcessor,5000,5.0,6.372,6.495,6.615,10.079,159.8
+BatchSpanProcessor,5000,5.0,0.016,0.029,0.046,4.096,49476.1
