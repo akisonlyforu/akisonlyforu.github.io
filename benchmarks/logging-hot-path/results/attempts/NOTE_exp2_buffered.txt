@@ -1,0 +1,17 @@
+exp2 first attempt: plain FileHandler, no fsync (OS page cache absorbs writes).
+
+On the container's fast storage a buffered FileHandler.emit() does not block the
+caller meaningfully, so moving it to a background thread (QueueHandler +
+QueueListener) did NOT lower tail latency -- it RAISED it. The async path pays
+queue-enqueue + a contending background thread (GIL) and its own GC pauses:
+
+  mode    p50_us  p99_us  p999_us   max_us   wall_s
+  sync     6.084  23.916   86.084  1132.334  1.4250
+  async    5.584  29.833  179.625 18957.208  1.5441
+
+Honest takeaway: async logging is NOT free. It only pays off when the sink
+actually blocks the caller. When the handler is a fast buffered write, the queue
+hop is pure overhead. The main run therefore makes the sink genuinely I/O-bound
+(flush + os.fsync per record, i.e. a durable/audit log) so the SAME per-record
+I/O cost is paid either on the caller thread (sync) or a background thread
+(async), isolating the real variable.

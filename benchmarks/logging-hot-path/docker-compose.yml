@@ -1,0 +1,22 @@
+services:
+  bench:
+    # python:3.12-slim pinned by digest (resolved via docker pull + docker inspect)
+    image: python@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+    working_dir: /work
+    environment:
+      RESULTS_DIR: /work/results
+      IMAGE_DIGEST: "python@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de"
+      # iteration counts / seed; override at `docker compose run -e ...` if desired
+      EXP1_ITERS: "1000000"
+      EXP1_REPEATS: "5"
+      EXP2_CALLS: "50000"
+      EXP2_SAMPLES: "2000"
+      EXP3_EVENTS: "1000000"
+      EXP3_SAMPLE_RATE: "100"
+      SEED: "1234"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - .:/work
+    # loopback-only: no published ports (there is no server), no outbound need
+    network_mode: none
+    command: ["python", "benchmark.py"]
