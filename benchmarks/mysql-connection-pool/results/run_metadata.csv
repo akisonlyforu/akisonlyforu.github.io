@@ -1,0 +1,24 @@
+key,value
+mysql_version,8.0.46
+image_digest,sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b
+arch,aarch64
+container_nproc,10
+cpu_limit_cores,4.0
+table_rows,200000
+scan_rows_per_query,20000
+query_shape,"SELECT id, val FROM reads_test WHERE id BETWEEN %s AND %s AND val >= %s ORDER BY val DESC LIMIT 50"
+calibration_p50_ms,2.621
+calibration_p99_ms,2.738
+window_s,8.0
+warmup_s,2.0
+concurrency_levels,"1,2,4,8,16,32,64,128,256,512"
+pool_sizes,"8,16,32,64"
+client_threads,512
+expA_peak_qps,1136.6
+expA_peak_concurrency,4
+expA_peak_p99_ms,8.126
+expA_c512_qps,719.5
+expA_c512_p99_ms,1714.634
+expC_best_pool_size,8
+expC_best_qps,956.8
+expC_best_p99_ms,42.056

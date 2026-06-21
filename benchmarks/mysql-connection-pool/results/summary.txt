@@ -1,0 +1,46 @@
+bringing up mysql (digest-pinned) ...
+  mysql 8.0.46 (aarch64) | container nproc=10 | cpu limit=4.0 cores
+  seeding 200000 rows (val = id*2654435761 % 100000, deterministic)...
+  seeded 200000 rows in 1.6s
+  warming buffer pool (200000 rows, 20000-wide scans)...
+  calibration: single-query serial latency p50=2.62ms p99=2.74ms (SCAN_W=20000 rows)
+
+======================================================================
+EXPERIMENT A  the curve: connection-per-client
+======================================================================
+  each of C worker threads owns its own dedicated MySQL connection
+  window=8s measured after 2s warmup, per level
+
+       C        qps    p50_ms    p99_ms        conns    running
+       1        340      2.86      5.20            2          3
+       2        720      2.65      4.90            3          4
+       4       1137      3.23      8.13            5          6
+       8       1087      5.12     40.65            9         10
+      16        985     13.08     58.31           17         14
+      32        926     28.29     93.24           33         27
+      64        875     74.29    184.07           65         48
+     128        842    147.16    349.61          130         93
+     256        796    294.70    772.11          258        177
+     512        720    600.32   1714.63          514        350
+
+======================================================================
+EXPERIMENT C  the pool fix: 512 client threads over a bounded pool
+======================================================================
+  the SAME 512 offered client threads, but only P backend connections
+
+    pool    clients        qps    p50_ms    p99_ms
+       8        512        957      5.57     42.06
+      16        512        802     14.24     64.31
+      32        512        744     34.11    103.44
+      64        512        712     90.62    217.66
+
+======================================================================
+SUMMARY
+======================================================================
+  Exp A peak      : 1137 QPS @ C=4, p99=8.13ms
+  Exp B collapse  : C=512 -> 720 QPS, p99=1714.63ms  (the pathological point)
+  peak/512 QPS    : 1.58x more throughput at the knee than at C=512
+  512-conn p99    : 211x the p99 of the peak
+  Exp C best pool : 512 clients over 8 conns -> 957 QPS, p99=42.06ms
+  pool vs 512     : 1.33x the QPS of direct-512, at 41x lower p99
+  pool vs peak    : recovers 84% of peak QPS
