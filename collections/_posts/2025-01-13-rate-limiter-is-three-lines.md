@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Everything I Got Wrong About Rate Limiting
-date:       2026-07-18
+date:       2025-01-13
 description:    A rate limiter is three lines and everyone writes the same fixed-window counter, myself included. Then a boundary burst walks through, Redis eviction hands out free quota, and a stale replica makes the decision disagree with the headers. Here's the algorithm menu, the atomic Lua the counter actually needs, and every sharp edge that has personally bitten me.
 categories: rate-limiting redis distributed-systems api
 ---
@@ -103,7 +103,7 @@ The thing that caught me off guard early is that "rate limiting" isn't one algor
 | **Fixed window** | `INCR` a counter, TTL the window, reject over the limit | Simplest and cheapest, one key per window. A burst on the window boundary is acceptable. Good default for a lot of internal stuff. |
 | **Sliding window log** | A sorted set of exact request timestamps; drop old ones, count what's left | I need it *exact* and I can pay for one stored entry per request. Billing, quotas people argue about. |
 | **Sliding window counter** | Weight this window's count plus the previous window's, by how much of it still overlaps | I want the boundary burst gone without the memory of a full log. Cheap, approximate, smooth. This is 80% of public-facing limits. |
-| **Token bucket** | Tokens refill at a steady rate, each request spends one, you can burst up to the bucket size | Bursts are a *feature* — a batch job or a webhook catching up should be allowed to spend saved-up capacity. |
+| **Token bucket** | Tokens refill at a steady rate, each request spends one, you can burst up to the bucket size | Bursts are a *feature*: a batch job or a webhook catching up should be allowed to spend saved-up capacity. |
 | **Leaky bucket / GCRA** | One timestamp (the theoretical next-allowed time), admit at a constant smooth rate | I'm protecting a downstream that hates spikes and I want O(1) state and a hard, smooth output rate. |
 
 The rules I actually use, stripped down:
@@ -189,7 +189,7 @@ Two keys instead of one, both with a short TTL. I still reach for it when smooth
 
 ## Two commands, one race
 
-The three-line version is safe because `INCR` does everything atomically. The moment you outgrow it — you want an explicit reset timestamp, or a negative window, or you split the counter and its expiry into two keys — you've handed yourself a check-then-act race, and you'll ship it at least once. I have, more than once.
+The three-line version is safe because `INCR` does everything atomically. The moment you outgrow it (you want an explicit reset timestamp, or a negative window, or you split the counter and its expiry into two keys) you've handed yourself a check-then-act race, and you'll ship it at least once. I have, more than once.
 
 Say you store the counter and the window's reset time as two separate keys, and on each request you check whether the window's expired and reset it if so:
 
@@ -244,7 +244,7 @@ I forced 30 expired-window rollovers with eight clients colliding on each one, t
   <figcaption>Limit 100 per window, 30 controlled rollovers, eight racing clients. The gap is deliberate timing amplification; the 0 ms point is the localhost baseline.</figcaption>
 </figure>
 
-The fix is to make the read-decide-reset-increment sequence one atomic step, and Redis gives you exactly that with a Lua script — it runs to completion with nothing interleaved:
+The fix is to make the read-decide-reset-increment sequence one atomic step, and Redis gives you exactly that with a Lua script. It runs to completion with nothing interleaved:
 
 ```lua
 -- KEYS[1] = counter key   KEYS[2] = reset key
@@ -261,11 +261,11 @@ local count = redis.call('INCR', KEYS[1])
 return {count, reset}                                  -- one call decides AND reports
 ```
 
-Two things I got wrong here that are worth stealing. Expire *both* keys, at the *same* absolute time, one second past the window — never let the counter outlive its reset or the other way round, half-a-window is corrupt state that's miserable to reason about. And return `count` *and* `reset` from the one call, because you're about to need both for the response headers, and reading them a second time is the next bug.
+Two things I got wrong here that are worth stealing. Expire *both* keys, at the *same* absolute time, one second past the window. Never let the counter outlive its reset or the other way round, half-a-window is corrupt state that's miserable to reason about. And return `count` *and* `reset` from the one call, because you're about to need both for the response headers, and reading them a second time is the next bug.
 
 ## The reset time that wobbles
 
-APIs hand the client a header saying when its window resets — `X-RateLimit-Reset`. Mine wobbled. Same client, back-to-back requests, and the reset time it got back jittered by a second: `10:01:00` on one request, `10:01:01` on the next. Nothing was actually wrong with the limit, but a client doing careful backoff off that header couldn't trust it, and I couldn't explain it.
+APIs hand the client a header saying when its window resets, `X-RateLimit-Reset`. Mine wobbled. Same client, back-to-back requests, and the reset time it got back jittered by a second: `10:01:00` on one request, `10:01:01` on the next. Nothing was actually wrong with the limit, but a client doing careful backoff off that header couldn't trust it, and I couldn't explain it.
 
 The cause was that I was computing the reset time as `now + TTL(key)`. The TTL came from Redis over the network; `now` came from the app process. Two different clocks, two different moments, a few milliseconds and a rounding boundary apart. Every so often they landed on different seconds and the header twitched.
 
@@ -275,7 +275,7 @@ The fix is to never *derive* the reset time, store it. Write the absolute reset 
 
 This is the one that started the whole bad morning. To keep the decision path cheap I read the counter from a Redis *replica* (reads are plentiful, spread them out) and only sent the increment to the primary. Sounds reasonable. It produced responses that rejected the request *and* reported a full quota remaining, in the same breath.
 
-Two things conspire here. Replicas lag the primary. And — the part I didn't know — a Redis replica doesn't expire keys on its own clock; it waits for the primary to tell it a key is gone. So a replica can happily serve you an expired-but-not-yet-deleted window:
+Two things conspire here. Replicas lag the primary. And (the part I didn't know) a Redis replica doesn't expire keys on its own clock; it waits for the primary to tell it a key is gone. So a replica can happily serve you an expired-but-not-yet-deleted window:
 
 ```
 Decision (from replica)              Reporting (from primary)
@@ -317,33 +317,33 @@ I measured the contradiction as a rejection where the fresh primary result still
   <figcaption>Three cycles and 120 decisions per point. The harness detaches replication for 0/10/25/50 ms to make localhost lag observable, then reattaches and verifies the replica after every cycle.</figcaption>
 </figure>
 
-Two fixes, both needed. Make the decision and the headers come from the *same* atomic result — the script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. Whether the key is still sitting there on a lazy, lagging replica tells you nothing reliable, so compare against the reset time you stored instead.
+Two fixes, both needed. Make the decision and the headers come from the *same* atomic result. The script that decides is the script whose numbers you report, no second read. And let the application own expiry: compare the stored reset timestamp to `now` yourself instead of trusting whether a key still exists on a machine that expires lazily and lags. Whether the key is still sitting there on a lazy, lagging replica tells you nothing reliable, so compare against the reset time you stored instead.
 
 ## Free quota from the eviction gods
 
-Here's a subtle one. If your rate-limiter keys live in the same Redis (or Memcached) as your application cache, and that instance runs an LRU eviction policy because it's a *cache*, then under memory pressure it will evict whatever's coldest — and a rate-limiter counter for a client that's mid-window but hasn't hit in a few seconds is exactly that. The counter vanishes. The client's next request finds no key, starts a brand-new full window, and just got handed quota it never earned. During a traffic spike — precisely when the limiter matters — memory pressure is highest and this fires most.
+Here's a subtle one. If your rate-limiter keys live in the same Redis (or Memcached) as your application cache, and that instance runs an LRU eviction policy because it's a *cache*, then under memory pressure it will evict whatever's coldest, and a rate-limiter counter for a client that's mid-window but hasn't hit in a few seconds is exactly that. The counter vanishes. The client's next request finds no key, starts a brand-new full window, and just got handed quota it never earned. During a traffic spike, precisely when the limiter matters, memory pressure is highest and this fires most.
 
 Worse is the partial eviction. Counter and reset are two keys; the eviction policy doesn't know they're a pair. It evicts one and keeps the other, and now you've got a counter with no expiry, or a reset time pointing at a window whose count is gone. Corrupt, half-alive state that behaves differently depending on which half survived, and good luck reproducing it.
 
-The rate limiter is not a cache and must not share a memory pool with one. Give it its own instance (or at least its own logical DB) with an eviction policy set on purpose — `noeviction`, or `volatile-ttl` so only genuinely-expiring keys ever go. You can afford to lose a cache entry, that's the whole point of a cache, but a rate-limiter counter that gets evicted mid-window is just free abuse, so don't make the two of them compete for the same memory.
+The rate limiter is not a cache and must not share a memory pool with one. Give it its own instance (or at least its own logical DB) with an eviction policy set on purpose: `noeviction`, or `volatile-ttl` so only genuinely-expiring keys ever go. You can afford to lose a cache entry, that's the whole point of a cache, but a rate-limiter counter that gets evicted mid-window is just free abuse, so don't make the two of them compete for the same memory.
 
 ## When Redis is down
 
 Redis will be unavailable at some point, and the limiter has to decide what to do when it can't reach its own state. Two doors, both bad.
 
-**Fail-open** — if you can't check the limit, allow the request. You stay available, but you've dropped your shield at the exact moment the backend might be under strain, and a flood walks right in on top of whatever already broke Redis.
+**Fail-open**: if you can't check the limit, allow the request. You stay available, but you've dropped your shield at the exact moment the backend might be under strain, and a flood walks right in on top of whatever already broke Redis.
 
-**Fail-closed** — if you can't check, reject. Now a Redis blip becomes a total API outage, and a thing that was only ever an optimization has taken down the whole service.
+**Fail-closed**: if you can't check, reject. Now a Redis blip becomes a total API outage, and a thing that was only ever an optimization has taken down the whole service.
 
-Neither blanket answer is right. What I do now is fail-open *with a local fallback* — a coarse, per-process token bucket in memory that kicks in when Redis is unreachable. It won't be globally accurate (each node counts only itself), but it caps the blast radius so you're not fully naked, and it turns a shared-Redis outage into "slightly leaky limits" instead of "no limits" or "no API." And alarm loudly the moment you're running on the fallback, because it's silent by nature — everything keeps working, a bit too generously, and you'll never notice from the outside.
+Neither blanket answer is right. What I do now is fail-open *with a local fallback*: a coarse, per-process token bucket in memory that kicks in when Redis is unreachable. It won't be globally accurate (each node counts only itself), but it caps the blast radius so you're not fully naked, and it turns a shared-Redis outage into "slightly leaky limits" instead of "no limits" or "no API." And alarm loudly the moment you're running on the fallback, because it's silent by nature: everything keeps working, a bit too generously, and you'll never notice from the outside.
 
 ## One box, single-threaded
 
 The reason any of the sharding stuff exists is a fact people forget about Redis: it executes commands on a single thread. It's not memory-bound at the scale a limiter hits, it's CPU-bound, and one instance has a ceiling on commands per second that you *will* reach if you're limiting a large enough front door. When you do, you shard.
 
-Shard by hashing the rate-limit key to one of N clusters, so a given key always lands on the same cluster — the state for one user stays in one place and stays consistent — but the *load* spreads across clusters. Each cluster is a primary plus replicas: increments (the decisions) go to the primary, and genuinely read-only traffic that doesn't gate anything — a usage dashboard, a "remaining" number on a page — can come off replicas, as long as you never make the actual *limit decision* from a lagging replica (see three sections up for how that goes).
+Shard by hashing the rate-limit key to one of N clusters, so a given key always lands on the same cluster (the state for one user stays in one place and stays consistent) but the *load* spreads across clusters. Each cluster is a primary plus replicas: increments (the decisions) go to the primary, and genuinely read-only traffic that doesn't gate anything (a usage dashboard, a "remaining" number on a page) can come off replicas, as long as you never make the actual *limit decision* from a lagging replica (see three sections up for how that goes).
 
-The trap in sharding by key: it does nothing for a single hot key. One abusive client hammering one token is one key, which is one shard, and sharding spread everyone *else* out but left that shard carrying the whole storm. It buys you aggregate throughput and does nothing for a single hot spot. A hot key needs local shedding at the edge before it ever reaches Redis, or its own fatter box — spreading the *other* keys around doesn't help the one that's actually on fire.
+The trap in sharding by key: it does nothing for a single hot key. One abusive client hammering one token is one key, which is one shard, and sharding spread everyone *else* out but left that shard carrying the whole storm. It buys you aggregate throughput and does nothing for a single hot spot. A hot key needs local shedding at the edge before it ever reaches Redis, or its own fatter box. Spreading the *other* keys around doesn't help the one that's actually on fire.
 
 On this laptop, one primary handled 283,791 Lua decisions/second with keys spread across the keyspace. Promoting the replica to a second primary and splitting those keys reached 400,032/second, a 41% gain. Both containers share the same laptop, so I did not get a clean 2× and I would not size production from this number. The hot key made the point more cleanly: 318,595/second on one shard and 299,301/second with two. The second shard sat there looking decorative while every request still landed on shard zero.
 
@@ -368,11 +368,11 @@ On this laptop, one primary handled 283,791 Lua decisions/second with keys sprea
 
 Last one, and it's a genuine judgment call, not a bug. Do you count the request when it *arrives* or when it *finishes*?
 
-Count on arrival (reserve the token up front) and you protect the backend properly — nothing runs until it's paid — but you charge clients for work that didn't happen. A request that 500s on your side, or comes back `304 Not Modified` because nothing changed, still burned a token. Feels unfair, and clients notice.
+Count on arrival (reserve the token up front) and you protect the backend properly (nothing runs until it's paid) but you charge clients for work that didn't happen. A request that 500s on your side, or comes back `304 Not Modified` because nothing changed, still burned a token. Feels unfair, and clients notice.
 
 Count on completion and you're fairer, but a client can have a pile of slow requests in flight, none of them counted yet, briefly blowing past the limit while they all run.
 
-The answer I've settled on is reserve-then-refund: charge a token on the way in so the backend's always protected, and hand it back on the responses you've decided are free — a `304`, or a request you rejected at your own validation layer before it did any real work. It's a little more bookkeeping, but it gets you protection *and* fairness instead of picking one. Decide which responses are "free" deliberately, and write it down, because "why did that `304` cost me a request" is a support ticket waiting to happen.
+The answer I've settled on is reserve-then-refund: charge a token on the way in so the backend's always protected, and hand it back on the responses you've decided are free: a `304`, or a request you rejected at your own validation layer before it did any real work. It's a little more bookkeeping, but it gets you protection *and* fairness instead of picking one. Decide which responses are "free" deliberately, and write it down, because "why did that `304` cost me a request" is a support ticket waiting to happen.
 
 ## The mistakes, in one place
 
@@ -390,7 +390,7 @@ Everything above, squeezed into the list I'd actually paste into a review:
 
 ## So is it worth it
 
-After all that, yeah, I still start every new limiter as a fixed-window counter, three lines, and I still think that's right. Reach for the fancy algorithm the day the boundary burst or the memory or the smoothness actually bites, not before. What the three lines leave out isn't the counting — `INCR` and a TTL genuinely handle the counting — it's everything around the counting: the seam in the window, the two-command race, the wobbling clock, the lagging replica, the eviction that shouldn't touch you, the outage you didn't plan for, the single thread you'll outgrow, the token you charged for nothing.
+After all that, yeah, I still start every new limiter as a fixed-window counter, three lines, and I still think that's right. Reach for the fancy algorithm the day the boundary burst or the memory or the smoothness actually bites, not before. What the three lines leave out isn't the counting, `INCR` and a TTL genuinely handle the counting, it's everything around the counting: the seam in the window, the two-command race, the wobbling clock, the lagging replica, the eviction that shouldn't touch you, the outage you didn't plan for, the single thread you'll outgrow, the token you charged for nothing.
 
 ## The takeaway
 

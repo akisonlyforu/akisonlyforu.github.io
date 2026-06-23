@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Priority Queue That Didn't Cut the Line
-date:       2026-07-19
+date:       2025-07-05
 description:    One queue carried the marketing blast and the OTPs. I added a priority queue and the OTP still waited 3.8 seconds behind the backlog. The culprit was prefetch, not priority. Here's the reproduction.
 categories: rabbitmq queues priority-queue notifications operations
 ---

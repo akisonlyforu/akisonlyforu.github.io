@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Machine That Rehashed Everything
-date:       2026-07-19
+date:       2025-06-30
 description:    You shard a table across four Postgres machines with hash % 4 and everything gets faster. Then you add the fifth machine and find out that changing the divisor moves four-fifths of your rows, because the row count was baked into the address. The fix is to never hash to machines at all, and the whole design turns on the number you pick before any of that happens.
 categories: postgres sharding databases scaling
 ---

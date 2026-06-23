@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Your Redis Pub/Sub Node Hears Its Own Messages
-date:       2026-07-18
+date:       2025-02-24
 description:    Redis pub/sub delivers every message to every subscriber on the channel, including the node that published it. If a node both publishes and subscribes, it hears its own echo. Here's why, a two-line fix, and a demo you can run to watch it happen.
 categories: redis pub-sub distributed-systems operations
 ---

@@ -1,6 +1,6 @@
 # pg_stats benchmark harness
 
-This is the harness behind [The Lie in pg_stats](../../collections/_posts/2026-07-18-the-130x-lie-in-pg-stats.md). It runs a digest-pinned PostgreSQL 16.14 image locally and reproduces the `ORDER BY id LIMIT 1` planner trap discussed in the post.
+This is the harness behind [The Lie in pg_stats](../../collections/_posts/2025-01-06-the-130x-lie-in-pg-stats.md). It runs a digest-pinned PostgreSQL 16.14 image locally and reproduces the `ORDER BY id LIMIT 1` planner trap discussed in the post.
 
 The seed is deterministic: 20,000,000 append-ordered audit events, 82% with a NULL `session_id`, and 20,000 non-null sessions with 180 physically adjacent events apiece. A 5,000,000-row seed with 18-event bursts did not reproduce the bad plan, and neither did 20,000,000 rows with 18-event bursts, so the checked-in run follows the post's disclosed escalation and tightens the clustering naturally. The benchmark measures the same query at per-column statistics targets 100, 2000, and 5000. `ANALYZE` sampling is random, and both target-5000 samples are kept in the CSV instead of pretending the seed makes statistics sampling deterministic.
 

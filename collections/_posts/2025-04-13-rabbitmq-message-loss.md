@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Messages RabbitMQ Confirmed and Lost Anyway
-date:       2026-07-18
+date:       2025-04-13
 description:    A publisher confirm is supposed to mean the broker has your message. On a classic mirrored queue I confirmed 5,000 messages and a single node failure lost all 5,000. Here's the reproduction on RabbitMQ 3.13, and what quorum queues do differently on 4.0.
 categories: rabbitmq quorum-queues reliability operations
 ---

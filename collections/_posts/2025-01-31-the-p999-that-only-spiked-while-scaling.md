@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The p99.9 That Only Spiked While We Were Scaling Up
-date:       2026-07-20
+date:       2025-01-31
 published:  false
 description:    p50 and p99 flat and healthy, p99.9 jumping to 400ms, but only for the fifteen minutes after autoscaling added a node. The trail went fork → smaps → Transparent Huge Pages, and the textbook fix was one I couldn't use.
 categories: redis latency thp linux operations

@@ -1,7 +1,7 @@
 # Benchmark handoff: redis-thp (for Gemini)
 
 You are building the harness behind the post **"The p99.9 That Only Spiked While We Were Scaling Up"**
-(`collections/_posts/2026-07-20-the-p999-that-only-spiked-while-scaling.md`). The post is drafted with
+(`collections/_posts/2025-01-31-the-p999-that-only-spiked-while-scaling.md`). The post is drafted with
 placeholder tokens `[[BENCH:*]]`; produce the real measurements that replace them, plus the checked-in
 evidence, following the conventions already used by `benchmarks/pg-stats/` and `benchmarks/cache-aside/`.
 
@@ -100,7 +100,7 @@ benchmarks/redis-thp/
 
 ## 3. Token map — what fills each `[[BENCH:*]]` in the post
 
-Replace tokens in `collections/_posts/2026-07-20-the-p999-that-only-spiked-while-scaling.md` from these.
+Replace tokens in `collections/_posts/2025-01-31-the-p999-that-only-spiked-while-scaling.md` from these.
 
 | Token | Source |
 |---|---|
@@ -151,7 +151,7 @@ From the repo root, on a Linux host you control:
 gemini "Read benchmarks/redis-thp/HANDOFF.md, heed section 0's environment caveat, and build the full
 harness it specifies: docker-compose.yml, benchmark.py, requirements.txt, README.md, and the results/
 tree. Run arms A/B/C plus the read-only control, capture real measurements into results/, then fill
-every [[BENCH:*]] token in collections/_posts/2026-07-20-the-p999-that-only-spiked-while-scaling.md
+every [[BENCH:*]] token in collections/_posts/2025-01-31-the-p999-that-only-spiked-while-scaling.md
 using the token map in section 3, recompute both figure geometries from the CSVs, and remove the DRAFT
 comment and the published:false line. Preserve non-reproducing shapes under results/attempts/. Do not
 fabricate any number — if the host can't toggle THP or a value wasn't measured, say so and mark that arm

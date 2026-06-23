@@ -1,7 +1,7 @@
 # Benchmark handoff: redis-oom (for Gemini)
 
 You are building the benchmark harness behind the post **"Redis Said It Was Fine. The OOM Killer Didn't."**
-(`collections/_posts/2026-07-19-redis-said-it-was-fine.md`). The post is drafted with placeholder
+(`collections/_posts/2025-02-06-redis-said-it-was-fine.md`). The post is drafted with placeholder
 tokens `[[BENCH:*]]`; your job is to produce the real measurements that replace them, plus the
 checked-in evidence, following the exact conventions already used by `benchmarks/pg-stats/`.
 
@@ -96,7 +96,7 @@ cgroup `memory.current` and the OOM outcome (killed? at what RSS? exit reason).
 
 ## 3. Token map — what fills each `[[BENCH:*]]` in the post
 
-Replace tokens in `collections/_posts/2026-07-19-redis-said-it-was-fine.md` from these sources.
+Replace tokens in `collections/_posts/2025-02-06-redis-said-it-was-fine.md` from these sources.
 Use `_human` forms for prose tokens (e.g. `812.44M`), raw integers only where noted.
 
 | Token | Source |
@@ -151,7 +151,7 @@ From the repo root:
 gemini "Read benchmarks/redis-oom/HANDOFF.md and build the full harness it specifies:
 docker-compose.yml, benchmark.py, requirements.txt, README.md, and the results/ tree.
 Run it, capture real measurements into results/, then fill every [[BENCH:*]] token in
-collections/_posts/2026-07-19-redis-said-it-was-fine.md using the token map in section 3,
+collections/_posts/2025-02-06-redis-said-it-was-fine.md using the token map in section 3,
 recompute both figure geometries from the CSVs, and remove the DRAFT manifest comment.
 Preserve any non-reproducing shapes under results/attempts/. Do not fabricate any number —
 if a value wasn't measured, the run isn't done."

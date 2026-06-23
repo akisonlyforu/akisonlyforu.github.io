@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Our Fix for the Thundering Herd Was a Lock
-date:       2026-07-18
+date:       2025-03-20
 description:    A hot cached price expires, the herd hits the database, so we wrapped the recompute in a SET NX lock. The p99 didn't budge, and the day a pod died mid-recompute the tail hit 3.5 seconds. Here's why the lock was the wrong tool, measured, and what actually fixed it.
 categories: redis caching thundering-herd operations
 ---

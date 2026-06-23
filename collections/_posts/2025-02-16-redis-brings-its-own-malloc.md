@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Redis Brings Its Own malloc, and Here's Why
-date:       2026-07-18
+date:       2025-02-16
 description:    Redis doesn't use your system's malloc. It ships jemalloc in its own source tree and compiles it in by default. I built the same Redis two ways and found that the allocator changed the memory numbers, just not in the direction I expected.
 categories: redis memory jemalloc allocator operations
 ---

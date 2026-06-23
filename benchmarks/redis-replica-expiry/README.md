@@ -1,6 +1,6 @@
 # redis replica expiration harness
 
-This is the harness behind [The Expired Keys Your Redis Replica Still Counts](../../collections/_posts/2026-07-18-redis-replica-expiry.md).
+This is the harness behind [The Expired Keys Your Redis Replica Still Counts](../../collections/_posts/2025-03-05-redis-replica-expiry.md).
 
 It runs a digest-pinned Redis 7.4 primary and a read replica and measures what a
 replica does with logically-expired keys, because replicas do not run their own

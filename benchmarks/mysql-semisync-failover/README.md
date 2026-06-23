@@ -1,6 +1,6 @@
 # mysql semi-sync failover harness
 
-This is the harness behind [The Commits That Didn't Survive the Failover](../../collections/_posts/2026-07-18-the-commits-that-didnt-survive-the-failover.md).
+This is the harness behind [The Commits That Didn't Survive the Failover](../../collections/_posts/2025-06-14-the-commits-that-didnt-survive-the-failover.md).
 
 This harness runs a digest-pinned MySQL 8.0 primary and a GTID replica and
 measures what a failover actually loses under **asynchronous** vs

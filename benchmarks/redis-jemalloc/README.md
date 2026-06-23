@@ -1,6 +1,6 @@
 # Redis allocator benchmark: jemalloc vs libc
 
-This is the harness behind [Redis Brings Its Own malloc, and Here's Why](../../collections/_posts/2026-07-18-redis-brings-its-own-malloc.md). It compiles Redis 7.4.0 twice from the same checksum-pinned source archive and digest-pinned Debian base. The only build difference is `MALLOC=jemalloc` versus `MALLOC=libc`.
+This is the harness behind [Redis Brings Its Own malloc, and Here's Why](../../collections/_posts/2025-02-16-redis-brings-its-own-malloc.md). It compiles Redis 7.4.0 twice from the same checksum-pinned source archive and digest-pinned Debian base. The only build difference is `MALLOC=jemalloc` versus `MALLOC=libc`.
 
 The default run loads 200,000 keys across five value sizes, then performs five deterministic churn rounds. Each round overwrites 20% of the live keys with another size class, deletes 20%, and inserts the same number under fresh names. Both builds execute the same 800,000-operation plan, identified by one SHA-256 fingerprint, and finish with 200,000 data keys and zero evictions.
 

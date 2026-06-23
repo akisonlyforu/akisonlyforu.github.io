@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Expired Keys Your Redis Replica Still Counts
-date:       2026-07-18
+date:       2025-03-05
 description:    A replica doesn't expire keys on its own clock, it waits for the primary to tell it. I went to reproduce the classic stale-lock-on-a-replica bug and found modern Redis had quietly fixed half of it, and left the more dangerous half in plain sight.
 categories: redis replication expiry operations
 ---

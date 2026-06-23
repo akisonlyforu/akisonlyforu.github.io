@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Commits That Didn't Survive the Failover
-date:       2026-07-18
+date:       2025-06-14
 description:    A MySQL primary told a thousand clients their writes were committed, then crashed. The replica came up in seconds, the dashboard went green, and every one of those thousand rows was gone. Async replication will do that quietly; I went to measure exactly how much semi-sync buys you back, and what it costs.
 categories: mysql replication high-availability failover
 ---

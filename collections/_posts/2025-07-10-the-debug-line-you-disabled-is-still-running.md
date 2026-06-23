@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Debug Line You Disabled Is Still Running
-date:       2026-07-19
+date:       2025-07-10
 description:    A DEBUG line that never prints still cost me 5,260 ns a call, because the logger checks the level after you've already built the message. That, sync writes on the request thread, and logging every event instead of sampling: three ways logging quietly eats a hot path.
 categories: logging performance python observability operations
 ---

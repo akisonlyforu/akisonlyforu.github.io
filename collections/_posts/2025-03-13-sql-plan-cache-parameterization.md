@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Query Plans That Only Ran Once
-date:       2026-07-18
+date:       2025-03-13
 description:    Run the same query five hundred times with a different literal each time and SQL Server caches five hundred plans, each used once, eating 66MB. Parameterize it and you get one plan, 136KB. Then parameter sniffing shows up and hands the common value a plan built for a rare one.
 categories: sql-server plan-cache parameterization databases
 ---

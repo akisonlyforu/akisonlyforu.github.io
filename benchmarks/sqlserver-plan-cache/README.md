@@ -1,6 +1,6 @@
 # SQL Server plan-cache harness
 
-This is the harness behind [The Query Plans That Only Ran Once](../../collections/_posts/2026-07-18-sql-plan-cache-parameterization.md).
+This is the harness behind [The Query Plans That Only Ran Once](../../collections/_posts/2025-03-13-sql-plan-cache-parameterization.md).
 
 It runs a digest-pinned SQL Server 2022 and reproduces what unparameterized
 queries do to the plan cache, and what parameterizing them costs you back.
