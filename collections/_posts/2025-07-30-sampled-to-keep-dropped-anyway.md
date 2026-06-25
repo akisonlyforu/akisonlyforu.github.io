@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Sampled to Keep, Dropped Anyway
-date:       2026-07-19
+date:       2025-07-30
 description:    Tail sampling in the OpenTelemetry Collector buffers whole traces in memory until a decision timer fires, so the memory it needs is rate times decision_wait, and at high traffic that number is bigger than the container. When the buffer overflows it drops the oldest traces first, which are exactly the error traces you turned tail sampling on to keep. Here is the reproduction, including the OOMKill loop.
 categories: opentelemetry observability tail-sampling tracing performance
 ---

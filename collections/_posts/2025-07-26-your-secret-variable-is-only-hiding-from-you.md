@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Your Secret Variable Is Only Hiding From You
-date:       2026-07-21
+date:       2025-07-26
 description:    Marking a Postman variable "secret" masks it with dots in the UI. It does not encrypt it, and it does not stop the app from resolving it to plaintext and syncing it to Postman's servers. A researcher caught the client shipping resolved secrets to analytics endpoints. Whether that exact bug still lives, the structural truth does, because a cloud tool that resolves your secret already has it.
 categories: security api-keys secrets postman devsecops privacy
 ---

@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      It Was Never a Breach
-date:       2026-07-20
+date:       2025-07-22
 description:    Someone crawled 30,000 public Postman workspaces for a year and pulled out live GitHub, Razorpay, and Okta credentials. Nothing was hacked. The tool worked exactly as designed. The real bug is that Postman is a credential store wearing a testing-tool costume, and opt-in security protects nobody who needs it.
 categories: security api-keys secrets postman devsecops
 ---

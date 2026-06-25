@@ -1,8 +1,8 @@
 ---
 layout:     post
 title:      What a Span Actually Costs
-date:       2026-07-19
-description:    OpenTelemetry instrumentation is not free, but the SDK is rarely where it hurts. A span costs a few microseconds and each attribute adds a bit more, which almost never matters. What matters is the span processor: SimpleSpanProcessor exports on the request thread and pays the full collector round trip on every single call, and the fix is a batch processor plus head sampling. Here is the reproduction, in microseconds.
+date:       2025-08-04
+description:    "OpenTelemetry instrumentation is not free, but the SDK is rarely where it hurts. A span costs a few microseconds and each attribute adds a bit more, which almost never matters. What matters is the span processor: SimpleSpanProcessor exports on the request thread and pays the full collector round trip on every single call, and the fix is a batch processor plus head sampling. Here is the reproduction, in microseconds."
 categories: opentelemetry observability tracing performance instrumentation
 ---
 
