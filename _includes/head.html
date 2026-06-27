@@ -37,6 +37,20 @@
     <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     {% endif %}
 
+    {% if page.mermaid == true %}
+    <!-- Mermaid diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      function initMermaid() {
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: (document.documentElement.getAttribute('data-theme') === 'dark') ? 'dark' : 'default'
+        });
+      }
+      document.addEventListener('DOMContentLoaded', initMermaid);
+    </script>
+    {% endif %}
+
     {% if site.google_verification %}
     <!-- Google Verification -->
       <meta name="google-site-verification" content="{{ site.google_verification }}" />
