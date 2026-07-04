@@ -59,4 +59,6 @@ Multi-step validation, approval workflows, middleware pipelines, anything where 
 
 Chain of Responsibility decouples the sender from whichever handler ends up processing the request, but the cost is that the request no longer tells you, without logging, which handler actually stopped it. Log the handler name at every link, or you'll be grepping through several classes to find where a request quietly died.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/chain_of_responsibility).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

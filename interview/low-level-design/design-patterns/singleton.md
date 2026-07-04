@@ -47,4 +47,6 @@ Reach for it when a second instance would be a correctness bug, not just wasted 
 
 If you're doing lazy double-checked locking, the volatile keyword is not optional, it's the only thing stopping a second thread from reading a half-built object. If you don't want to think about memory visibility at all, use an enum and let the JVM handle it.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/creational/singleton).
+
 [← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)

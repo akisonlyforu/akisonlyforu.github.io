@@ -52,4 +52,6 @@ classDiagram
 
 The proxy and the real object share the same interface on purpose, that's what lets the caller stay completely unaware of which one it's holding. If your proxy starts exposing methods the real object doesn't have, or the caller starts checking which one it got, the substitution has stopped being transparent and the pattern isn't doing its job anymore.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/proxy).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

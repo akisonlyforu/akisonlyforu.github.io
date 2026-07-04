@@ -80,4 +80,6 @@ Reach for it when you've got a small set of canonical configurations and need ma
 
 Copy constructors get you most of what Cloneable promises without the checked exception or the marker-interface awkwardness. Just remember that field-by-field copying is only safe for primitives and immutable references, mutable fields need to be copied explicitly or the clone and original end up sharing state.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/creational/prototype).
+
 [← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)

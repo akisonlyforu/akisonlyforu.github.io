@@ -74,4 +74,6 @@ Reach for it when the products genuinely need to travel together, cross-platform
 
 Abstract Factory buys you a guarantee that Factory Method alone can't, that everything created through one factory instance belongs to the same family. If nothing in your system actually requires that consistency, you're paying extra structure for nothing.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/creational/abstract_factory).
+
 [← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)

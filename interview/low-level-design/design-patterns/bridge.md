@@ -87,4 +87,6 @@ classDiagram
 
 Bridge is what you reach for before the class explosion happens, not after. If you're already staring at a naming scheme like `CarProduce` and `BikeAssemble`, that's the signal you needed this two designs ago.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/bridge).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

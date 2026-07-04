@@ -49,4 +49,6 @@ Any time you've got multiple classes behind one interface and the choice of whic
 
 One method owns the "which concrete class" decision, everyone else programs against the interface. Adding a new player type means one new class and one new case label, nothing else in the codebase changes.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/creational/factory).
+
 [← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)

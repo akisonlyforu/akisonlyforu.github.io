@@ -71,4 +71,6 @@ classDiagram
 
 The whole pattern hinges on correctly splitting state into intrinsic and extrinsic. Get that split wrong, put something that should be per-instance into the shared flyweight, and you've built a bug where one caller's data bleeds into another's, not a memory optimization.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/flyweight).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

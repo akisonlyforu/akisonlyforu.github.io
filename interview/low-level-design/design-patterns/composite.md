@@ -59,4 +59,6 @@ classDiagram
 
 The trick worth remembering isn't the tree structure, it's the default-method dodge that lets leaves opt out of container behavior without a wall of `if` checks or empty overrides. Get that part right and the recursion mostly writes itself.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/composite).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

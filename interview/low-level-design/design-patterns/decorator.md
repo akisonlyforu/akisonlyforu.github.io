@@ -63,4 +63,6 @@ classDiagram
 
 Each decorator should do exactly one small thing and delegate the rest. The moment a decorator starts checking what else is in the chain or reaching past its immediate `coffee` reference, you've broken the thing that made this useful in the first place.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/decorator).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

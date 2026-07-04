@@ -55,4 +55,6 @@ A family of classes that share the same overall algorithm shape but differ in a 
 
 Template Method locks the algorithm's shape down using inheritance, which means every loader is permanently tied to `BaseGameLoader`, you can't swap the skeleton itself at runtime the way you could swap a Strategy. That's fine when the skeleton really is fixed, it's a liability the moment you discover you need two different skeletons.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/template).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

@@ -80,4 +80,6 @@ A stable set of element types that rarely changes, but a growing set of unrelate
 
 Visitor trades "adding an operation is free" for "adding an element type is expensive," it's a deliberate bet on which axis of change is more likely in your domain. Know which axis actually moves before you commit to it, guessing wrong means rewriting every visitor class you've already written.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/visitor).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
