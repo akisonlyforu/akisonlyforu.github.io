@@ -7,6 +7,8 @@ categories: interview lld design-patterns behavioral
 mermaid: true
 ---
 
+[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
+
 The first time I needed to add a new report across `Bank`, `Company`, and `Restaurant` classes that already existed, say a marketing-campaign generator, I didn't want to touch any of those three classes to bolt on another method each. Visitor is what lets you add that operation from the outside, at the cost of a mechanic that trips up almost everyone the first time they read it: double dispatch.
 
 ## The problem

@@ -7,6 +7,8 @@ categories: interview lld design-patterns structural
 mermaid: true
 ---
 
+[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
+
 If you've ever stared at a Spring `@Configuration` class, seen a `@Bean` method called from two other `@Bean` methods, and wondered why it doesn't just create two separate instances, this is for you. It doesn't, because you're never actually calling that method directly, you're calling a CGLIB-generated subclass of your configuration class that intercepts the call first.
 
 ## The problem

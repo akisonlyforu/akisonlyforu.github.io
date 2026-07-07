@@ -7,6 +7,8 @@ categories: interview lld design-patterns behavioral
 mermaid: true
 ---
 
+[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
+
 The first time I wrote a "remote control" style class without an undo stack, I ended up bolting a redo-state hack directly onto the invoker, because button presses were wired straight to receiver method calls with nothing in between. Command exists so you never have to retrofit that.
 
 ## The problem

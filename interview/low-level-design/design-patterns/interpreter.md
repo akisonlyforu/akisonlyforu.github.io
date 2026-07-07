@@ -7,6 +7,8 @@ categories: interview lld design-patterns behavioral
 mermaid: true
 ---
 
+[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
+
 I once wrote a tiny arithmetic evaluator for a pricing config field, something like "base + surge * 1.5", and the naive version was a growing switch statement over token types. Adding a new operator meant touching that same method again, every time. Interpreter's whole pitch is: stop doing that, give every grammar rule its own class.
 
 ## The problem
