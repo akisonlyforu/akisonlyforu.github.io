@@ -9,7 +9,7 @@ permalink: /search/
   <h1>Search</h1>
 
   <div class="search-box">
-    <input type="text" id="search-input" placeholder="Search posts and musings...">
+    <input type="text" id="search-input" placeholder="Search posts, musings, and interview prep...">
     <button id="search-button">Search</button>
   </div>
 
@@ -17,6 +17,7 @@ permalink: /search/
     <button class="search-pill search-pill-active" data-type="all">All</button>
     <button class="search-pill" data-type="post">Posts</button>
     <button class="search-pill" data-type="thought">Musings</button>
+    <button class="search-pill" data-type="interview">Interview</button>
   </div>
 
   <div id="search-result-count"></div>
@@ -131,6 +132,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
   color: #7b1fa2;
 }
 
+.badge-interview {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
 [data-theme="dark"] .badge-post {
   background-color: #1e3a8a;
   color: #93c5fd;
@@ -139,6 +145,11 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
 [data-theme="dark"] .badge-thought {
   background-color: #581c87;
   color: #ddd6fe;
+}
+
+[data-theme="dark"] .badge-interview {
+  background-color: #1b4332;
+  color: #95d5b2;
 }
 
 .post-meta {
