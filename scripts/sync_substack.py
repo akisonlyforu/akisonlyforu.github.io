@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 DEFAULT_FEED_URL = "https://akisonlyforu.substack.com/feed"
+RSS_PROXY_URL = "https://api.rss2json.com/v1/api.json?rss_url={}"
 CONTENT_TAG = "{http://purl.org/rss/1.0/modules/content/}encoded"
 GENERATED_MARKER = "<!-- Generated from Substack. Edit the Substack post instead. -->"
 MAX_FEED_BYTES = 10 * 1024 * 1024
@@ -231,6 +232,39 @@ def parse_feed(data: bytes, publication_host: str) -> list[FeedPost]:
     return posts
 
 
+def parse_json_feed(data: bytes, publication_host: str) -> list[FeedPost]:
+    try:
+        payload = json.loads(data)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise SyncError(f"Invalid RSS proxy JSON: {error}") from error
+    if payload.get("status") != "ok" or not isinstance(payload.get("items"), list):
+        raise SyncError(f"RSS proxy returned an error: {payload.get('message', 'unknown error')}")
+
+    posts: list[FeedPost] = []
+    for item in payload["items"]:
+        title = str(item.get("title") or "").strip()
+        url = str(item.get("link") or "").strip()
+        guid = str(item.get("guid") or url).strip()
+        raw_date = str(item.get("pubDate") or "").strip()
+        parsed_url = urllib.parse.urlparse(url)
+        if not title or not guid or not raw_date:
+            raise SyncError("Every proxied RSS item must contain a title, identifier, and publication date")
+        if parsed_url.scheme != "https" or parsed_url.hostname != publication_host:
+            raise SyncError(f"Proxied RSS item URL is outside {publication_host}: {url}")
+        try:
+            published = datetime.strptime(raw_date, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+        except ValueError as error:
+            raise SyncError(f"Invalid proxied publication date for {url}: {raw_date}") from error
+        categories = item.get("categories") if isinstance(item.get("categories"), list) else []
+        posts.append(FeedPost(
+            guid, title, url, published,
+            str(item.get("content") or item.get("description") or ""),
+            str(item.get("description") or ""),
+            tuple(str(value).strip() for value in categories if str(value).strip()),
+        ))
+    return posts
+
+
 def slug_for(post: FeedPost) -> str:
     match = re.search(r"/p/([^/?#]+)", urllib.parse.urlparse(post.url).path)
     candidate = match.group(1) if match else post.title
@@ -359,12 +393,22 @@ def main() -> int:
     publication_host = urllib.parse.urlparse(args.feed_url).hostname
     if not publication_host:
         raise SyncError(f"Invalid feed URL: {args.feed_url}")
-    data = (
-        args.feed_file.read_bytes()
-        if args.feed_file
-        else fetch(args.feed_url, MAX_FEED_BYTES, allowed_host=lambda host: host == publication_host)[0]
-    )
-    posts = parse_feed(data, publication_host)
+    if args.feed_file:
+        posts = parse_feed(args.feed_file.read_bytes(), publication_host)
+    else:
+        try:
+            data = fetch(
+                args.feed_url, MAX_FEED_BYTES, allowed_host=lambda host: host == publication_host
+            )[0]
+            posts = parse_feed(data, publication_host)
+        except SyncError as direct_error:
+            print(f"warning: direct RSS fetch failed ({direct_error}); using public RSS proxy", file=sys.stderr)
+            proxy_url = RSS_PROXY_URL.format(urllib.parse.quote(args.feed_url, safe=""))
+            data = fetch(
+                proxy_url, MAX_FEED_BYTES, "application/json",
+                allowed_host=lambda host: host == "api.rss2json.com",
+            )[0]
+            posts = parse_json_feed(data, publication_host)
     changes = sync(posts, args.posts_dir, args.assets_dir, not args.no_assets)
     print(f"Substack sync complete: {len(posts)} feed post(s), {changes} changed file(s)")
     return 0
