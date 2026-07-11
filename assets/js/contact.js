@@ -21,15 +21,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 3000);
   };
 
-  // Adblockers can strip the reCAPTCHA script; submission must still work without a token.
+  // Adblockers (or a stalled ready() callback) can strip/hang the reCAPTCHA
+  // script; submission must still work without a token, and must not hang.
   async function getRecaptchaToken() {
     if (typeof grecaptcha === 'undefined') return null;
-    try {
-      return await new Promise((resolve, reject) => {
-        grecaptcha.ready(() => {
-          grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'contact' }).then(resolve, reject);
-        });
+    const tokenPromise = new Promise((resolve, reject) => {
+      grecaptcha.ready(() => {
+        grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'contact' }).then(resolve, reject);
       });
+    });
+    const timeout = new Promise(resolve => setTimeout(() => resolve(null), 4000));
+    try {
+      return await Promise.race([tokenPromise, timeout]);
     } catch (error) {
       console.error('reCAPTCHA error:', error);
       return null;
