@@ -13,6 +13,8 @@ function waitForGtag(callback) {
 }
 
 // Enhanced page view tracking with metadata
+// Note: gtag('config') in head.html already sends the page_view hit itself;
+// this only adds a custom engagement event on top, it must not send another page_view.
 function trackEnhancedPageView() {
   const pageData = {
     page_title: document.title,
@@ -22,7 +24,6 @@ function trackEnhancedPageView() {
   };
 
   if (typeof gtag !== 'undefined') {
-    gtag('event', 'page_view', pageData);
     gtag('event', 'enhanced_page_view', {
       event_category: 'Engagement',
       event_label: pageData.content_group1,

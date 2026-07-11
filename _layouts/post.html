@@ -37,12 +37,14 @@ layout: default
   <h1>{{ page.title }}</h1>
   <span class="post-meta">
     {{ page.date | date: site.date_format }}
+    {% if page.substack_url %}
     <span class="post-substack-link" style="margin-left: 10px;">
-      <a href="{{ site.substack_home_url }}/p/{{ page.slug }}" target="_blank">
+      <a href="{{ page.substack_url }}" target="_blank" rel="noopener noreferrer">
         <img src="/assets/icons/substack.png" alt="Substack" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;">
         Read this on Substack
       </a>
     </span>
+    {% endif %}
   </span>
   <br />
   {% if page.update_date %}
@@ -63,7 +65,7 @@ layout: default
   {% include series-nav.html %}
 {% endif %}
 
-<div class="sharethis-inline-share-buttons"></div>
+{% include share_buttons.html %}
 
 {% include subscribe.html %}
 
