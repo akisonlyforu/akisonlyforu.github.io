@@ -57,12 +57,15 @@ document.addEventListener('DOMContentLoaded', function() {
       const token = await getRecaptchaToken();
       if (token) params.append('g-recaptcha-response', token);
 
-      // mode: 'no-cors' keeps the response opaque; we can't read status from a
-      // cross-origin Apps Script endpoint, so success is assumed if fetch didn't throw.
-      await fetch(form.action, {
-        method: 'POST',
-        body: params,
-        mode: 'no-cors'
+      // TEMPORARY: reverted to GET because the Apps Script backend only
+      // implements doGet, not doPost — POST silently dropped submissions
+      // (see .context/opus-handoff.md). Switch back to POST once doPost
+      // is added server-side; GET puts name/email/message in the URL,
+      // which lands in browser history and server logs.
+      const url = `${form.action}?${params}`;
+      await fetch(url, {
+        method: 'GET',
+        redirect: 'manual'
       });
 
       showMessage('Message sent successfully! 🎉', false);
