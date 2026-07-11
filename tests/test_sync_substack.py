@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import sys
 import tempfile
 import unittest
@@ -74,6 +75,25 @@ class SyncSubstackTests(unittest.TestCase):
             images = list(assets.rglob("*.png"))
             self.assertEqual(len(images), 1)
             self.assertIn("/images/substack/test-post/", generated)
+
+    def test_parses_rss_proxy_response(self):
+        item = self.posts[0]
+        payload = json.dumps({
+            "status": "ok",
+            "items": [{
+                "title": item.title,
+                "link": item.url,
+                "guid": item.identifier,
+                "pubDate": "2026-07-11 10:00:00",
+                "description": item.description_html,
+                "content": item.body_html,
+                "categories": ["engineering"],
+            }],
+        }).encode()
+        posts = sync_substack.parse_json_feed(payload, "akisonlyforu.substack.com")
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(posts[0].identifier, item.identifier)
+        self.assertIn("Hello", posts[0].body_html)
 
 
 if __name__ == "__main__":
