@@ -25,9 +25,11 @@ tags: thoughts
       <p class="post-summary">
         {% if thought.description %} {{ thought.description }} {% else %} {{ thought.excerpt }} {% endif %}
       </p>
-        <span class="post-substack-link">
-          <a href="{{ site.substack_home_url }}/{{ thought.name }}" target="_blank">Read this on Substack</a>
-        </span>
+        {% if thought.substack_url %}
+          <span class="post-substack-link">
+            <a href="{{ thought.substack_url }}" target="_blank" rel="noopener noreferrer">Read this on Substack</a>
+          </span>
+        {% endif %}
     </div>
     {% endfor %}
   </div>

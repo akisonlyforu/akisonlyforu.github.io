@@ -4,24 +4,17 @@
  */
 class DarkModeToggle {
   constructor() {
-    console.log('DarkModeToggle constructor called');
     this.storageKey = 'theme-preference';
     this.toggleButton = null;
 
     // Always start with light theme by default
     this.currentTheme = 'light';
     const storedTheme = this.getStoredTheme();
-    console.log('Stored theme:', storedTheme);
 
     // Only use stored preference if user has explicitly set one before
     if (storedTheme) {
       this.currentTheme = storedTheme;
-      console.log('Using stored theme:', storedTheme);
-    } else {
-      console.log('No stored preference, defaulting to light theme');
     }
-
-    console.log('Final initial theme:', this.currentTheme);
 
     this.init();
   }
@@ -47,29 +40,23 @@ class DarkModeToggle {
   }
 
   setupToggle() {
-    console.log('Setting up dark mode toggle...');
     this.toggleButton = document.querySelector('.dark-mode-toggle');
 
     if (!this.toggleButton) {
       console.error('Dark mode toggle button not found');
-      console.log('Available buttons:', document.querySelectorAll('button'));
       return;
     }
-
-    console.log('Dark mode toggle button found:', this.toggleButton);
 
     // Set initial icon
     this.updateToggleIcon();
 
     // Add click event listener
-    this.toggleButton.addEventListener('click', (e) => {
-      console.log('Dark mode toggle clicked!', e);
+    this.toggleButton.addEventListener('click', () => {
       this.toggleTheme();
     });
 
     // Add keyboard support
     this.toggleButton.addEventListener('keydown', (e) => {
-      console.log('Dark mode toggle key pressed:', e.key);
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.toggleTheme();
@@ -97,14 +84,12 @@ class DarkModeToggle {
     try {
       // Always store user's explicit choice
       localStorage.setItem(this.storageKey, theme);
-      console.log('Stored theme preference:', theme);
     } catch (e) {
       console.warn('localStorage not available');
     }
   }
 
   applyTheme(theme) {
-    console.log('Applying theme:', theme);
     // Add transitioning class to disable transitions during theme change
     document.documentElement.classList.add('theme-transitioning');
 
@@ -114,16 +99,13 @@ class DarkModeToggle {
       if (document.body) {
         document.body.setAttribute('data-theme', 'dark');
       }
-      console.log('Set data-theme=dark on documentElement and body');
     } else {
       document.documentElement.removeAttribute('data-theme');
       if (document.body) {
         document.body.removeAttribute('data-theme');
       }
-      console.log('Removed data-theme from documentElement and body');
     }
 
-    console.log('documentElement attributes:', document.documentElement.attributes);
     this.currentTheme = theme;
 
     // Remove transitioning class after a brief delay
@@ -174,9 +156,7 @@ class DarkModeToggle {
   }
 
   toggleTheme() {
-    console.log('toggleTheme called! Current theme:', this.currentTheme);
     const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
-    console.log('Switching to theme:', newTheme);
 
     this.applyTheme(newTheme);
     this.setStoredTheme(newTheme);
@@ -219,9 +199,7 @@ class DarkModeToggle {
 }
 
 // Initialize dark mode toggle
-console.log('Dark mode script loaded');
 const darkModeToggle = new DarkModeToggle();
-console.log('Dark mode toggle initialized');
 
 // Make it globally accessible for debugging/API access
 window.darkModeToggle = darkModeToggle;

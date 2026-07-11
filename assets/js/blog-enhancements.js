@@ -1,6 +1,15 @@
 (function() {
   'use strict';
 
+  // Post headings are content, not trusted markup (e.g. "Vector<T>" would break the TOC otherwise).
+  function escapeHTML(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
   // --- Table of Contents ---
   function initTableOfContents() {
     var postContent = document.querySelector('.post-content');
@@ -48,7 +57,7 @@
       var level = heading.tagName === 'H3' ? 'toc-item-nested' : '';
       var timeLabel = sectionTimes[idx] >= 1 ? ' <span class="toc-time">' + sectionTimes[idx] + 'm</span>' : '';
       tocHTML += '<li class="toc-item ' + level + '">';
-      tocHTML += '<a class="toc-link" href="#' + heading.id + '">' + heading.textContent + timeLabel + '</a>';
+      tocHTML += '<a class="toc-link" href="#' + heading.id + '">' + escapeHTML(heading.textContent) + timeLabel + '</a>';
       tocHTML += '</li>';
     });
 
