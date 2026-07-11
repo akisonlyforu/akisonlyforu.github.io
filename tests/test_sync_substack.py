@@ -3,6 +3,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("sync_substack", ROOT / "scripts/sync_substack.py")
@@ -64,6 +65,15 @@ class SyncSubstackTests(unittest.TestCase):
         fixture = fixture.replace(b"akisonlyforu.substack.com/p/test-post", b"evil.example/p/test-post")
         with self.assertRaises(sync_substack.SyncError):
             sync_substack.parse_feed(fixture, "akisonlyforu.substack.com")
+
+    def test_mirrors_images_from_bare_substack_cdn(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            assets = Path(temporary) / "images" / "substack"
+            with mock.patch.object(sync_substack, "fetch", return_value=(b"png-data", "image/png")):
+                _, generated = sync_substack.render_post(self.posts[0], assets, True)
+            images = list(assets.rglob("*.png"))
+            self.assertEqual(len(images), 1)
+            self.assertIn("/images/substack/test-post/", generated)
 
 
 if __name__ == "__main__":

@@ -268,12 +268,17 @@ def make_image_mirror(assets_root: Path, slug: str) -> Callable[[str], str]:
         if count >= MAX_IMAGES_PER_POST:
             return url
         host = (urllib.parse.urlparse(url).hostname or "").lower()
-        if host != "substack-post-media.s3.amazonaws.com" and not host.endswith(".substackcdn.com"):
+        if (
+            host != "substack-post-media.s3.amazonaws.com"
+            and host != "substackcdn.com"
+            and not host.endswith(".substackcdn.com")
+        ):
             return url
         count += 1
         try:
             allowed_host = lambda candidate: (
                 candidate == "substack-post-media.s3.amazonaws.com"
+                or candidate == "substackcdn.com"
                 or candidate.endswith(".substackcdn.com")
             )
             data, content_type = fetch(url, MAX_IMAGE_BYTES, "image/", allowed_host)
