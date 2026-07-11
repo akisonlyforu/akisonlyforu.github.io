@@ -60,16 +60,48 @@
   border-bottom: thin solid #f3f3f3;
 }
 
-// ShareThis integration styling
-.sharethis-inline-share-buttons {
+// Custom share buttons
+.share-buttons {
   margin: 2rem 0;
   text-align: center;
-  border-top: 1px solid #e1e1e1;
-  border-bottom: 1px solid #e1e1e1;
+  border-top: 1px solid var(--border-color, #e1e1e1);
+  border-bottom: 1px solid var(--border-color, #e1e1e1);
   padding: 1.5rem 0;
 }
 
-// Dark mode support for ShareThis
-[data-theme="dark"] .sharethis-inline-share-buttons {
-  border-color: #444;
+.share-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #333);
+}
+
+.share-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg-secondary, #f8f9fa);
+  color: var(--text-primary, #333);
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.share-button:hover,
+.share-button:focus {
+  background: var(--link-color, #0076df);
+  color: #fff;
+  transform: translateY(-2px);
 }
