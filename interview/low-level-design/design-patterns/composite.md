@@ -5,9 +5,9 @@ date: 2026-07-19
 description: You've got a tree of things, some are leaves, some are containers of other things, and you want to run the same operation over the whole tree without writing an if (isDirectory) check at every call site.
 categories: interview lld design-patterns structural
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/structural
+back_label: Structural Patterns
 ---
-
-[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
 
 If you've ever written a `display()` or `delete()` method and then had to write a second, near-identical version for the folder case because a folder isn't a file, this is for you. The file system example nails the shape of it: a `Directory` can hold `File` objects and other `Directory` objects, and whoever's calling `display()` shouldn't have to care which one they're looking at.
 

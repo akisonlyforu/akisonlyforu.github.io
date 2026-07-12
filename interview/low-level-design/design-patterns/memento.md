@@ -5,9 +5,9 @@ date: 2026-07-19
 description: TextEditor needs undo/redo, which means saving snapshots of TextArea's state before every edit, but TextArea shouldn't have to expose its internal fields publicly just so something else can stash and later restore them, that would trade encapsulation for a history feature.
 categories: interview lld design-patterns behavioral
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/behavioral
+back_label: Behavioral Patterns
 ---
-
-[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
 
 Every undo button you've ever clicked in a text editor is this pattern, and the detail people miss when they build their own is that whatever's holding your history isn't allowed to see your document's internals while it stores them, it just holds an opaque snapshot and hands it back later.
 

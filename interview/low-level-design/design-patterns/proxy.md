@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Sometimes you want to control access to an object, whether that's delaying its creation until it's actually needed, checking whether it already exists before making another one, or adding a check before a call reaches it, and you want to do it without changing the real object's code or the caller's code.
 categories: interview lld design-patterns structural
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/structural
+back_label: Structural Patterns
 ---
-
-[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
 
 If you've ever stared at a Spring `@Configuration` class, seen a `@Bean` method called from two other `@Bean` methods, and wondered why it doesn't just create two separate instances, this is for you. It doesn't, because you're never actually calling that method directly, you're calling a CGLIB-generated subclass of your configuration class that intercepts the call first.
 

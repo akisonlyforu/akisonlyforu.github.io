@@ -5,9 +5,9 @@ date: 2026-07-19
 description: You have two interfaces that do conceptually the same thing but don't share a method signature, and you can't (or won't) change either one.
 categories: interview lld design-patterns structural
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/structural
+back_label: Structural Patterns
 ---
-
-[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
 
 If you've ever had to wire a legacy service into a codebase where none of the method names line up with what the new caller expects, this is for you. I've run into this more than once: some old internal library nobody wants to touch, exposing methods like `find()` and `click()`, and a new consumer that only knows how to call `get()` and `select()`. Nobody's rewriting the legacy side. So something has to sit in between.
 

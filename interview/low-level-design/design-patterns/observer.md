@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Publisher needs to tell an arbitrary, changing set of interested parties when something happens, without hardcoding which parties those are, and without those parties needing to poll for changes.
 categories: interview lld design-patterns behavioral
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/behavioral
+back_label: Behavioral Patterns
 ---
-
-[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
 
 The bug I remember here isn't a crash, it's a silence, a subscriber that stopped getting notified because nobody unsubscribed it properly and it just sat there, or the opposite, an event that fired and nobody downstream noticed because the listener never got registered in the first place. Observer bugs are almost always about the subscription list, not the notification logic.
 

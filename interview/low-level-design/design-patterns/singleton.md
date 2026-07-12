@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Some things in a system genuinely need to exist exactly once.
 categories: interview lld design-patterns creational
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/creational
+back_label: Creational Patterns
 ---
-
-[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
 
 I once chased a bug where a config object had all the right values in local testing and came back with a null field under load. Same getInstance() call, same class, no code changed between runs. Took a day to realize the constructor was still running on another thread when a second thread read the reference. That's the entire Singleton pattern in one sentence: get object creation and visibility across threads right, or watch it come apart exactly when you can least afford it, under concurrent load.
 

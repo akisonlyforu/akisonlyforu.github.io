@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Some objects are genuinely expensive to construct and short-lived in how they're used, database connections being the standard example.
 categories: interview lld design-patterns creational
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/creational
+back_label: Creational Patterns
 ---
-
-[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
 
 The test file for this one fakes "expensive" with a 50 millisecond Thread.sleep() in the constructor, which is a stand-in for the real thing, a database handshake, a socket setup, whatever actually costs wall-clock time to build. The pool exists so you pay that cost once per object and then hand the same object out over and over instead of re-paying it on every request.
 

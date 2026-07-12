@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Sometimes creating one object isn't the problem, creating a consistent family of objects is.
 categories: interview lld design-patterns creational
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/creational
+back_label: Creational Patterns
 ---
-
-[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
 
 Picture pairing a VLC audio player with a Windows video player because two separate factory calls got made in two different places and nobody enforced they came from the same platform. Individually each call is correct, together they're a mismatched pair that behaves badly in ways that are annoying to trace back to "these two objects were never supposed to be used together." Abstract Factory is what stops that pairing from being possible in the first place.
 

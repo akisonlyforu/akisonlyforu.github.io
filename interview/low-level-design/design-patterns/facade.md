@@ -5,9 +5,9 @@ date: 2026-07-19
 description: A real operation touches multiple subsystems in a specific sequence, and every caller who wants to perform that operation has to know the sequence, the dependencies between the calls, and the error handling for each step.
 categories: interview lld design-patterns structural
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/structural
+back_label: Structural Patterns
 ---
-
-[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
 
 If you've ever had to call three services in a specific order just to book a hotel room, and gotten it wrong once because you forgot to check availability before reserving, this is for you. That's the exact shape of the hotel example: `RoomBookingService`, `HousekeepingService`, `RestaurantService`, each fine on its own, miserable to coordinate correctly from outside.
 

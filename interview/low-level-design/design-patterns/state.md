@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Phone's behavior for the same six actions, onHome, onOffOn, lock, home, unlock, turnOn, is completely different depending on whether the phone is locked, ready, or off, and encoding that as conditionals inside Phone itself means every new state adds a branch to every single method.
 categories: interview lld design-patterns behavioral
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/behavioral
+back_label: Behavioral Patterns
 ---
-
-[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
 
 The tell that you need State instead of a pile of booleans is when you catch yourself writing "if locked and not off, do X, but if off do nothing, unless." Phone lock/unlock/power logic is the cleanest version of this I've seen: three states, six actions, and every action means something different depending on which state you're in.
 
