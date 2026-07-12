@@ -105,7 +105,7 @@ IDs are String via UUID.randomUUID(); timestamps long or Instant.
 
 **Step 4: Service interfaces (3 min)**
 
-Write the service class skeleton with the 3-4 operations from Step 1. 
+Write the service class skeleton with the 3-4 operations from Step 1.
 
 Method signatures = your API contract.
 
@@ -123,13 +123,15 @@ Do it as an explicit pass: "now let me make this thread-safe", narrating it earn
 
 **Step 7: Demo + extensibility pitch (5 min)**
 
-Run Main. Then say: "To add [likely extension], I'd only add a new class implementing [interface X], nothing else changes." When the variation is data-driven, use the data-shaped version instead: "New fiscal year / new recipe / new fee tier = a new data row, zero code changes." Close every round with one of these sentences.
+Run your Main class. Then say something like: "To add [likely extension], I'd only add a new class implementing [interface X], nothing else changes."
+
+When the variation is data-driven, use the data-shaped version instead: "New fiscal year / new recipe / new fee tier, our change is limited to a new data row, zero code changes." Close every round with one of these sentences.
 
 ## 3. Pattern selection: trigger table
 
-These 8 cover the vast majority of the questions asked:
+These 8 patterns cover the vast majority of the questions asked:
 
-| Trigger in the problem | Pattern | Canonical example |
+| Keyword in the problem | Pattern | Sample questions |
 |---|---|---|
 | "support multiple X algorithms" / pricing / eviction / matching / payment methods | Strategy | Parking fee, LRU-vs-LFU, driver matching, Splitwise split types |
 | "notify users when…" / subscribers / alerts / listeners | Observer | Stock alerts, auction outbid, notification service, config changes |
@@ -141,9 +143,14 @@ These 8 cover the vast majority of the questions asked:
 | request tries handler after handler | Chain of Responsibility | ATM cash dispensing, logger levels, approval workflow, discount rules |
 | variants differ only in VALUES, not behavior | No pattern, just a table/config | Tax slabs, vending recipes, fee schedules, transition tables |
 
-Two defaults the bank's validation surfaced: for rule chains, prefer a rule LIST evaluated by an engine over textbook linked CoR (link handlers only when they consume or escalate, e.g. ATM denominations, approvals); for Strategy, know the three sub-shapes: comparator cascade, first-success cascade, contributor list. Deep dives per variation type, each validated against every matching problem: patterns/01-06.
+Two rules of thumb worth remembering:
 
-Singleton: use enum singleton or just instantiate once in Main, mention thread-safe lazy init only if asked. Anti-signal at L5: forcing patterns where a plain method works. Say "I could use Visitor here but it's overkill", knowing when NOT to is senior.
+- **Rule chains**: default to a flat rule LIST evaluated by an engine, not a linked Chain of Responsibility. Only reach for linked handlers when each one actually consumes or escalates the request, like ATM cash denominations or a multi-level approval workflow.
+- **Strategy**: it comes in three shapes, a comparator cascade (rank candidates, e.g. driver matching by distance then rating), a first-success cascade (try each until one works, e.g. payment gateway fallback, coupon eligibility checks), or a contributor list (combine results from all of them, e.g. total pricing = base fare + surge + taxes, each a separate strategy).
+
+**Note on Singleton**: good to have, but it costs time. Do it when the problem actually needs it, or when you have ample time to spare. Otherwise just instantiate once in Main, and mention thread-safe lazy initialization only if asked.
+
+Where it's actually needed: a ParkingLot in the Parking Lot problem, only one lot exists, every Level/Slot/Ticket must resolve against the same instance, and if two threads race to construct it you'd end up with two lots silently tracking separate slot states. Same shape shows up for a shared IDGenerator or a Logger, one physical resource, accessed from many services, where a second instance is a correctness bug, not just waste.
 
 ## 4. Concurrency playbook (this is the Uber L5 differentiator)
 
