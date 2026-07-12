@@ -81,7 +81,7 @@
       var link = e.target.closest('.toc-link');
       if (!link) return;
       e.preventDefault();
-      var target = document.querySelector(link.getAttribute('href'));
+      var target = document.getElementById(link.getAttribute('href').slice(1));
       if (target) {
         var offset = 80; // account for fixed nav
         var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
