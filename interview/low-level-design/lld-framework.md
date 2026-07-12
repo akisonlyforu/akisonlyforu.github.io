@@ -17,7 +17,11 @@ The idea of an LLD round is to gauge how well you code for production business s
 
 A repeatable framework for you to follow. Unfortunately, an interview is not an environment where you can embrace the randomness of a situation and let your mind explore, so it's really important to have a structured approach. If this guide doesn't click for you, remember what works for me might not work for you. Focus on finding your own structured approach instead. Let's get started.
 
-## 1. Components of a Problem Statment
+## A note on language
+
+The code examples here are in Java, that's just what I use day to day. The framework itself isn't tied to Java, entities, states, invariants, strategies, and concurrency boundaries exist the same way in Python, Go, or whatever you code in. Translate the syntax, keep the thinking.
+
+## 1. Components of a Problem Statmen
 
 Every LLD question, no matter how tough, can be broken down into the same 6 things:
 
@@ -29,12 +33,12 @@ Every LLD question, no matter how tough, can be broken down into the same 6 thin
 - **CONCURRENCY** → which operations race, and on what shared state
 
 Two additions matter most at Senior+ levels:
-- INVARIANTS: for each entity, state the rules that must never break ("a slot holds at most one vehicle", "balances across a transfer sum to zero"), they drive your validation code AND your concurrency boundaries. 
+- INVARIANTS: for each entity, state the rules that must never break ("a slot holds at most one vehicle", "balances across a transfer sum to zero"), they drive your validation code AND your concurrency boundaries.
 - VARIATION: predict the follow-up ("now add LFU eviction", "now add surge pricing") and put an interface exactly there. But neither substitutes for the real bar: correct working code, sound judgment, and clear narration of trade-offs. A pattern-rich design that violates an invariant fails; a plain design that runs and respects them passes.
 
 ## 2. Your folder structure
 
-The goal of this round is to project yourself as a Object Oriented Programmer and not as a CRUD Developer. I still see engineers trying to carry the MVC model in interviews. Remember, in a 60-min round it costs you time to write a Controller.
+The goal of this round is to project yourself as a Object Oriented Programmer and not as a CRUD Developer. I still see engineers trying to carry the MVC model in interviews i.e. Controller->Service->Repository. Remember, in a 60-min round it costs you time to write a Controller.
 
 - Drop controllers. I wish someone would have told me this earlier. In machine coding there is no HTTP. A Main/Demo class that runs your scenario IS the controller. Interviewers want working code + a driver.
 
@@ -65,10 +69,10 @@ src/
 └── Main.java        # Demo driver: wires dependencies, runs the scenario.
 ```
 
-Interface rule: I see a lot of candidates end up creating interfaces for each non-entity class out there. While I like the strategy and sometimes I follow it too, it eats up small chunks of your time. So a better idea is to add them only at real substitution. 
-- Strategies: always (multiple implementations are the point). 
-- Repositories: usually (in-memory today, DB tomorrow is a credible swap, and it aids testing). 
-Services: usually NOT as we generally have one implementation, no seam; a concrete RideService is fine, extract an interface only when a second implementation appears. 
+**Interface rule**: I see a lot of candidates end up creating interfaces for each non-entity class out there. While I like the strategy and sometimes I follow it too, it eats up small chunks of your time. So a better idea is to add them only at real substitution.
+- Strategies: always (multiple implementations are the point).
+- Repositories: usually (in-memory today, DB tomorrow is a credible swap, and it aids testing).
+Services: usually NOT as we generally have one implementation, nothing to swap; a concrete RideService is fine, extract an interface only when a second implementation appears.
 
 Java naming: no I prefix. The interface gets the good name (RideService, PricingStrategy); implementations get descriptive names (InMemoryRideRepository, SurgePricing, or DefaultRideService as last resort). Keep interface and implementations in the same package, no interface/impl subfolders.
 
