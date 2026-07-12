@@ -22,6 +22,7 @@ show_subscribe_cta: True
 show_social_icons: true
 show_sharing_icons: true
 show_comments: true
+show_post_stats: true
 author: Avinash Kumar
 
 # Giscus comments (GitHub Discussions)
@@ -30,6 +31,9 @@ giscus:
   repo_id: "MDEwOlJlcG9zaXRvcnkxNDIwODI2Njc="
   category: Announcements
   category_id: "DIC_kwDOCHgCa84DBBjp"
+
+# Views/votes counters (Cloudflare Worker + D1)
+counters_api: "https://metrics.akisonlyforu.com"
 extended_fonts: false
 enable_anchorjs: true
 
@@ -102,6 +106,7 @@ exclude:
   - .git/
   - .github/
   - README.md
+  - workers/
 
 collections_dir: collections
 collections:

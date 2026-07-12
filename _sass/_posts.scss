@@ -114,3 +114,38 @@
     color: var(--text-primary, #333);
   }
 }
+
+// Views/votes counters
+.post-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.vote-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border-color, #e1e1e1);
+  border-radius: 999px;
+  background: var(--bg-secondary, #f8f9fa);
+  color: var(--text-primary, #333);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.vote-button:hover,
+.vote-button:focus {
+  border-color: var(--link-color, #0076df);
+  transform: translateY(-2px);
+}
+
+.vote-button.active {
+  background: var(--link-color, #0076df);
+  border-color: var(--link-color, #0076df);
+  color: #fff;
+}

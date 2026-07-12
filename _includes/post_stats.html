@@ -1,0 +1,18 @@
+{% if site.show_post_stats %}
+<div class="post-stats" id="post-stats">
+  <button type="button" id="vote-up" class="vote-button" aria-label="Upvote this post" title="Upvote this post">
+    <i class="fas fa-arrow-up"></i>
+    <span id="vote-up-count">0</span>
+  </button>
+  <button type="button" id="vote-down" class="vote-button" aria-label="Downvote this post" title="Downvote this post">
+    <i class="fas fa-arrow-down"></i>
+    <span id="vote-down-count">0</span>
+  </button>
+</div>
+
+<script>
+  window.COUNTERS_API = {{ site.counters_api | jsonify }};
+  window.COUNTERS_PATH = {{ page.url | jsonify }};
+</script>
+<script src="/assets/js/post-counters.js" defer></script>
+{% endif %}
