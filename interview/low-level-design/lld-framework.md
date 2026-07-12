@@ -1,9 +1,10 @@
 ---
-layout: default
+layout: post
 title: What do you actually do in a LLD Interview?
+date: 2026-07-12
+description: A repeatable framework for Low Level Design interview rounds, folder structure, patterns, concurrency, and a practice plan.
+categories: interview lld system-design
 ---
-
-# What do you actually do in a LLD Interview?
 
 If you're starting out, or still prefer writing code the harder way without AI, this is for you.
 
@@ -223,7 +224,7 @@ Divide problems into patterns first, then do 2 problems per pattern deeply rathe
 
 Almost every LLD question you'll get asked collapses into one of these. Pick 2 per row, work through them with the full framework above, timed.
 
-| Problem shape | Entities + pattern + concurrency | Practice problem |
+| Pattern | Entities + pattern + concurrency | Practice problem |
 |---|---|---|
 | Resource booking | Resource, Booking, Slot + Strategy (pricing/allocation) + putIfAbsent on the slot | Parking Lot |
 | Board game | Board, Cell, Player, Piece + State/Factory + turn loop, win-check | Chess, Snake & Ladder |
