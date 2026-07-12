@@ -2,7 +2,7 @@
 layout: post
 title: Strategy Variation Playbook
 date: 2026-07-12
-description: When to reach for Strategy, how to shape it in Java, and the three sub-shapes candidates conflate — comparator cascade, first-success cascade, contributor list.
+description: When to reach for Strategy, how to shape it in Java, and the three sub-shapes candidates conflate, comparator cascade, first-success cascade, contributor list.
 categories: interview lld patterns
 ---
 
@@ -10,7 +10,7 @@ Deep dive on the Strategy variation type, companion to [What do you actually do 
 
 ## 1. When Strategy is the answer
 
-**Triggers.** Put an interface at the axis when ALL three hold:
+**Triggers.** Put an interface at the axis when all three hold:
 1. **Same question, different algorithm.** The system asks one question ("what does this ride cost?", "which spot?", "evict whom?", "in what order?") and plausible answers differ in *logic*, not just numbers.
 2. **The variation is a verb on the service, not the identity of an entity.** Pricing varies per policy, not per Ride. If behavior varies by *what the object is*, use polymorphism on the entity instead.
 3. **The interviewer will ask for variant #2.** Pricing, matching, eviction, ranking, backoff, scoring, allocation, routing, expiry, split types, these words in the prompt are near-guarantees.
@@ -37,7 +37,7 @@ Say it out loud: "The axis here is X, so X goes behind a strategy interface."
 
 **Package.** `strategies/`; with two-plus axes use subpackages: `strategies/pricing/`, `strategies/matching/`. Interface and impls in the same package, no interface/impl subfolders.
 
-**One interface per axis.** Parking-lot has allocation AND pricing; ride-sharing has matching AND pricing. Never merge two axes into one fat interface, you'd force every pricing variant to reimplement matching.
+**One interface per axis.** Parking-lot has allocation and pricing; ride-sharing has matching and pricing. Never merge two axes into one fat interface, you'd force every pricing variant to reimplement matching.
 
 **Three injection points, know which the problem needs:**
 1. **Constructor injection** (default): policy fixed for the service's lifetime. `new RideService(repo, matching, pricing)`.
@@ -48,7 +48,7 @@ Say it out loud: "The axis here is X, so X goes behind a strategy interface."
 - **State inside the strategy, guarded per key**: a rate limiter keeps `ConcurrentHashMap<clientId, BucketState>` and does refill-and-consume inside `compute()`, atomic per client, scales because contention is per-key. If a strategy holds state, that state needs its own guard, the strategy's mutability is now your concurrency problem, name it.
 - **State on the entity, strategy stateless**, required for runtime swap, next.
 
-**Runtime swapping.** Swapping an eviction policy on a live cache forces the key design decision: *entries carry raw, policy-agnostic metadata* (last-access timestamp, access count, insert time) so ANY policy can rebuild its private index (recency list for LRU, freq buckets for LFU) from the entries on swap. Mechanics: hold the strategy in a `volatile` field; on swap, take the write side of a `ReadWriteLock` (ops take read side, so gets/puts stay cheap), rebuild the new policy's index from entry metadata, then flip the reference. If you skip the rebuild, the new policy starts blind and evicts garbage, narrating this rebuild IS the question.
+**Runtime swapping.** Swapping an eviction policy on a live cache forces the key design decision: entries carry raw, policy-agnostic metadata (last-access timestamp, access count, insert time) so any policy can rebuild its private index (recency list for LRU, freq buckets for LFU) from the entries on swap. Mechanics: hold the strategy in a `volatile` field. On swap, take the write side of a `ReadWriteLock` (ops take read side, so gets/puts stay cheap), rebuild the new policy's index from entry metadata, then flip the reference. Skip the rebuild and the new policy starts blind and evicts garbage. Narrating this rebuild is the actual question being asked.
 
 **Resource-owning strategies need a lifecycle.** If an implementation owns a thread/queue (a background sweeper, a log appender holding a file handle), give the interface `start()`/`close()` (or extend `AutoCloseable`) and shut the old one down on swap.
 
@@ -59,12 +59,12 @@ Say it out loud: "The axis here is X, so X goes behind a strategy interface."
 ## 3. Skeletons
 
 ```java
-// strategies/pricing/PricingStrategy.java — interface gets the good name
+// strategies/pricing/PricingStrategy.java, interface gets the good name
 public interface PricingStrategy {
     Money price(Trip trip, RateCard rates);   // pure: candidates/inputs in, decision out
 }
 
-// strategies/pricing/SurgePricing.java — stateless: final fields only
+// strategies/pricing/SurgePricing.java, stateless: final fields only
 public class SurgePricing implements PricingStrategy {
     private final PricingStrategy base;       // composes the base policy
     private final SurgeIndex surgeIndex;
@@ -75,7 +75,7 @@ public class SurgePricing implements PricingStrategy {
 ```
 
 ```java
-// services/RideService.java — constructor injection; swap-able axis is volatile
+// services/RideService.java, constructor injection; swap-able axis is volatile
 public class RideService {
     private final RideRepository rides;
     private final DriverMatchingStrategy matching;   // fixed for lifetime
@@ -86,11 +86,11 @@ public class RideService {
 ```
 
 ```java
-// Main.java — the swap demo: same call, new behavior, no service edits
+// Main.java, the swap demo: same call, new behavior, no service edits
 RideService svc = new RideService(repo, new NearestDriverStrategy(), new BasePricing());
 svc.requestRide(riderA, locX);                                  // flow 1: base pricing
 svc.setPricingStrategy(new SurgePricing(new BasePricing(), surgeIdx, 2.0));
-svc.requestRide(riderB, locX);                                  // flow 2: surge — narrate the diff
+svc.requestRide(riderB, locX);                                  // flow 2: surge, narrate the diff
 ```
 
 Close with: "Adding time-of-day pricing is one new `PricingStrategy` class, nothing else changes."
