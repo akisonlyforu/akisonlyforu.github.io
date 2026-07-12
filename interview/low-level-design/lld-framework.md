@@ -3,7 +3,7 @@ layout: post
 title: What do you actually do in a LLD Interview?
 date: 2026-07-12
 description: A repeatable framework for Low Level Design interview rounds, folder structure, patterns, concurrency, and a practice plan.
-categories: interview lld system-design
+categories: interview lld framework
 ---
 
 If you're starting out, or still prefer writing code the harder way without AI, this is for you.
@@ -13,6 +13,12 @@ There was a time we all coded by hand. With the flood of candidates on the job m
 ## What is it
 
 The idea of an LLD round is to gauge how well you code for production business services. It's an indirect translation of a small, direct business requirement into code, something DSA fails to materialize with. How well are you able to code out the requirement, how well you're able to encapsulate all the features, making sure your code is extensible for future requirements, testable, etc. Unlike DSA, which is something you rarely use in day-to-day work, this is something you're supposed to do on a daily basis in a non-agentic world. So it's really crucial to nail it, not just from an interview point of view but also from a point of honing your craft.
+
+## LLD vs System Design, in case you're confused
+
+System design talks services, scaling, sharding, caching, no code, just boxes and arrows on a whiteboard. LLD is one component, classes, methods, state transitions.
+
+Say the prompt is "design Uber." In system design you'd draw a matching service, a pricing service, a location service, a queue, and talk about how they scale. In LLD you write the Trip class, the TripState enum, how assignDriver() and completeTrip() actually behave. Same prompt, completely different interview, don't prep the wrong one.
 
 ## What this document captures
 
@@ -83,7 +89,7 @@ Other rules: constructor injection everywhere (no new inside services) which dem
 
 ## 3. The 7-step method (60-minute round)
 
-**Step 1: Clarify & scope (5 min)**
+### Step 1: Clarify & scope (5 min)
 
 First, confirm the round format: "Do you want fully working, runnable code, or design discussion with class diagrams and key methods?" Machine coding and design-discussion LLD have different winning moves: working code vs breadth of design reasoning. Then ask, in this order:
 
@@ -94,7 +100,7 @@ First, confirm the round format: "Do you want fully working, runnable code, or d
 
 Then say the scope Out Loud: "I'll build X, Y, Z; I'm explicitly skipping things not in scope like auth, payments, DB persistence."
 
-**Step 2: Entities, invariants & enums (5 min)**
+### Step 2: Entities, invariants & enums (5 min)
 
 List nouns → classes.
 
@@ -106,11 +112,13 @@ Don't stop at nouns, for each entity note who owns whom (a Floor owns its Slots;
 
 IDs are String via UUID.randomUUID(); timestamps long or Instant.
 
-**Step 3: Name the variation axis (2 min, out loud)**
+### Step 3: Name the variation axis (2 min, out loud)
 
 "The thing most likely to change here is ___ (pricing / eviction / matching / notification channel / discount rules), so I'll put that behind a Strategy interface." And if the problem has no swappable algorithm, say THAT: "the variation here lives in the states / the rules / the data, so I'll use State / a rule chain / a config table instead", correctly declining Strategy is the same signal.
 
-**Step 4: Service interfaces (3 min)**
+Some interviewers want you to name the pattern out loud, some care more about the reasoning than the vocabulary. You cannot change the interviewer so you have no option to suck it up.
+
+### Step 4: Service interfaces (3 min)
 
 Write the service class skeleton with the 3-4 operations from Step 1.
 
@@ -118,17 +126,17 @@ Method signatures = your API contract.
 
 Return domain objects, throw custom exceptions (never return null / boolean success flags). Delete is the one exception, there's no domain object to hand back on a delete, so throw NotFoundException if the ID doesn't exist and return void on success.
 
-**Step 5: Code inside-out (30 min), THE ORDER MATTERS**
+### Step 5: Code inside-out (30 min), Focus on Order
 
 enums → models → exceptions → repository → strategies → service → Main
 
 Never start with the service. Dependencies first means you never write code that doesn't compile. Get one end-to-end flow WORKING before adding the second feature. Write working minimal code first. Do a second pass for refactoring using patterns. A beautiful design that doesn't run fails the round; a running system you then refactor toward patterns passes it.
 
-**Step 6: Concurrency pass (8 min)**
+### Step 6: Concurrency pass (8 min)
 
 Do it as an explicit pass: "now let me make this thread-safe", narrating it earns the points even if you don't finish every lock.
 
-**Step 7: Demo + extensibility pitch (5 min)**
+### Step 7: Demo + extensibility pitch (5 min)
 
 Run your Main class. Then say something like: "To add [likely extension], I'd only add a new class implementing [interface X], nothing else changes."
 
@@ -236,6 +244,7 @@ Almost every LLD question you'll get asked collapses into one of these. Pick 2 p
 | State-machine device | Machine, Inventory, Coin/Card + State + single-lock transactions | Vending machine, elevator |
 | Feed/social | User, Post, Comment, Follow + Observer + merged-feed iterator | Twitter-like feed |
 | Editor/undo | Document, command history (two stacks) + Command pattern | Text editor |
+| Hierarchical storage | File, Directory (composite tree) + Composite pattern for traversal + per-node lock | File System |
 
 ## 10. Closing thought
 
