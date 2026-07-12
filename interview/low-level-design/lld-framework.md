@@ -115,7 +115,7 @@ Write the service class skeleton with the 3-4 operations from Step 1.
 
 Method signatures = your API contract.
 
-Return domain objects, throw custom exceptions (never return null / boolean success flags). There are some exceptions though for example, a Delete API.
+Return domain objects, throw custom exceptions (never return null / boolean success flags). Delete is the one exception, there's no domain object to hand back on a delete, so throw NotFoundException if the ID doesn't exist and return void on success.
 
 **Step 5: Code inside-out (30 min), THE ORDER MATTERS**
 
