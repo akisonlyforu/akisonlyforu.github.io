@@ -179,28 +179,30 @@ Genuine anti-signals: Collections.synchronizedMap (CHM exists), sprinkling synch
 
 Narrate every choice: "booking a specific slot is single-key check-then-act, so compute() on the slot map covers the invariant."
 
-## 5. Time budget (60 min) and L4→L5 signal map
+## 5. Time budget (60 min)
 
 | Min | Activity |
 |---|---|
 | 0-5 | Clarify + scope declaration |
 | 5-12 | Entities, enums, variation axis named |
-| 12-15 | Service interfaces |
-| 15-45 | Code inside-out; ONE flow working by min 35 |
+| 12-15 | Service interfaces (if needed) |
+| 15-45 | Code inside-out; ONE flow working by min 35th minute mark |
 | 45-52 | Concurrency pass |
 | 52-58 | Demo in Main + edge cases (invalid input, double-booking, not-found) |
 | 58-60 | Extensibility pitch |
 
 If you get 90 minutes instead: keep the same proportions, spend the extra ~30 min on a second working flow, a real concurrency test in Main (spawn threads, assert the invariant held), and 2-3 quick edge-case checks. Don't spend it on more patterns.
 
+## 6. What is looked at each stage ?
+
 | Dimension | Mid Level answer | Senior Level answer |
 |---|---|---|
 | Scope | Builds what's asked | Declares what's out of scope and why |
 | Patterns | Names them | Places one interface exactly at the variation axis, rejects unnecessary ones |
 | Concurrency | Adds synchronized when prompted | Proactively identifies the race, picks fine-grained primitive, explains deadlock avoidance |
-| Follow-ups | Rewrites code | Extension = new class only, no edits to existing code (Open/Closed in action) |
+| Follow-ups | Rewrites code | Extension = new class only, no edits to existing code (Open/Closed of SOLID principle in action) |
 | Communication | Codes silently | Narrates trade-offs continuously |
 
+## 7. Preparation Plan
 
-Preparation plan: do 2 problems per archetype deeply (20 total, marked ★ in the question bank) rather than 200 shallowly, plus the two Track B concurrency drills first. For each ★: full code in your structure, timed at 60 min, concurrency pass included, then one self-inflicted follow-up.
-
+Divide problems into patterns first, then do 2 problems per pattern deeply rather than skimming through 200 problems. Once you've done your initial preparation, keep a timer with you and time yourself regularly.
