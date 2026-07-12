@@ -7,6 +7,10 @@ title: Low Level Design
 
 Object-oriented design and clean architecture principles.
 
+## Posts
+
+- [What do you actually do in a LLD Interview?](/interview/low-level-design/lld-framework)
+
 ## Topics
 
 Coming soon...
