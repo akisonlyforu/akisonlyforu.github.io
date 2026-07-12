@@ -10,20 +10,12 @@
           <span class="left-circle-arrow"></span>
         </a>
       {% endif %}
-    {% else %}
-        <a href="">
-          <span class="left-circle-arrow arrow-disabled"></span>
-        </a>
     {% endif %}
   </div>
   <div class="right">
     {% if paginator.next_page %}
       <a href="{{ paginator.next_page_path }}">
         <span class="right-circle-arrow"></span>
-      </a>
-    {% else %}
-      <a href="">
-        <span class="right-circle-arrow arrow-disabled"></span>
       </a>
     {% endif %}
   </div>
@@ -92,11 +84,6 @@ a {
 
 .right-circle-arrow:hover {
   transform: scale(1.1);
-}
-
-.arrow-disabled {
-  background: WhiteSmoke;
-  border-color: WhiteSmoke;
 }
 
 </style>
