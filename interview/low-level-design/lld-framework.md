@@ -163,6 +163,15 @@ Two rules of thumb worth remembering:
 - **Rule chains**: default to a flat rule LIST evaluated by an engine, not a linked Chain of Responsibility. Only reach for linked handlers when each one actually consumes or escalates the request, like ATM cash denominations or a multi-level approval workflow.
 - **Strategy**: it comes in three shapes, a comparator cascade (rank candidates, e.g. driver matching by distance then rating), a first-success cascade (try each until one works, e.g. payment gateway fallback, coupon eligibility checks), or a contributor list (combine results from all of them, e.g. total pricing = base fare + surge + taxes, each a separate strategy).
 
+Deep dives, one per variation type, each with mechanics, skeletons, concurrency, and anti-signals:
+
+- [Strategy Variation Playbook](/interview/low-level-design/patterns/strategy-variation/)
+- [State Variation Playbook](/interview/low-level-design/patterns/state-variation/)
+- [Command Variation Playbook](/interview/low-level-design/patterns/command-variation/)
+- [Rule-Chain Variation Playbook](/interview/low-level-design/patterns/rule-chain-variation/)
+- [Data-Driven Variation Playbook](/interview/low-level-design/patterns/data-driven-variation/)
+- [Structure-Driven Problems Playbook](/interview/low-level-design/patterns/structure-driven/)
+
 ### Note on Singleton:
 
 Good to have, but costs time, use it only when the problem needs it or you have time to spare. Otherwise just instantiate once in Main, and mention thread-safe lazy initialization only if asked.
