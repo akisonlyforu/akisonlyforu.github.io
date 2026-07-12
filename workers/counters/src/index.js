@@ -1,4 +1,13 @@
-const PATH_RE = /^\/(blog|thoughts)\/[A-Za-z0-9-]+\/$|^\/interview\/[A-Za-z0-9-]+\/[A-Za-z0-9-]+\/$/;
+// Generic shape check, not an enumerated directory allowlist: any path made of
+// 1-6 alnum/hyphen segments under a trailing slash. Content routing (which pages
+// actually call this API) is decided by Jekyll layout inclusion, not here -- this
+// only guards against garbage/injection paths.
+const PATH_RE = /^\/(?:[A-Za-z0-9-]+\/){1,6}$/;
+const MAX_PATH_LENGTH = 200;
+
+function isValidPath(path) {
+  return typeof path === 'string' && path.length <= MAX_PATH_LENGTH && PATH_RE.test(path);
+}
 
 async function sha256Hex(message) {
   const data = new TextEncoder().encode(message);
@@ -82,7 +91,7 @@ export default {
     if (url.pathname === '/view' && request.method === 'POST') {
       const body = await request.json().catch(() => ({}));
       const path = typeof body.path === 'string' ? body.path : '';
-      if (!PATH_RE.test(path)) return json({ error: 'invalid path' }, 400, cors);
+      if (!isValidPath(path)) return json({ error: 'invalid path' }, 400, cors);
 
       const { stable, daily } = await getVisitorHashes(request, env);
       await env.DB.prepare(
@@ -94,7 +103,7 @@ export default {
 
     if (url.pathname === '/counts' && request.method === 'GET') {
       const path = url.searchParams.get('path') || '';
-      if (!PATH_RE.test(path)) return json({ error: 'invalid path' }, 400, cors);
+      if (!isValidPath(path)) return json({ error: 'invalid path' }, 400, cors);
 
       const { stable } = await getVisitorHashes(request, env);
       return json(await readStats(env, path, stable), 200, cors);
@@ -104,7 +113,7 @@ export default {
       const body = await request.json().catch(() => ({}));
       const path = typeof body.path === 'string' ? body.path : '';
       const vote = body.vote;
-      if (!PATH_RE.test(path)) return json({ error: 'invalid path' }, 400, cors);
+      if (!isValidPath(path)) return json({ error: 'invalid path' }, 400, cors);
       if (![1, -1, 0].includes(vote)) return json({ error: 'invalid vote' }, 400, cors);
 
       const { stable } = await getVisitorHashes(request, env);
