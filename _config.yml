@@ -1,5 +1,5 @@
 # Site settings
-title: akisonlyforu
+title: Avinash Kumar
 email: kumaravinashinbox@gmail.com
 description: >-
   Backend engineering deep dives on distributed systems, data-intensive applications, and software architecture by Avinash Kumar.
@@ -73,6 +73,13 @@ defaults:
       type: "thoughts"
     values:
       image: /images/site-og-image.png
+  # These are intentionally navigable in the site but are incomplete practice
+  # prompts, so they should not compete with the finished interview guides.
+  - scope:
+      path: "interview/low-level-design/problems"
+    values:
+      meta_robots: "noindex, follow"
+      sitemap: false
 
 text:
   pagination:

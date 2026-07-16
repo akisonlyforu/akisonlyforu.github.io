@@ -2,20 +2,23 @@
   <div class="left">
     {% if paginator.previous_page %}
       {% if paginator.page == 2 %}
-        <a href="{{ site.baseurl }}/blog/">
+        <a href="{{ site.baseurl }}/blog/" rel="prev" aria-label="Newer posts" title="Newer posts">
           <span class="left-circle-arrow"></span>
+          <span class="pagination-label">Newer posts</span>
         </a>
       {% else %}
-        <a href="{{ paginator.previous_page_path }}">
+        <a href="{{ paginator.previous_page_path }}" rel="prev" aria-label="Newer posts" title="Newer posts">
           <span class="left-circle-arrow"></span>
+          <span class="pagination-label">Newer posts</span>
         </a>
       {% endif %}
     {% endif %}
   </div>
   <div class="right">
     {% if paginator.next_page %}
-      <a href="{{ paginator.next_page_path }}">
+      <a href="{{ paginator.next_page_path }}" rel="next" aria-label="Older posts" title="Older posts">
         <span class="right-circle-arrow"></span>
+        <span class="pagination-label">Older posts</span>
       </a>
     {% endif %}
   </div>
@@ -86,4 +89,18 @@ a {
   transform: scale(1.1);
 }
 
+</style>
+
+<style>
+.pagination-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>

@@ -3,6 +3,7 @@ layout: page
 title: Anti-Library
 permalink: /anti-library/
 tags: antilibrary library
+description: A growing anti-library of books Avinash Kumar plans to explore across technology, engineering, and ideas.
 ---
 
 Books I haven't read, but like the idea of having read, and plan to read in the future.
