@@ -23,7 +23,9 @@ show_social_icons: true
 show_sharing_icons: true
 show_comments: true
 show_post_stats: true
-author: Avinash Kumar
+author:
+  name: Avinash Kumar
+  twitter: akisonlyforu
 
 # Giscus comments (GitHub Discussions)
 giscus:
@@ -60,17 +62,17 @@ defaults:
   - scope:
       path: ""
     values:
-      image: /images/site-og-image.svg
+      image: /images/site-og-image.png
   - scope:
       path: ""
       type: "posts"
     values:
-      image: /images/site-og-image.svg
+      image: /images/site-og-image.png
   - scope:
       path: ""
       type: "thoughts"
     values:
-      image: /images/site-og-image.svg
+      image: /images/site-og-image.png
 
 text:
   pagination:
