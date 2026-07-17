@@ -18,7 +18,7 @@ The unreliable mechanisms in distributed systems force us to redefine certainty 
 
 ### **The Truth Defined by the Majority**
 
-When decisions need to be made in a distributed setting, many algorithms resort to a **quorum**—a mechanism in which most participating nodes agree on an outcome.
+When decisions need to be made in a distributed setting, many algorithms resort to a **quorum**, a mechanism in which most participating nodes agree on an outcome.
 
 #### **Example of Asymmetric Faults**
 Imagine a node in the network that can receive messages but cannot send responses back due to a fault. Even if the semi-disconnected node is operating correctly, the other nodes in the system might declare it as failed because they can no longer communicate with it. From the perspective of the majority, the node is “dead,” and it is no longer part of the system despite its protests.

@@ -29,7 +29,7 @@ By leveraging transactions, all reads and writes within an operation are treated
 ### **ACID Guarantees**
 
 The behavior of transactions is governed by the well-known **ACID** properties:
-1. **Atomicity**: Ensures all-or-nothing execution—either the transaction completes successfully, or its changes are rolled back entirely.
+1. **Atomicity**: Ensures all-or-nothing execution: either the transaction completes successfully, or its changes are rolled back entirely.
     - Example: If adding a row to a table fails, preceding operations modifying the same table as part of that transaction are reversed.
 2. **Consistency**: Guarantees that the database remains in a valid state as defined by the application’s constraints or rules.
     - Example: Ensuring an accounting ledger always balances debits and credits post-transaction.

@@ -123,7 +123,7 @@ Unix's design philosophy has influenced modern distributed systems in profound w
    Unix tools assume a consistent text-based record format (e.g., `\n`-delimited lines), enabling broad interoperability, much like Hadoop employs HDFS as a universal storage layer.
 
 3. **Resiliency Through Immutability**:    
-   Inputs are treated as immutable files, allowing reprocessing or debugging without fear of corruption—a foundational idea mirrored in distributed batch jobs.
+   Inputs are treated as immutable files, allowing reprocessing or debugging without fear of corruption, a foundational idea mirrored in distributed batch jobs.
 
 ---
 

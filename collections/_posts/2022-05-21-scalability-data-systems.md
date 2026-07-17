@@ -39,7 +39,7 @@ In 2012, Twitter had two primary load-heavy operations:
 1. **Posting a Tweet** (12,000 requests/sec at its peak).  
 2. **Home Timeline Reads** (300,000 requests/sec!).  
   
-Despite being smaller in volume, writing tweets triggered a fan-out effect—updating timelines for followers. For some users with thousands (or millions) of followers, this caused immense stress on backend systems.  
+Despite being smaller in volume, writing tweets triggered a fan-out effect, updating timelines for followers. For some users with thousands (or millions) of followers, this caused immense stress on backend systems.  
   
 ```
                       READ-HEAVY (HOME TIMELINE)                         WRITE-HEAVY (TWEET UPDATES)
@@ -98,7 +98,7 @@ Here’s how Twitter approached their scalability challenges for their timelines
 - Pros: Fast reads for end users.  
 - Cons: Expensive updates (e.g., a single tweet reposted for thousands must update thousands of timeline caches).  
   
-Ultimately, Twitter moved to **Approach 2**, accepting higher write-time costs for faster reads—since users view timelines much more often than they post tweets.  
+Ultimately, Twitter moved to **Approach 2**, accepting higher write-time costs for faster reads, since users view timelines much more often than they post tweets.  
 
 ```
                        WRITE LIGHT, READ HEAVY                              WRITE HEAVY, READ LIGHT
@@ -133,7 +133,7 @@ Many systems today are **elastic**, meaning they scale dynamically in response t
 - **Autoscaling Groups** on AWS or GCP automatically spin up more instances.  
 - Database clusters in tools like MongoDB or Cassandra adjust replicas for higher throughput.  
   
-Manual scaling is also valid—it’s simpler and avoids unpredictable costs.  
+Manual scaling is also valid. It’s simpler and avoids unpredictable costs.  
   
 ---
   

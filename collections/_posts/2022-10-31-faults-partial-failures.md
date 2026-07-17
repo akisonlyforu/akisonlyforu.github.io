@@ -12,7 +12,7 @@ series_order: 24
 
 Distributed systems, by their nature, span multiple computers communicating over unreliable networks. Partial failures represent an inherent challenge: some components in the system may fail unpredictably, while others continue to function. Unlike a single-computer system, where failures result in predictable crashes, distributed systems operate amid a continuous mess of faults.
 
-Faults are especially hard to handle in such systems because they are often **nondeterministic**—that is, failures and delays do not always behave consistently, making symptom diagnosis and programming more complex.
+Faults are especially hard to handle in such systems because they are often **nondeterministic**, that is, failures and delays do not always behave consistently, making symptom diagnosis and programming more complex.
   
 ---
 
@@ -23,7 +23,7 @@ In a distributed environment, partial failures occur when some nodes or message 
 - Failure of one power distribution unit (PDU) may leave part of a system functional while another part crashes entirely.
 
 #### **Real-World Anecdote**
-A hypoglycemic driver crashing into a data center's HVAC system once left entire racks offline while others remained fine—a clear example of distributed systems’ unpredictable failure modes.
+A hypoglycemic driver crashing into a data center's HVAC system once left entire racks offline while others remained fine, a clear example of distributed systems’ unpredictable failure modes.
   
 ---
 
@@ -75,4 +75,4 @@ Supercomputers’ rigid fault-handling mechanisms contrast with the adaptive, fa
 
 Partial failures are a defining characteristic of distributed systems, and addressing them requires designing with pessimism and resilience in mind. Unlike single-computer environments where software assumes ideal conditions, distributed systems engineers must embrace uncertainty to handle everything from hardware breakdowns to network glitches.
 
-By adopting fault-tolerant principles, dynamic recovery processes, and thorough testing strategies, distributed systems can continue to perform reliably—even when certain parts fail unpredictably. This adaptability lies at the heart of modern cloud-based and internet-scale systems.  
+By adopting fault-tolerant principles, dynamic recovery processes, and thorough testing strategies, distributed systems can continue to perform reliably, even when certain parts fail unpredictably. This adaptability lies at the heart of modern cloud-based and internet-scale systems.  

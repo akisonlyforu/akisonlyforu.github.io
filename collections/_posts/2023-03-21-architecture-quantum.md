@@ -52,7 +52,7 @@ Dynamic coupling examines runtime communication between quanta:
 - **Synchronous Calls**: Pending responses create bottlenecks but may provide strict consistency.
 - **Asynchronous Calls**: Enhance scalability by decoupling runtime dependencies, often used with event queues.
 
-Dynamic quantum coupling illustrates multi-dimensional decision-making—balancing communication, consistency, and coordination needs.
+Dynamic quantum coupling illustrates multi-dimensional decision-making, balancing communication, consistency, and coordination needs.
    
 ---
 

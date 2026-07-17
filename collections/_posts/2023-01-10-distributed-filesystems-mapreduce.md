@@ -10,14 +10,14 @@ series_order: 33
 
 ### **Introduction**
 
-Batch processing frameworks like **MapReduce** revolutionized data processing by enabling scalable computation across distributed systems. These frameworks leverage **distributed filesystems**—such as the Hadoop Distributed File System (HDFS)—to store and process massive datasets efficiently. Together, MapReduce and distributed filesystems provide a robust, reliable mechanism for handling tasks like ETL (Extract, Transform, Load) pipelines, log analysis, and search index creation.
+Batch processing frameworks like **MapReduce** revolutionized data processing by enabling scalable computation across distributed systems. These frameworks leverage **distributed filesystems**, such as the Hadoop Distributed File System (HDFS), to store and process massive datasets efficiently. Together, MapReduce and distributed filesystems provide a robust, reliable mechanism for handling tasks like ETL (Extract, Transform, Load) pipelines, log analysis, and search index creation.
    
 ---
 
 ### **Understanding Distributed Filesystems**
 
 Distributed filesystems like HDFS form the backbone of MapReduce by ensuring efficient storage and access to data across multiple machines. Key properties include:
-1. **Replication for Fault Tolerance**: File blocks are copied across machines for redundancy, safeguarding against disk or node failures. Advanced techniques, such as **Reed–Solomon coding**, are used in some implementations to reduce storage overhead while maintaining recovery capabilities.
+1. **Replication for Fault Tolerance**: File blocks are copied across machines for redundancy, safeguarding against disk or node failures. Advanced techniques, such as **Reed-Solomon coding**, are used in some implementations to reduce storage overhead while maintaining recovery capabilities.
 2. **Shared-Nothing Architecture**: Unlike traditional storage systems requiring dedicated hardware, HDFS runs on commodity hardware connected through standard datacenter networks.
 3. **Scalability**: Modern HDFS deployments span tens of thousands of nodes, managing hundreds of petabytes of data cost-effectively.
 
@@ -25,7 +25,7 @@ Distributed filesystems like HDFS form the backbone of MapReduce by ensuring eff
 
 ### **How MapReduce Works**
 
-The MapReduce programming model breaks down large data processing jobs into two stages—**map** and **reduce**—with data intermediary stages like sorting and shuffling occurring transparently.
+The MapReduce programming model breaks down large data processing jobs into two stages, **map** and **reduce**, with data intermediary stages like sorting and shuffling occurring transparently.
 
 #### **1. Mapper Stage**
 Each mapper reads a portion of the input dataset (e.g., file blocks on HDFS), processes the data record by record, and outputs intermediate key-value pairs.
@@ -61,7 +61,7 @@ The reducer aggregates the grouped data for each key. For example, summing URL c
    - User databases and logs, often stored on distributed filesystems, can be aggregated, cleaned, and joined using MapReduce for both analytics and operational pipelines.
 
 3. **Recommendation Systems**
-   - MapReduce workflows comprise 50–100 stages in complex recommendation systems for tasks such as collaborative filtering and frequent itemset mining.
+   - MapReduce workflows comprise 50 to 100 stages in complex recommendation systems for tasks such as collaborative filtering and frequent itemset mining.
 
 ---
 

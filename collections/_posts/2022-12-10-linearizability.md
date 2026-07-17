@@ -12,7 +12,7 @@ series_order: 29
 
 Linearizability is one of the strongest consistency guarantees a distributed system can provide. Often referred to as **atomic consistency**, **strong consistency**, or **immediate consistency**, linearizability makes a system appear as though there is only one copy of the data, and all operations happen atomically.
 
-This guarantee ensures that when one client completes a write, all subsequent reads reflect that write, regardless of which replica the client contacts. Linearizability is fundamentally about **recency**—ensuring that the most recent updates are always reflected in the system.
+This guarantee ensures that when one client completes a write, all subsequent reads reflect that write, regardless of which replica the client contacts. Linearizability is fundamentally about **recency**, ensuring that the most recent updates are always reflected in the system.
    
 ---
 
@@ -29,7 +29,7 @@ This scenario demonstrates a violation of linearizability. While users expect a 
 ### **Key Features of Linearizability**
 
 1. **Single Copy Illusion**    
-   Linearizability makes it appear as if all data updates occur atomically on a single, unified copy of the database—even when there are multiple replicas.
+   Linearizability makes it appear as if all data updates occur atomically on a single, unified copy of the database, even when there are multiple replicas.
 
 2. **Recency Guarantee**    
    Once a write completes, any subsequent read must reflect that write or a later one. This property prevents conflicting states across replicas and ensures predictable behavior for concurrent operations.
@@ -44,7 +44,7 @@ This scenario demonstrates a violation of linearizability. While users expect a 
 Linearizability ensures consistency across distributed systems but comes at a cost:
 
 1. **High Latency**    
-   Achieving linearizability requires ensuring all replicas agree on the order of operations. In practice, this involves synchronization or consensus protocols (e.g., Paxos, Raft), which add significant latency to operations—especially for geographically distributed systems.
+   Achieving linearizability requires ensuring all replicas agree on the order of operations. In practice, this involves synchronization or consensus protocols (e.g., Paxos, Raft), which add significant latency to operations, especially for geographically distributed systems.
 
 2. **Scalability Challenges**    
    Systems prioritizing linearizability often sacrifice throughput, since writes must propagate across all replicas before being acknowledged.

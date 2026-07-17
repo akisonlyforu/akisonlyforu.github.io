@@ -10,7 +10,7 @@ Breaking a monolithic architecture into distributed services requires careful pl
 
 ## **What is Component-Based Decomposition?**
 
-Component-based decomposition is a strategy that breaks down monolithic applications by identifying and refining logical **components**—the architectural building blocks of a system.    
+Component-based decomposition is a strategy that breaks down monolithic applications by identifying and refining logical **components**: the architectural building blocks of a system.    
 These components:
 1. **Have well-defined roles** in the system, often recognizable within namespaces or directory structures.
 2. **Contain specific functionality**, such as payment processing or customer surveys.
@@ -42,7 +42,7 @@ Key advantages include:
 
 ### 1. **Flatten Components to Remove Orphans**
 
-While restructuring components, architects should ensure that non-leaf namespaces hold no directly implemented functionality—only leaf namespaces (like `ss.survey.templates`) should have code<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 7 </strong></span></sup><sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 8 </strong></span></sup>.
+While restructuring components, architects should ensure that non-leaf namespaces hold no directly implemented functionality: only leaf namespaces (like `ss.survey.templates`) should have code<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 7 </strong></span></sup><sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 8 </strong></span></sup>.
 
 For example:
 - If `ss.survey` holds shared and template files, these must migrate either into subcomponents like `ss.survey.templates` or consolidated back under a singular `ss.survey` focus<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 9 </strong></span></sup><sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 10 </strong></span></sup>.
@@ -72,8 +72,8 @@ Chapter-wise insights introduce practical patterns to refine monolithic breakdow
 
 Through grouped domains (e.g., Ticketing, Reporting functionalities), code stabilizes into separately deployable service contexts possibly keeping legacy databases until readiness permits full decoupled models evolve<sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 15 </strong></span></sup><sup><span title="Software Architecture - The Hard Parts.pdf assistant-BBUxEpzSuyHN9z8sUsdfpK"><strong> 16 </strong></span></sup>.
 
-**Examples include domain-driven design cases split— modular logic/ticket-routing hierarchy sample Split restructuring shows rather expands merely simple for rollback scenarios per that handles complexity quickly refactors future-growth-oriented deployments.**
+**Examples include domain-driven design cases split, modular logic/ticket-routing hierarchy sample Split restructuring shows rather expands merely simple for rollback scenarios per that handles complexity quickly refactors future-growth-oriented deployments.**
    
 ---  
 
-Component decomposition isn’t just theory—it’s a tested, adaptive method to navigate the maze of transitioning to modern service-based software. Architects embracing this path ensure smoother scaling, maintainability lifts organizational teams matcher modern digital distributed tooling etcservices).
+Component decomposition isn’t just theory. It’s a tested, adaptive method to navigate the maze of transitioning to modern service-based software. Architects embracing this path ensure smoother scaling, maintainability lifts organizational teams matcher modern digital distributed tooling etcservices).

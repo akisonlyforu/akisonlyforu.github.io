@@ -10,7 +10,7 @@ series_order: 23
 
 ### **Understanding Serializability**
 
-Serializability is widely acknowledged as the strongest isolation level for transactions. It ensures that even though transactions may execute concurrently, the resulting state of the database is equivalent to a scenario where those transactions were executed serially—one after another. By enforcing this isolation level, the system guarantees that all race conditions and other concurrency anomalies are completely avoided.
+Serializability is widely acknowledged as the strongest isolation level for transactions. It ensures that even though transactions may execute concurrently, the resulting state of the database is equivalent to a scenario where those transactions were executed serially, one after another. By enforcing this isolation level, the system guarantees that all race conditions and other concurrency anomalies are completely avoided.
    
 ---
 

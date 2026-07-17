@@ -8,7 +8,7 @@ series: "Designing Data-Intensive Applications"
 series_order: 1
 ---
 
-Building reliable systems isn’t just an aspirational goal—it’s a necessity in today’s data-driven and ever-growing digital landscape. Failures can come from anywhere: bad disk drives, unpredictable bugs, or even – let’s be honest – us humans accidentally deploying the wrong version.  
+Building reliable systems isn’t just an aspirational goal. It’s a necessity in today’s data-driven and ever-growing digital landscape. Failures can come from anywhere: bad disk drives, unpredictable bugs, or even, let’s be honest, us humans accidentally deploying the wrong version.  
    
 But here’s the good news: failures don’t have to end in disaster. This post explores practical strategies to keep your systems functional, consistent, and fault-tolerant, even when the unexpected happens. Drawn from the principles in Chapter 1 of *Designing Data-Intensive Applications*, let’s dive into what makes a system reliable.  
    
@@ -122,7 +122,7 @@ Replication helps maintain availability, but what happens if bugs accidentally o
 
 ### 3. **Graceful Recovery with Retries**
 
-Even reliable systems fail; networks get flaky or databases time out. By building in **retry logic**, your system can recover seamlessly without alarming users. A key element here is **exponential backoff**—retrying failed requests while gradually increasing the interval between each attempt.
+Even reliable systems fail; networks get flaky or databases time out. By building in **retry logic**, your system can recover seamlessly without alarming users. A key element here is **exponential backoff**: retrying failed requests while gradually increasing the interval between each attempt.
 
 Here’s an example to implement retry logic in Java:
 
@@ -179,9 +179,9 @@ For example:
 
 ## **Summary: Making Systems Reliable**
 
-Reliability isn’t about creating a perfect system—it’s about building solutions that embrace imperfection. Follow these principles:
+Reliability isn’t about creating a perfect system. It’s about building solutions that embrace imperfection. Follow these principles:
 1. Replicate critical data to prevent disruptions.
-2. Don’t just recover data—protect it with comprehensive backups.
+2. Don’t just recover data. Protect it with comprehensive backups.
 3. Develop retry mechanisms for transient failures.
 4. Reduce human error through automation wherever possible.
 

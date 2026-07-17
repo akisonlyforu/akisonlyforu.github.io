@@ -32,7 +32,7 @@ Let’s consider an example:
 - A user asks a question (Event A).
 - Another user answers it (Event B).
 
-Causally dependent events would guarantee that a system always shows Event A (the question) before Event B (the answer). Violating this order—showing the answer first—is unintuitive and leads to a broken experience.
+Causally dependent events would guarantee that a system always shows Event A (the question) before Event B (the answer). Violating this order, showing the answer first, is unintuitive and leads to a broken experience.
   
 ---
 
@@ -55,7 +55,7 @@ Using **sequence numbers** or logical timestamps helps track and enforce orderin
 Total order broadcast ensures that all nodes in a system process messages (operations) in the exact same order. This is critical for distributed systems needing consistent state replication and synchronized decision-making.
 
 #### **Defining Total Order Broadcast**
-1. **Reliable Delivery**: No message is lost—if it’s delivered to one node, it must be delivered to all.
+1. **Reliable Delivery**: No message is lost: if it’s delivered to one node, it must be delivered to all.
 2. **Ordered Delivery**: Messages are processed in the same sequence across all nodes.
 
 #### **Applications**

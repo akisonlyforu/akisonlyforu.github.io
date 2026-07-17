@@ -12,7 +12,7 @@ series_order: 39
 
 Databases have traditionally consolidated functionalities, combining features like storage, indexing, query processing, and replication into one integrated system. However, as application requirements diversify, handling everything in one database becomes impractical. **Unbundling databases** proposes breaking monolithic systems into smaller, specialized components. These components work collectively but focus on mastering specific responsibilities, such as full-text search, analytics, or change data capture.
 
-The unbundling approach not only increases flexibility but also aligns with the Unix philosophy of modularity—combining small tools with well-defined purposes to create reliable, scalable systems.
+The unbundling approach not only increases flexibility but also aligns with the Unix philosophy of modularity, combining small tools with well-defined purposes to create reliable, scalable systems.
    
 ---
 
@@ -37,7 +37,7 @@ Unbundling databases means using different specialized systems and coordinating 
 2. **Replication Logs**: Coordinating data synchronization across multiple storage systems.
 3. **Search Engines**: External systems (such as Elasticsearch) tailored for full-text or fuzzy queries.
 
-Unbundling emphasizes breadth—providing broad coverage for multiple workloads—over deep optimization for individual use cases.
+Unbundling emphasizes breadth, providing broad coverage for multiple workloads, over deep optimization for individual use cases.
 
 Example:     
 Imagine using **distributed blob storage** to hold raw datasets, **a graph database** for social network queries, and **Kafka streams** for log-based synchronization, all integrating seamlessly for specific application needs.

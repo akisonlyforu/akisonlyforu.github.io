@@ -19,7 +19,7 @@ As engineers, our work entails more than just building reliable and efficient so
 Predictive analytics turns historical data into decisions about the future. While it offers transformative benefits, such as predicting the spread of diseases or assisting in disaster response, it also poses risks when applied to areas such as:
 
 1. **Loan Decisions or Hiring**: Algorithms trained on biased data may reinforce existing inequalities, disproportionately denying loans or jobs to certain groups.
-2. **Algorithmic Exclusion**: Mislabeling someone as "high risk" (e.g., for loans, travel, or insurance) can lead to systemic discrimination and exclusion. This phenomenon—referred to as the "algorithmic prison"—restricts opportunities without offering paths to challenge or appeal.
+2. **Algorithmic Exclusion**: Mislabeling someone as "high risk" (e.g., for loans, travel, or insurance) can lead to systemic discrimination and exclusion. This phenomenon, referred to as the "algorithmic prison", restricts opportunities without offering paths to challenge or appeal.
 
 While data-driven insights hold the promise of objectivity, they risk amplifying the biases of the input data. As engineers, our job is to ensure models remain transparent, accountable, and free of discriminatory behavior.
   
@@ -32,7 +32,7 @@ Algorithms are a reflection of the data they feed on. If that data embeds system
 - Traits correlated with protected categories (e.g., race, gender) can indirectly perpetuate discrimination.
 
 For instance:
-- **Targeted Ads and Discrimination**: Factors like a user’s postal code, often correlated with race or socioeconomic status, can lead to biased ad targeting—even unintentionally.
+- **Targeted Ads and Discrimination**: Factors like a user’s postal code, often correlated with race or socioeconomic status, can lead to biased ad targeting, even unintentionally.
 - **Machine Learning Myths**: Some believe that algorithms are inherently fair, but their opacity often obscures discriminatory outputs, a problem humorously referred to as “machine learning as laundering for bias.”
 
 **Solution**: Proactively audit both training data and model outputs for fairness and enforce anti-discrimination compliance in systems making impactful decisions.
@@ -41,7 +41,7 @@ For instance:
 
 ### **Surveillance vs. Privacy**
 
-Modern technologies—social media platforms, IoT devices, and search engines—gather vast datasets. These are often repurposed to create behavioral models, marketing profiles, or even intrusive surveillance measures.
+Modern technologies (social media platforms, IoT devices, and search engines) gather vast datasets. These are often repurposed to create behavioral models, marketing profiles, or even intrusive surveillance measures.
 
 The ethical challenge is ensuring that data collection respects users’ privacy. For example:
 - **Consent Issues**: Users often lack clear knowledge about what data they provide and how it will be used, undermining the concept of informed consent.
@@ -53,7 +53,7 @@ The ethical challenge is ensuring that data collection respects users’ privacy
 
 Even seemingly benign systems like recommendation engines warrant closer scrutiny:
 - **Echo Chambers**: Algorithms prioritizing user affinity create polarized environments where misinformation spreads unchecked.
-- **Poverty Loops**: For example, employer reliance on credit scores can create vicious cycles—an applicant with a low score is denied jobs, worsening their financial status and damaging their score further.
+- **Poverty Loops**: For example, employer reliance on credit scores can create vicious cycles: an applicant with a low score is denied jobs, worsening their financial status and damaging their score further.
 
 Addressing these issues demands "systems thinking," a holistic understanding of how each component of a system impacts users and society.
   
@@ -77,4 +77,4 @@ Addressing these issues demands "systems thinking," a holistic understanding of 
 
 ### **Conclusion**
 
-Software systems wield immense power to shape society—not always for the better. As stewards of these technologies, engineers must rise above technical challenges to consider the societal and human consequences of our work. By embedding fairness, transparency, and ethical considerations into every stage, we can focus on building systems that foster equality and respect dignity. The path forward for the information age shouldn't mirror the exploitation of the industrial era—it must be built on a foundation of responsibility and humanity.  
+Software systems wield immense power to shape society, not always for the better. As stewards of these technologies, engineers must rise above technical challenges to consider the societal and human consequences of our work. By embedding fairness, transparency, and ethical considerations into every stage, we can focus on building systems that foster equality and respect dignity. The path forward for the information age shouldn't mirror the exploitation of the industrial era. It must be built on a foundation of responsibility and humanity.  

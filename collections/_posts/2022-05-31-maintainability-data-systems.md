@@ -8,7 +8,7 @@ series: "Designing Data-Intensive Applications"
 series_order: 3
 ---
    
-Software lifespan doesn’t end at deployment—it begins there. Over time, systems accumulate changes, adapt to new requirements, and scale to meet growing demands. This is why **maintainability**, as described in *Designing Data-Intensive Applications*, is vital for creating systems that engineers can continue to work on productively.  
+Software lifespan doesn’t end at deployment. It begins there. Over time, systems accumulate changes, adapt to new requirements, and scale to meet growing demands. This is why **maintainability**, as described in *Designing Data-Intensive Applications*, is vital for creating systems that engineers can continue to work on productively.  
   
 In this post, we tackle what maintainability truly means, its three foundational pillars, and how to achieve it in large-scale data systems.  
   
@@ -49,7 +49,7 @@ Effective operability means making life easier for the people managing software 
             [Automated Processes] <---- Feedback Loop ----> [Operations]  
 ~~~  
   
-> **Key Takeaway**: Good operability doesn’t just help recover from problems—it actively prevents them.  
+> **Key Takeaway**: Good operability doesn’t just help recover from problems. It actively prevents them.  
   
 ---
   

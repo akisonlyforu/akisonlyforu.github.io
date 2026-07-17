@@ -65,7 +65,7 @@ GROUP BY region;
 
 ### **The Role of Data Warehouses**
 
-Initially, companies used the same databases for both OLTP and OLAP tasks. However, this proved inefficient because these workloads have conflicting needs. Enter the **data warehouse**—a system optimized specifically for analytics.
+Initially, companies used the same databases for both OLTP and OLAP tasks. However, this proved inefficient because these workloads have conflicting needs. Enter the **data warehouse**, a system optimized specifically for analytics.
 
 #### How it Works:
 - **Extract, Transform, Load (ETL):** Data is periodically sourced from OLTP systems, cleaned, and stored in the warehouse.
@@ -88,7 +88,7 @@ Popular Data Warehouse Solutions:
 
 2. **Cloud Growth:** Tools like Apache Spark, Presto, and Snowflake use distributed computing for on-demand analytics, democratizing access to powerful analytics even for smaller entities.
 
-3. **Separation for Scalability:** Gradual specialization has led to separation of responsibilities—transaction systems for real-time operations and warehouses for analytics.
+3. **Separation for Scalability:** Gradual specialization has led to separation of responsibilities: transaction systems for real-time operations and warehouses for analytics.
 
 ---
 

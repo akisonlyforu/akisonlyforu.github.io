@@ -8,7 +8,7 @@ series: "Designing Data-Intensive Applications"
 series_order: 7
 ---
 
-At the heart of every database lies a powerful combination of data structures designed to efficiently store and retrieve information. This post explores some of the essential mechanisms—including **hash indexes**, **B-trees**, and **LSM-trees**—that drive the performance of modern database systems.
+At the heart of every database lies a powerful combination of data structures designed to efficiently store and retrieve information. This post explores some of the essential mechanisms, including **hash indexes**, **B-trees**, and **LSM-trees**, that drive the performance of modern database systems.
    
 ---
 
@@ -138,6 +138,6 @@ Each structure comes with its own set of trade-offs, which means there's no one-
 
 ### **Conclusion: The Behind-the-Scenes Magic**
 
-The unseen heroes—**data structures**—are critical to a database's ability to balance write speeds, lookup efficiency, and range queries. Whether it’s the simplicity of a hash index, the sequential efficiency of an LSM-tree, or the balanced versatility of a B-tree, each structure contributes to the incredible performance databases achieve today.
+The unseen heroes, **data structures**, are critical to a database's ability to balance write speeds, lookup efficiency, and range queries. Whether it’s the simplicity of a hash index, the sequential efficiency of an LSM-tree, or the balanced versatility of a B-tree, each structure contributes to the incredible performance databases achieve today.
 
 Understanding these mechanisms not only demystifies how databases work but also empowers you to make informed decisions when choosing or optimizing storage engines for your next project.

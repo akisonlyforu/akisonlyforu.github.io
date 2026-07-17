@@ -74,4 +74,4 @@ Message brokers, however, typically use opaque payloads that the application lay
 
 ### **Conclusion**
 
-The choice of dataflow mode—whether using **databases**, **services**, or **message brokers**—dictates how data processes interact and evolve within a distributed system. Selecting the right approach based on specific use cases while incorporating compatibility strategies ensures flexibility, resilience, and maintainability. As systems grow in complexity, understanding these modes enables engineers to design scalable and robust architectures.  
+The choice of dataflow mode (whether using **databases**, **services**, or **message brokers**) dictates how data processes interact and evolve within a distributed system. Selecting the right approach based on specific use cases while incorporating compatibility strategies ensures flexibility, resilience, and maintainability. As systems grow in complexity, understanding these modes enables engineers to design scalable and robust architectures.  

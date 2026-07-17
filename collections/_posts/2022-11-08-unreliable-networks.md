@@ -10,7 +10,7 @@ series_order: 25
 
 ### **Introduction to Unreliable Networks**
 
-Distributed systems rely heavily on networks for node-to-node communication. However, networks are inherently untrustworthy—messages may be delayed, lost, duplicated, or even delivered out of order. Designing reliable distributed systems requires acknowledging and overcoming these inconsistencies, especially in asynchronous environments where guarantees around timing and delivery don’t exist.
+Distributed systems rely heavily on networks for node-to-node communication. However, networks are inherently untrustworthy: messages may be delayed, lost, duplicated, or even delivered out of order. Designing reliable distributed systems requires acknowledging and overcoming these inconsistencies, especially in asynchronous environments where guarantees around timing and delivery don’t exist.
    
 ---
 

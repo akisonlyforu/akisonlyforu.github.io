@@ -10,7 +10,7 @@ series_order: 40
 
 ### **Introduction**
 
-Building **correct systems**—those that produce well-defined, reliable outcomes even in the presence of faults—is among the most significant challenges in distributed systems. **Stateful systems**, like databases, are particularly tricky since they are designed to persist information long-term, making errors difficult to reverse. Traditional tools like ACID transactions and consensus protocols are foundational but insufficient for all modern data needs. This subchapter explores practical approaches to correctness with a focus on fault tolerance, immutable dataflows, and balancing constraints.
+Building **correct systems** (those that produce well-defined, reliable outcomes even in the presence of faults) is among the most significant challenges in distributed systems. **Stateful systems**, like databases, are particularly tricky since they are designed to persist information long-term, making errors difficult to reverse. Traditional tools like ACID transactions and consensus protocols are foundational but insufficient for all modern data needs. This subchapter explores practical approaches to correctness with a focus on fault tolerance, immutable dataflows, and balancing constraints.
   
 ---
 

@@ -44,7 +44,7 @@ To avoid unnecessary data movement:
     - New nodes take ownership of a subset of partitions, balancing the load.
     - Partition-to-node assignments are adjusted dynamically without changing the partition scheme.
 
-This approach is effective because only entire partitions are moved during rebalancing—not individual keys—thus reducing the data transfer cost significantly.
+This approach is effective because only entire partitions are moved during rebalancing, not individual keys, thus reducing the data transfer cost significantly.
 
 #### **Dynamic Partitioning**
 Dynamic rebalancing splits or merges partitions as needed based on their size or workload:
@@ -86,4 +86,4 @@ Dynamic rebalancing splits or merges partitions as needed based on their size or
 
 Partition rebalancing is essential for maintaining an evenly distributed workload in a dynamic, growing database cluster. Strategies like fixed partitioning and dynamic partitioning ensure efficient data redistribution with minimal downtime or overhead. While manual rebalancing provides greater control, automated approaches are indispensable for large-scale distributed systems demanding high availability.
 
-Carefully configuring rebalancing mechanisms and balancing automation with administrative oversight are critical to avoiding unnecessary disturbances in production systems. Efficient rebalancing enhances cluster performance, scalability, and resiliency—making it foundational to modern distributed database design.  
+Carefully configuring rebalancing mechanisms and balancing automation with administrative oversight are critical to avoiding unnecessary disturbances in production systems. Efficient rebalancing enhances cluster performance, scalability, and resiliency, making it foundational to modern distributed database design.  

@@ -38,7 +38,7 @@ If two users try to write to the same data (e.g., modifying the same invoice ent
 To tackle inconsistencies like **nonrepeatable reads** (data changing mid-query), many databases offer **snapshot isolation**, which presents a consistent snapshot of the database to each transaction.
 
 #### **How It Works**
-Instead of blocking concurrent transactions, snapshot isolation ensures that reads always use a committed snapshot from the start of the transaction—even if ongoing updates are made elsewhere. This achieves a **read-only consistent view**.
+Instead of blocking concurrent transactions, snapshot isolation ensures that reads always use a committed snapshot from the start of the transaction, even if ongoing updates are made elsewhere. This achieves a **read-only consistent view**.
 
 Example:
 - Alice queries her bank accounts and sees balances totaling `$1,000`. If Bob transfers `$100` from one account to another during Alice’s transaction, her total balance remains `$1,000` based on her consistent snapshot.
@@ -61,9 +61,9 @@ Weak isolation levels avoid locks but may still require additional care, such as
 ### **Practical Applications of Weak Isolation Levels**
 
 Both read committed and snapshot isolation are suited for applications prioritizing **high throughput** over strict consistency. Examples include:
-1. Retail Websites—Concurrent inventory updates with minimal blocking.
-2. Social Platforms—Real-time feeds where strict ordering isn’t critical.
-3. Analytics—Long-running, read-only operations optimized using consistent snapshots.
+1. Retail Websites: Concurrent inventory updates with minimal blocking.
+2. Social Platforms: Real-time feeds where strict ordering isn’t critical.
+3. Analytics: Long-running, read-only operations optimized using consistent snapshots.
 
 When higher consistency matters, developers can introduce custom locking mechanisms or adopt stronger isolation levels like serializability.
    

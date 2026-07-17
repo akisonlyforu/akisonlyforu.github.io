@@ -10,7 +10,7 @@ series_order: 20
 
 ### **Introduction to Request Routing**
 
-In a distributed database, after partitioning data across multiple nodes, the system faces a new challenge—**how does a client know which node to interact with for a specific request?** Since the partition-to-node mapping is dynamic due to rebalancing or node additions/removals, request routing becomes a crucial aspect of managing distributed systems.
+In a distributed database, after partitioning data across multiple nodes, the system faces a new challenge: **how does a client know which node to interact with for a specific request?** Since the partition-to-node mapping is dynamic due to rebalancing or node additions/removals, request routing becomes a crucial aspect of managing distributed systems.
    
 ---
 

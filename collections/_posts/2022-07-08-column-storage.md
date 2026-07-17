@@ -18,7 +18,7 @@ Traditional databases store all attributes of a single row together in a contigu
 
 ### **Why Column-Oriented?**
 
-In analytics, queries typically access only a handful of columns but span millions—or even billions—of rows. A column-oriented approach avoids loading irrelevant data into memory, significantly improving performance.
+In analytics, queries typically access only a handful of columns but span millions, or even billions, of rows. A column-oriented approach avoids loading irrelevant data into memory, significantly improving performance.
 
 ### **Example to Illustrate the Difference**
 

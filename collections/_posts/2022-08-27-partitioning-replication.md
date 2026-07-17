@@ -21,7 +21,7 @@ When combining partitioning and replication:
    - For instance, in a **leader-follower model**, each partition has one leader assigned to a node, while follower replicas ensure data redundancy.
 
 #### **Example Setup**
-Consider a database system with 3 nodes (A, B, C), 6 partitions (P1–P6), and replication enabled:
+Consider a database system with 3 nodes (A, B, C), 6 partitions (P1-P6), and replication enabled:
 
 - Partition Leaders:
   - Node A → P1, P4

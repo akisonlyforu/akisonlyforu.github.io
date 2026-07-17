@@ -10,7 +10,7 @@ series_order: 26
 
 ### **Introduction to Unreliable Clocks**
 
-Time is fundamental in modern software applications, used for everything from measuring durations to scheduling tasks. Distributed systems, however, complicate time management. Each machine has its own hardware clock, and these clocks are prone to drift—running faster or slower depending on environmental factors. Inconsistent clocks across nodes can lead to unpredictable behavior, subtle bugs, or data inconsistencies.
+Time is fundamental in modern software applications, used for everything from measuring durations to scheduling tasks. Distributed systems, however, complicate time management. Each machine has its own hardware clock, and these clocks are prone to drift, running faster or slower depending on environmental factors. Inconsistent clocks across nodes can lead to unpredictable behavior, subtle bugs, or data inconsistencies.
 
 Understanding the limitations of hardware clocks and the mechanisms of clock synchronization is critical to designing robust distributed systems.
   
@@ -39,7 +39,7 @@ Synchronizing clocks across distributed systems is fraught with difficulties:
 1. **Quartz Clock Drift**:
    - Hardware clocks drift when left unchecked, leading to inaccuracies even over short intervals. For example, Google assumes a drift of up to 200 parts per million (ppm), equivalent to 6ms drift after 30 seconds or 17 seconds in a day.
 2. **Network Dependencies**:
-   - Clocks are typically synchronized using the **Network Time Protocol (NTP)** or GPS-based systems. However, network delays and jitter introduce inaccuracies—sometimes exceeding 100ms during congestion.
+   - Clocks are typically synchronized using the **Network Time Protocol (NTP)** or GPS-based systems. However, network delays and jitter introduce inaccuracies, sometimes exceeding 100ms during congestion.
 3. **Leap Seconds**:
    - Occasionally, a minute will have 59 or 61 seconds (to adjust Earth’s rotation), causing timing inaccuracies unless applications are specifically designed to handle them.
 
@@ -50,7 +50,7 @@ Synchronizing clocks across distributed systems is fraught with difficulties:
 Using synchronized clocks in distributed systems can be problematic:
 1. Timestamps for event ordering can mislead when clocks are out of sync.
 2. The confidence interval of clock readings means precise time-based operations (e.g., resolving conflicts) must consider uncertainties in timestamps.
-3. If a node’s clock drifts too far from others’, it might be silently removed from the cluster to prevent data corruption—requiring constant monitoring of clock offsets.
+3. If a node’s clock drifts too far from others’, it might be silently removed from the cluster to prevent data corruption, requiring constant monitoring of clock offsets.
 
 ---
 

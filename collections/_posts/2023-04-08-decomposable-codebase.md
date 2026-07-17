@@ -6,13 +6,13 @@ description:    Analyzing metrics like coupling, abstraction, and stability to a
 categories: sahp codebase decomposition architecture
 ---
 
-The question of whether a monolithic codebase is decomposable lies at the crux of architectural decomposition. This post explores techniques and metrics—afferent and efferent coupling, abstractness and instability, and distance from the main sequence—that help assess the feasibility of breaking down monolithic architectures into manageable components.
+The question of whether a monolithic codebase is decomposable lies at the crux of architectural decomposition. This post explores techniques and metrics (afferent and efferent coupling, abstractness and instability, and distance from the main sequence) that help assess the feasibility of breaking down monolithic architectures into manageable components.
    
 ---
 
 ## Determining Decomposability
 
-A disorganized system—commonly referred to as the Big Ball of Mud anti-pattern—poses immense challenges for decomposition. Such systems often lack modularity or structure, requiring architects to evaluate whether restructuring the codebase is a viable approach.
+A disorganized system, commonly referred to as the Big Ball of Mud anti-pattern, poses immense challenges for decomposition. Such systems often lack modularity or structure, requiring architects to evaluate whether restructuring the codebase is a viable approach.
 
 Key considerations include:
 1. **Can the codebase be salvaged?**
@@ -62,7 +62,7 @@ For decomposable codebases, architects can adopt approaches like:
 
 ## Conclusion
 
-Through metrics like afferent coupling, abstractness, and main sequence proximity, architects can make informed decisions about the decomposability of monolithic systems. A focused analysis leads to effective strategies—whether gradual restructuring or tactical removal—ensuring modern, scalable architectures.
+Through metrics like afferent coupling, abstractness, and main sequence proximity, architects can make informed decisions about the decomposability of monolithic systems. A focused analysis leads to effective strategies, whether gradual restructuring or tactical removal, ensuring modern, scalable architectures.
 
 Let’s continue the conversation. How do you approach assessing decomposability in your projects?
   

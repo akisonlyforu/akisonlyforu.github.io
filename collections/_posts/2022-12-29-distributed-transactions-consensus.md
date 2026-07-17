@@ -16,7 +16,7 @@ Distributed systems often need to ensure consistency while accommodating failure
 
 ### **Atomic Commit and Distributed Transactions**
 
-Atomicity—ensuring that a transaction either commits entirely or aborts—is relatively straightforward within a single-node database but becomes a significant challenge in distributed databases spanning multiple nodes. Problems arise when:
+Atomicity, ensuring that a transaction either commits entirely or aborts, is relatively straightforward within a single-node database but becomes a significant challenge in distributed databases spanning multiple nodes. Problems arise when:
 1. A transaction successfully commits on some nodes while failing on others, leading to data inconsistency.
 2. Nodes lose messages, timing out without knowledge of other nodes' success or failure.
 3. Crashes prevent certain nodes from completing their part of a transaction.
@@ -61,7 +61,7 @@ Modern systems like **ZooKeeper** and **etcd** implement consensus protocols (e.
 1. **Leader Election**:  
    Consensus ensures that at any given time, only one node is the leader, preventing split-brain situations.
 2. **Atomic Commit Protocols**:  
-   The outcome of a distributed transaction relies on all nodes agreeing on commit/abort decisions—a task that consensus guarantees.
+   The outcome of a distributed transaction relies on all nodes agreeing on commit/abort decisions, a task that consensus guarantees.
 
 ---
 

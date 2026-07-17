@@ -45,7 +45,7 @@ Both approaches intentionally leave write-ordering to be resolved asynchronously
 ### **Advantages of Leaderless Replication**
 
 1. **Resilience Against Node Failures**    
-   Leaderless designs negate the need for failovers. If a replica becomes unavailable, writes and reads continue with available replicas—the system catches up when offline nodes return following mechanisms like **read repair** and **anti-entropy**.
+   Leaderless designs negate the need for failovers. If a replica becomes unavailable, writes and reads continue with available replicas. The system catches up when offline nodes return following mechanisms like **read repair** and **anti-entropy**.
 
     - **Read Repair**: Detects stale replicas during read operations and updates them with fresh data.
     - **Anti-Entropy Process**: Background processes compare replicas to ensure missing information is copied over.

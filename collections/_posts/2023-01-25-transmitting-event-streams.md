@@ -85,4 +85,4 @@ Regardless of the mechanism, transmitting event streams presents inherent challe
 
 ### **Conclusion**
 
-Messaging systems and partitioned logs represent two complementary approaches to transmitting event streams in distributed systems. Traditional brokers excel at transient workloads, while log-based brokers offer persistent storage, replayability, and scalability. By understanding the trade-offs between these mechanisms, engineers can design stream-based architectures that balance performance, reliability, and durability—key pillars for modern data-intensive applications.  
+Messaging systems and partitioned logs represent two complementary approaches to transmitting event streams in distributed systems. Traditional brokers excel at transient workloads, while log-based brokers offer persistent storage, replayability, and scalability. By understanding the trade-offs between these mechanisms, engineers can design stream-based architectures that balance performance, reliability, and durability, key pillars for modern data-intensive applications.  
