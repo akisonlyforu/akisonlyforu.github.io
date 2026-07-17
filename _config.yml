@@ -87,6 +87,7 @@ text:
   og_locale: "en_US"
 
 # Build settings
+future: true
 theme: null
 markdown: kramdown
 permalink: /blog/:title/
