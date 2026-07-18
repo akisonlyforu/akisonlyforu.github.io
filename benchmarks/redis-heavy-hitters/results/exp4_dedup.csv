@@ -1,0 +1,3 @@
+structure,bytes,false_positive_rate,dedup_recall,note
+exact_python_set,190046050,0.0,1.0,2138760 unique ids
+redis_bloom_filter,4943984,0.00011,1.0,cap=2500000 err=0.001

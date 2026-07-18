@@ -1,0 +1,54 @@
+
+==================================================================
+SUMMARY  robotic ad-click invalidation: exact vs probabilistic
+==================================================================
+redis 7.4.7 | redis-py 5.3.0 | image sha256:798ab84d9f26...
+stream: 1,000,000 humans + 20 bots x 50,000 clicks = 2,430,865 clicks, 2,138,760 unique ids, 292,105 replays
+
+EXP 1  exact counting grows unbounded (source counter + id set)
+    100,000 sources -> dict    13.6 MB | redis HASH     8.2 MB | id-set    20.5 MB (213,596 ids)
+    250,000 sources -> dict    31.6 MB | redis HASH    20.1 MB | id-set    47.1 MB (534,522 ids)
+    500,000 sources -> dict    63.4 MB | redis HASH    40.2 MB | id-set    94.4 MB (1,068,707 ids)
+  1,000,000 sources -> dict   126.8 MB | redis HASH    80.4 MB | id-set   190.0 MB (2,138,714 ids)
+  1,000,020 sources -> dict   126.8 MB | redis HASH    80.4 MB | id-set   190.0 MB (2,138,760 ids)
+
+EXP 2  Count-Min Sketch: FIXED memory, still finds heavy hitters
+  CMS width=20000 depth=5 -> 0.80 MB (fixed) vs exact dict 126.8 MB
+  bot overestimate   : mean 57  median 59  p99 65  max 65  (true ~50,000)
+  human overestimate : mean 58.3  median 59  p99 75  max 80  (true 1-4)
+
+EXP 3  Top-K: the bot list in bounded memory
+  TopK k=50 width=1000 depth=8 -> 0.067 MB (fixed)
+  recall: 20/20 planted bots in top-50 = 100%   bots occupy ranks 1..20
+  humans ranked above any bot: 0   (the k=50 list's remaining 30 slots are ordinary humans)
+    #1  bot:3      topk=  50000 true=  50000 [planted_bot]
+    #2  bot:7      topk=  50000 true=  50000 [planted_bot]
+    #3  bot:18     topk=  50000 true=  50000 [planted_bot]
+    #4  bot:19     topk=  50000 true=  50000 [planted_bot]
+    #5  bot:0      topk=  50000 true=  50000 [planted_bot]
+    #6  bot:2      topk=  50000 true=  50000 [planted_bot]
+    #7  bot:1      topk=  50000 true=  50000 [planted_bot]
+    #8  bot:6      topk=  50000 true=  50000 [planted_bot]
+    #9  bot:4      topk=  50000 true=  50000 [planted_bot]
+    #10 bot:5      topk=  50000 true=  50000 [planted_bot]
+    #11 bot:14     topk=  50000 true=  50000 [planted_bot]
+    #12 bot:8      topk=  50000 true=  50000 [planted_bot]
+    #13 bot:10     topk=  50000 true=  50000 [planted_bot]
+    #14 bot:9      topk=  50000 true=  50000 [planted_bot]
+    #15 bot:11     topk=  50000 true=  50000 [planted_bot]
+    #16 bot:12     topk=  50000 true=  50000 [planted_bot]
+    #17 bot:13     topk=  50000 true=  50000 [planted_bot]
+    #18 bot:16     topk=  50000 true=  50000 [planted_bot]
+    #19 bot:15     topk=  50000 true=  50000 [planted_bot]
+    #20 bot:17     topk=  50000 true=  50000 [planted_bot]
+    #21 h:999960   topk=      4 true=      4 [human]
+    #22 h:999997   topk=      4 true=      4 [human]
+    #23 h:913      topk=      4 true=      4 [human]
+
+EXP 4  Bloom dedup vs exact set
+  exact python set :   190.0 MB  FP=0.000%  recall=100%
+  redis bloom      :     4.9 MB  FP=0.011% (22/200000)  recall=100%
+
+HEADLINE
+  exact source-counter + id-set climb to 317 MB at 1,000,020 sources and keep growing.
+  CMS+TopK+Bloom = 5.8 MB FIXED, flagged 100% of planted bots and caught 100% of replays at 0.011% false positives.
