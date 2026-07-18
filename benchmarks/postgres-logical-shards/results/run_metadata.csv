@@ -1,0 +1,2 @@
+postgres_version,image_digest,hash_function,n_workspaces,total_rows,max_rows_per_ws,L,seed,A_transitions,B_transitions,C_physicals,C_logical_counts
+PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu,sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20,"blake2b(str(workspace_id),digest_size=8)->int",200000,1202279,20,480,1234,4->5;4->6;4->8;8->12,4->6;8->12,3;4;5;6;8;10;12;15;16;24;32,480;479;500
