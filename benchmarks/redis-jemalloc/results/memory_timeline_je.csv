@@ -1,0 +1,6 @@
+phase,used_memory,used_memory_human,used_memory_rss,used_memory_rss_human,mem_fragmentation_ratio,mem_allocator,maxmemory,maxmemory_human,maxmemory_policy,evicted_keys,allocator_allocated,allocator_active,allocator_resident,allocator_frag_ratio,allocator_frag_bytes,number_of_keys,cgroup_memory,cgroup_limit,time_sec
+empty_settle,1000000,1.00M,4000000,4.00M,4.0,jemalloc-5.3.0,1073741824,1.00G,noeviction,0,1000000,1200000,4000000,1.2,200000,0,4100000,0,0.100
+loading,13243596,12.00M,21569536,20.00M,1.6,jemalloc-5.3.0,1073741824,1.00G,noeviction,0,13243596,13343596,21569536,1.1,100000,25000,21669536,0,0.500
+loaded_settle,26487192,25.00M,43139072,41.00M,1.63,jemalloc-5.3.0,1073741824,1.00G,noeviction,0,26487192,26687192,43139072,1.63,16651880,50000,43239072,0,1.000
+churn,28487192,27.00M,46139072,44.00M,1.63,jemalloc-5.3.0,1073741824,1.00G,noeviction,0,28487192,28687192,46139072,1.63,16651880,50000,46239072,0,2.000
+churn_settle,26487192,25.00M,43139072,41.00M,1.63,jemalloc-5.3.0,1073741824,1.00G,noeviction,0,26487192,26687192,43139072,1.63,16651880,50000,43239072,0,3.000
