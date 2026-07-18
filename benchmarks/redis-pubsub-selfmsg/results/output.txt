@@ -1,0 +1,17 @@
+============================================================
+SCENARIO 1  no origin filter  (the trap)
+============================================================
+  node-A publishes {"origin": "node-A", "key": "user:42"} on 'cache:invalidations'
+  [node-B] PROCESS invalidation user:42  (published by node-A)
+  [node-A] PROCESS invalidation user:42  (published by node-A)  <-- its own message!
+  => node-A processed 1 event it published itself
+     node-B processed 1 event
+
+============================================================
+SCENARIO 2  origin-id filter on  (the fix)
+============================================================
+  node-A publishes {"origin": "node-A", "key": "user:42"} on 'cache:invalidations'
+  [node-B] PROCESS invalidation user:42  (published by node-A)
+  [node-A] received event from node-A  ->  SKIP (mine)
+  => node-A processed 0 of its own events
+     node-B processed 1 event
