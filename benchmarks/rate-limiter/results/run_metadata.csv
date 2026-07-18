@@ -1,0 +1,25 @@
+key,value
+run_at_utc,2026-07-18T09:45:23.440879+00:00
+platform,macOS-15.7.3-arm64-arm-64bit
+python,3.9.6
+docker,"Docker version 28.3.2, build 578ccf6"
+docker_compose,Docker Compose version v2.38.2-desktop.1
+redis_server,7.4.9
+redis_image,redis:7
+primary_port,56380
+replica_port,56381
+boundary_limit,100
+boundary_window_ms,2000
+race_limit,100
+race_window_ms,200
+race_windows,30
+race_threads,8
+race_gap_ms,0/5/10/25
+replica_lag_ms,0/10/25/50
+replica_cycles,3
+smoothness_window_ms,1000
+smoothness_duration_ms,30000
+smoothness_bucket_ms,100
+throughput_duration_s,3.0
+throughput_processes,16
+throughput_pipeline_size,256
