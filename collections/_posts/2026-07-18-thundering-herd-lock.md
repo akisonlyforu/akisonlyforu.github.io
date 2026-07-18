@@ -8,6 +8,23 @@ categories: redis caching thundering-herd operations
 
 We had a pricing endpoint that cached an expensive aggregate for 60 seconds. It was expensive enough, close to a third of a second to compute, that we absolutely did not want to run it on every request, so we cached it and moved on. Then every sixty seconds the cache entry expired, and because every app instance had cached it at roughly the same moment, they all missed at the same moment, and the whole fleet stampeded the database at once. Classic thundering herd.
 
+To make "expensive aggregate" concrete: it was the kind of pricing rollup that blends a few million rows into one number per category. Something along these lines, a couple of joins and an aggregate over the last hour of activity:
+
+```sql
+SELECT p.category_id,
+       AVG(c.competitor_price)                    AS market_price,
+       SUM(oi.qty)                                AS demand_last_hour,
+       percentile_cont(0.5) WITHIN GROUP (ORDER BY c.competitor_price) AS median
+FROM   products p
+JOIN   competitor_prices c ON c.product_id = p.id
+JOIN   order_items oi      ON oi.product_id = p.id
+                          AND oi.created_at > now() - interval '1 hour'
+WHERE  p.region = $1
+GROUP  BY p.category_id;
+```
+
+Nothing pathological, just enough joins, rows, and a percentile that the planner has to sort, to land around 300 ms. Fine to run occasionally, not fine to run on every request, which is exactly why it was cached.
+
 The fix looked obvious. Put a lock around the recompute so only one request does the work and everyone else waits for it. We shipped `SET NX` as a recompute lock, watched the database load spike flatten out, and felt good about it. The p99 did not get better. And a couple of weeks later, when a pod got killed mid-recompute during a deploy, the p99 didn't just stay bad, it went to three and a half seconds.
 
 ## The problem
