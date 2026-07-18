@@ -1,0 +1,21 @@
+PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu
+params: total_rows=1000000 page_size=1000 repeats=3 seed=1234 deep_offset=990000
+table: 1000000 rows, ids 1..1000000, size 274 MB, load 3.8s
+cache warmed with one full keyset pass before timing
+
+TOTAL EXPORT WALL-CLOCK (median of repeats)
+  OFFSET  : median=35.35s  runs(s)=[35.35, 35.43, 35.1]
+  keyset  : median=1.50s  runs(s)=[1.53, 1.48, 1.5]
+  cursor  : median=1.54s  runs(s)=[1.53, 1.54, 1.8]
+  OFFSET/keyset wall ratio = 23.6x
+
+PER-PAGE LATENCY (single recorded run)
+  OFFSET  : p99=74.229ms  max=101.552ms  deep(offset>=990000) max=88.713ms
+  keyset  : p99=2.972ms  max=8.740ms  deep(last_id>=990000) max=2.430ms
+  cursor  : p99=3.440ms  max=6.856ms (per FETCH 1000)
+  deep-page OFFSET/keyset max ratio = 37x
+
+EXPLAIN (ANALYZE, BUFFERS)  -- the mechanism
+  offset  pos=0       scan=Index Scan           scanned=1000     discarded=0        time=0.158ms buffers(hit+read)=76
+  offset  pos=990000  scan=Index Scan           scanned=991000   discarded=990000   time=121.322ms buffers(hit+read)=69310
+  keyset  pos=990000  scan=Index Scan           scanned=1000     discarded=0        time=0.098ms buffers(hit+read)=78

@@ -1,0 +1,4 @@
+query,position,scan_node,rows_scanned,rows_emitted,rows_discarded,rows_removed_by_filter,actual_total_time_ms,shared_hit_blocks,shared_read_blocks
+offset,0,Index Scan,1000,1000,0,0,0.158,0,76
+offset,990000,Index Scan,991000,1000,990000,0,121.322,76,69234
+keyset,990000,Index Scan,1000,1000,0,0,0.098,78,0
