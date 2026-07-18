@@ -418,11 +418,24 @@ def main() -> int:
         except SyncError as direct_error:
             print(f"warning: direct RSS fetch failed ({direct_error}); using public RSS proxy", file=sys.stderr)
             proxy_url = RSS_PROXY_URL.format(urllib.parse.quote(feed_request_url, safe=""))
-            data = fetch(
-                proxy_url, MAX_FEED_BYTES, "application/json",
-                allowed_host=lambda host: host == "api.rss2json.com",
-            )[0]
-            posts = parse_json_feed(data, publication_host)
+            try:
+                data = fetch(
+                    proxy_url, MAX_FEED_BYTES, "application/json",
+                    allowed_host=lambda host: host == "api.rss2json.com",
+                )[0]
+                posts = parse_json_feed(data, publication_host)
+            except SyncError as proxy_error:
+                # Both the direct feed and the public proxy are unreachable
+                # (Substack routinely 403s datacenter IPs; the proxy 500s under
+                # load). No feed means nothing to sync -- treat as a clean no-op
+                # rather than a red pipeline, and log both failures for triage.
+                print(
+                    f"warning: RSS proxy fetch also failed ({proxy_error}); "
+                    "feed unreachable via direct and proxy, skipping this run",
+                    file=sys.stderr,
+                )
+                print("Substack sync skipped: feed unreachable (0 changed file(s))")
+                return 0
     changes = sync(posts, args.posts_dir, args.assets_dir, not args.no_assets)
     print(f"Substack sync complete: {len(posts)} feed post(s), {changes} changed file(s)")
     return 0
