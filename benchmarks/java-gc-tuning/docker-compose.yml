@@ -1,0 +1,8 @@
+# The workload is compiled and run by benchmark.py via `docker run` against this
+# same digest-pinned image (there is no long-lived service, so nothing to `up`).
+# This file documents/pins the image the driver uses; `docker compose pull` fetches it.
+services:
+  jdk:
+    image: eclipse-temurin:21-jdk@sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+    # no ports, no network: this workload is purely in-process CPU + heap.
+    command: ["java", "-version"]
