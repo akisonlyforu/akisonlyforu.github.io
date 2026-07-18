@@ -1,0 +1,3 @@
+# build artifact — rebuilt by make/run.sh
+latency
+*.o

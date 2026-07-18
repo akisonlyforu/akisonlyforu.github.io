@@ -1,0 +1,10 @@
+operation,measured_ns,jeff_dean_2012_ns,note
+L1 cache reference,0.93,1,smallest working set (4KB) from Exp A
+Branch mispredict,4.77,3,sorted-vs-unsorted delta x2
+Mutex lock/unlock,4.18,17,uncontended pthread_mutex
+Main memory reference,92.89,100,DRAM plateau (256MB) from Exp A
+Compress 1KB (zlib),7709,3000,zlib level 6 from compress_bench.py
+SSD random 4KB read,54000,16000,F_NOCACHE-real-SSD
+Read 1MB sequentially from memory,49000,250000,malloc buffer sum
+Read 1MB sequentially from SSD,54000,1000000,F_NOCACHE-real-SSD
+Localhost socket round trip,13000,500000,TCP-loopback-underestimates-datacenter-RTT

@@ -1,0 +1,39 @@
+Latency Numbers Every Programmer Should Know — remeasured on this host
+Generated: Sat Jul 18 17:25:52 UTC 2026
+Host: Apple M4, 10 logical cores, 24GB
+Run NATIVELY (not Docker) to preserve cache/DRAM/SSD latency fidelity.
+
+== Exp A: memory latency ladder ==
+  L1 region (4KB):      0.926 ns/access
+  DRAM region (256MB):  92.887 ns/access
+  (full ladder in mem_latency.csv)
+
+== Exp B: sequential vs random (256MB, 64B lines) ==
+  sequential: 0.969 ns/line, 62977 MB/s
+  random:     3.492 ns/line, 17479 MB/s
+  prefetcher speedup (rnd/seq ns): 3.6x
+
+== Exp C rows measured in C ==
+  Mutex lock/unlock:            4.18 ns
+  Branch mispredict:            4.77 ns
+  Read 1MB from RAM:            49000 ns
+  SSD random 4KB read:          54000 ns (real SSD via F_NOCACHE)
+  SSD 1MB sequential read:      54000 ns (real SSD via F_NOCACHE)
+  Localhost socket round trip:  13000 ns (TCP loopback)
+
+== Canonical table (measured vs Jeff Dean 2012) ==
+operation                          measured_ns  jeff_dean_2012_ns  note
+L1 cache reference                 0.93         1                  smallest working set (4KB) from Exp A
+Branch mispredict                  4.77         3                  sorted-vs-unsorted delta x2
+Mutex lock/unlock                  4.18         17                 uncontended pthread_mutex
+Main memory reference              92.89        100                DRAM plateau (256MB) from Exp A
+Compress 1KB (zlib)                7709         3000               zlib level 6 from compress_bench.py
+SSD random 4KB read                54000        16000              F_NOCACHE-real-SSD
+Read 1MB sequentially from memory  49000        250000             malloc buffer sum
+Read 1MB sequentially from SSD     54000        1000000            F_NOCACHE-real-SSD
+Localhost socket round trip        13000        500000             TCP-loopback-underestimates-datacenter-RTT
+
+== Honesty note ==
+Reproduced cleanly: the L1/L2/DRAM ladder plateaus (L1 edge at 128KB, L2 edge at 16MB — matching the reported cache sizes), seq-vs-random prefetcher gap, mutex, RAM/SSD reads (F_NOCACHE succeeded so SSD rows are the real device), compress, and loopback RTT.
+Lumpy / needed care: the DRAM mid-ladder (8-128MB) jittered on an earlier run due to P/E-core scheduling (saved under attempts/), and the naive -O2 branch test measured 0 ns because clang predicated it, so branch mispredict uses an optnone real-branch rewrite.
+See README for the SSD/loopback caveats.
