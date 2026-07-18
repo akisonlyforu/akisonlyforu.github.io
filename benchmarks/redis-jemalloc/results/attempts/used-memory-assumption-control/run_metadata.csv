@@ -1,0 +1,28 @@
+key,value
+run_at_utc,2026-07-18T11:40:08Z
+platform,macOS-15.7.3-arm64-arm-64bit
+python,3.9.6
+docker,"Docker version 28.3.2, build 578ccf6"
+docker_compose,Docker Compose version v2.38.2-desktop.1
+redis_version,7.4.0
+source_tag,7.4.0
+mode,no-churn-control
+seed,42
+keys,200000
+rounds,0
+churn_fraction,0
+value_sizes,64;128;256;512;1024
+batch_size,1000
+sample_interval_seconds,0.25
+settle_seconds,5.0
+defrag_seconds,0
+workload_fingerprint_sha256,6b978d704886d0dbee9fcd04b9743106aa4efb5bd5439503fd4638e91ded3c28
+workload_operations_per_build,200000
+jemalloc_allocator,jemalloc-5.3.0
+libc_allocator,libc
+used_memory_difference_pct,12.823525953508616
+jemalloc_rss_bytes,126496768
+libc_rss_bytes,111820800
+jemalloc_fragmentation_ratio,1.08
+libc_fragmentation_ratio,1.1
+self_verification,"FAIL: used_memory differs by 12.82%, above 5.00%"

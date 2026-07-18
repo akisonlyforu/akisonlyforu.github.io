@@ -1,5 +1,5 @@
 key,value
-run_at_utc,2026-07-18T11:44:09Z
+run_at_utc,2026-07-18T11:41:21Z
 platform,macOS-15.7.3-arm64-arm-64bit
 python,3.9.6
 docker,"Docker version 28.3.2, build 578ccf6"
@@ -20,15 +20,13 @@ workload_fingerprint_sha256,21de1d1859e31220b6bb50207805bb282d41fce179c25bd5fb13
 workload_operations_per_build,800000
 jemalloc_allocator,jemalloc-5.3.0
 libc_allocator,libc
-used_memory_difference_pct,12.394576575478505
-used_memory_tolerance_pct,5.0
-used_memory_within_tolerance,False
-jemalloc_rss_bytes,127627264
+used_memory_difference_pct,12.398726389725537
+jemalloc_rss_bytes,127565824
 libc_rss_bytes,112513024
 jemalloc_fragmentation_ratio,1.09
 libc_fragmentation_ratio,1.1
 jemalloc_defrag_observed_running,False
-jemalloc_defrag_rss_before,127627264
-jemalloc_defrag_rss_after,127627264
+jemalloc_defrag_rss_before,127565824
+jemalloc_defrag_rss_after,127565824
 libc_defrag_result,rejected: CONFIG SET failed (possibly related to argument 'activedefrag') - Active defragmentation cannot be enabled: it requires a Redis server compiled with a modified Jemalloc like the one shipped by default with the Redis source distribution
-self_verification,PASS
+self_verification,"FAIL: used_memory differs by 12.40%, above 5.00%"

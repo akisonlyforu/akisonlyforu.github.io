@@ -2,7 +2,7 @@
 layout:     post
 title:      Redis Brings Its Own malloc, and Here's Why
 date:       2026-07-18
-description:    Redis doesn't use your system's malloc. It ships jemalloc in its own source tree and compiles it in by default. I went looking for why, built the same Redis two ways, and watched the fragmentation ratio pick a side.
+description:    Redis doesn't use your system's malloc. It ships jemalloc in its own source tree and compiles it in by default. I built the same Redis two ways and found that the allocator changed the memory numbers, just not in the direction I expected.
 categories: redis memory jemalloc allocator operations
 ---
 
@@ -42,7 +42,7 @@ There's no honest way to benchmark jemalloc in the abstract, and a bare-allocato
 
 The workload is the one that makes an allocator sweat: load a large set of small keys of a few different value sizes, then churn them, overwrite a chunk, delete a chunk, add more, the constant reshaping of the keyspace that a real Redis lives through, not a clean load-then-measure. After the churn settles I read three numbers off each build:
 
-- `used_memory`, what Redis asked the allocator for.
+- `used_memory`, what Redis accounts as allocated through that allocator. I went in treating this as pure logical data; the result below corrected me.
 - `used_memory_rss`, what the OS is actually keeping resident.
 - `mem_fragmentation_ratio`, which is just `rss / used`, and is the number that tells you how much the allocator is holding over what Redis is using.
 
@@ -106,25 +106,27 @@ Both builds are the same Redis version, same config, same digest-pinned containe
   <div class="cb-panels">
     <div>
       <p class="cb-panel-title">jemalloc build (default)</p>
-      <div class="cb-bar-row"><span>used_memory</span><span class="cb-track"><span class="cb-fill" style="--value:59%;--bar:var(--cb-blue)"></span></span><span class="cb-value">25.26M</span></div>
-      <div class="cb-bar-row"><span>RSS</span><span class="cb-track"><span class="cb-fill" style="--value:96%;--bar:var(--cb-orange)"></span></span><span class="cb-value">41.14M</span></div>
-      <div class="cb-bar-row"><span>frag ratio</span><span class="cb-track"><span class="cb-fill" style="--value:96%;--bar:var(--cb-green)"></span></span><span class="cb-value">1.63</span></div>
+      <div class="cb-bar-row"><span>used_memory</span><span class="cb-track"><span class="cb-fill" style="--value:92%;--bar:var(--cb-blue)"></span></span><span class="cb-value">111.54M</span></div>
+      <div class="cb-bar-row"><span>RSS</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">121.71M</span></div>
+      <div class="cb-bar-row"><span>frag ratio</span><span class="cb-track"><span class="cb-fill" style="--value:99%;--bar:var(--cb-green)"></span></span><span class="cb-value">1.09</span></div>
     </div>
     <div>
       <p class="cb-panel-title">libc build (MALLOC=libc)</p>
-      <div class="cb-bar-row"><span>used_memory</span><span class="cb-track"><span class="cb-fill" style="--value:59%;--bar:var(--cb-blue)"></span></span><span class="cb-value">25.20M</span></div>
-      <div class="cb-bar-row"><span>RSS</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">42.72M</span></div>
-      <div class="cb-bar-row"><span>frag ratio</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-green)"></span></span><span class="cb-value">1.70</span></div>
+      <div class="cb-bar-row"><span>used_memory</span><span class="cb-track"><span class="cb-fill" style="--value:80%;--bar:var(--cb-blue)"></span></span><span class="cb-value">97.72M</span></div>
+      <div class="cb-bar-row"><span>RSS</span><span class="cb-track"><span class="cb-fill" style="--value:88%;--bar:var(--cb-orange)"></span></span><span class="cb-value">107.30M</span></div>
+      <div class="cb-bar-row"><span>frag ratio</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-green)"></span></span><span class="cb-value">1.10</span></div>
     </div>
   </div>
-  <figcaption>Both builds ask for about the same used_memory, because that's just the data. The difference is RSS and the ratio, which is the allocator's fingerprint. Bar widths are normalized against the larger RSS across the two builds; the frag-ratio bars against the higher ratio. Measured values from benchmarks/redis-jemalloc/results/.</figcaption>
+  <figcaption>Two hundred thousand live keys after five churn rounds; both builds executed the same 800,000-operation plan and finished with zero evictions. Memory bars share the larger RSS as their denominator; ratio bars share the higher ratio. The unexpected used_memory split is part of the result, not a different workload.</figcaption>
 </figure>
 
 ## Where the difference landed
 
 Before running it I wrote down what I expected, because a benchmark you've already peeked at has a way of confirming whatever you walked in believing. My bet was that `used_memory` would come out about the same on both builds, since that number is just the data Redis is holding and the data doesn't care which allocator stored it, and that the whole split would show up in RSS and therefore in the ratio. glibc's `ptmalloc`, handed Redis's churn, tends to accumulate scattered free space it can't hand back, so I expected its RSS and its ratio to sit higher after the same workload, and jemalloc's size-class discipline to keep its ratio closer to the ground.
 
-That's roughly how it landed, and I'll be honest that it was closer than the folklore made me expect. On a churny run of 50,000 keys across five size classes, the libc build settled at 42.72M resident with a fragmentation ratio of 1.70; the jemalloc build held 41.14M at 1.63. Both asked the allocator for basically the same `used_memory`, so that whole gap is the allocator's doing, but on this workload it's a few percent, not the night-and-day margin you might picture. Which is worth saying plainly: if raw fragmentation on a steady churn were the only axis, you could almost shrug at the difference. The reason jemalloc actually isn't a coin-flip is the next section.
+The expected RSS win did not reproduce. After five churn rounds, jemalloc finished at 121.71M RSS and libc at 107.30M, so jemalloc held 14.41M more, about 13.4% relative to libc. The fragmentation ratios were effectively tied at 1.09 and 1.10. More awkwardly for my opening assumption, `used_memory` was not the same: 111.54M on jemalloc and 97.72M on libc, a 12.39% split even though both builds executed the same SHA-256-identified plan and finished with the same 200,000 keys.
+
+The no-churn control landed in almost the same place: 120.62M RSS on jemalloc and 107.30M on libc. So this shape did not expose a churn-driven external-fragmentation advantage for jemalloc. The `used_memory` result is consistent with Redis accounting allocator usable sizes rather than only the logical payload, which means my neat "that number is just the data" explanation was too neat. The allocator mattered here, but not by making jemalloc look better.
 
 ## The part where jemalloc isn't optional
 
@@ -132,7 +134,9 @@ Even before the numbers, there's one thing the libc build straight up cannot do,
 
 `activedefrag yes` works by walking Redis's allocations, spotting the ones sitting on sparsely-populated pages, and copying them into denser pages so the empty ones can go back to the kernel. Redis can only do that because jemalloc exposes enough about where an allocation physically lives for Redis to ask "is this thing worth relocating," through a hook jemalloc provides for exactly this purpose. glibc's `malloc` gives you no such window. It hands you a pointer and keeps its bookkeeping to itself.
 
-So the libc build fragments a bit more, and worse, it has no way to clean up after itself when it does. On the jemalloc build, a fragmentation ratio that climbs after a mass delete is something you can turn `activedefrag` loose on. On the libc build, your only defrag is restarting the process. That gap alone is enough to explain why Redis ships jemalloc as the default and leaves libc as the escape hatch.
+The ratio in this run does not support saying libc fragmented more; 1.09 and 1.10 are a tie for practical purposes. The capability gap is real, though. On the jemalloc build, a fragmentation ratio that climbs after a mass delete is something you can turn `activedefrag` loose on. The libc build rejected `CONFIG SET activedefrag yes` because the feature requires Redis's modified jemalloc.
+
+The jemalloc probe also supplied a useful limit. Its allocator fragmentation ratio was already 1.01, active defragmentation was never observed running, and RSS stayed at 121.71M through the ten-second probe. So this experiment verified which allocator supports the feature; it did not demonstrate memory reclamation, and I'm not going to promote an accepted config command into a result it didn't produce.
 
 ## A note for the Rust and module crowd
 
