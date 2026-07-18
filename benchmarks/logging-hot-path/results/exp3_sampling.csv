@@ -1,0 +1,3 @@
+mode,events,lines_written,bytes_written,ops_per_sec
+full,1000000,1000000,75667678,217325
+sampled,1000000,10000,756666,10561711

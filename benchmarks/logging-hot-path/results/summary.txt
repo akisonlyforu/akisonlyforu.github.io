@@ -1,0 +1,33 @@
+logging hot-path benchmark | python 3.12.13 | image python@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+==================================================================
+EXPERIMENT 1  cost of a DISABLED debug line (logger at INFO)
+==================================================================
+  1,000,000 iterations/variant, median of 5 timed repeats
+  variant        ns/call          ops/sec
+  eager          5260.39          190,099
+  guarded          58.55       17,078,033
+  lazy           1419.64          704,404
+  eager is 3.7x slower than lazy (%-formatting)
+  eager is 89.8x slower than isEnabledFor-guarded
+
+==================================================================
+EXPERIMENT 2  per-call latency on the caller: sync vs async handler
+==================================================================
+  50,000 INFO calls/mode to a durable (flush+fsync) file sink
+  latency timed per call on the calling thread
+  mode       p50_us    p99_us    p999_us      max_us    wall_s
+  sync      276.375   645.084   5752.167   31203.041   14.9447
+  async       4.167    10.417     24.625    5976.000    0.2347
+  latency samples downsampled to ~2000/mode (every 25th call)
+
+==================================================================
+EXPERIMENT 3  log every event vs sample 1-in-100
+==================================================================
+  1,000,000 events/mode
+  mode           lines          bytes          ops/sec
+  full       1,000,000     75,667,678          217,325
+  sampled       10,000        756,666       10,561,711
+  sampling wrote 100x fewer lines, 100x fewer bytes
+  and ran 48.60x the throughput of full logging
+
+  artifacts in results/  (seed=1234)
