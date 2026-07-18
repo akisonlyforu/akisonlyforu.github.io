@@ -1,0 +1,50 @@
+services:
+  primary:
+    image: postgres:16@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
+    environment:
+      POSTGRES_USER: bench
+      POSTGRES_PASSWORD: bench
+      POSTGRES_DB: ryw_bench
+      # loopback-only container network; trust keeps the replica wiring simple
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command:
+      - postgres
+      - -c
+      - wal_level=replica
+      - -c
+      - max_wal_senders=10
+      - -c
+      - max_replication_slots=10
+      - -c
+      - hot_standby=on
+      - -c
+      - max_connections=200
+    volumes:
+      - ./primary-init.sh:/docker-entrypoint-initdb.d/00-replication.sh:ro
+    ports:
+      - "127.0.0.1:55442:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bench -d ryw_bench"]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+
+  replica:
+    image: postgres:16@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
+    environment:
+      # deterministic lag: the standby holds every commit for this long before
+      # applying it, so a read immediately after a write is reliably stale.
+      RECOVERY_MIN_APPLY_DELAY: 250ms
+    entrypoint: ["/bin/bash", "/replica-entrypoint.sh"]
+    volumes:
+      - ./replica-entrypoint.sh:/replica-entrypoint.sh:ro
+    depends_on:
+      primary:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:55444:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bench -d ryw_bench"]
+      interval: 1s
+      timeout: 3s
+      retries: 60

@@ -1,0 +1,26 @@
+seed=1234  primary=127.0.0.1:55442  replica=127.0.0.1:55444
+  postgres: 16.14  replica recovery_min_apply_delay: 250ms
+  replica pg_is_in_recovery() : True
+  primary pg_stat_replication : 1 walsender(s), state = streaming
+==================================================================
+EXPERIMENT A  the stale window (replica apply delay = 250ms)
+==================================================================
+  D=    0ms  trials=300  stale=300  stale%=100.0  median_lag_ms=310.0
+  D=   50ms  trials=300  stale=300  stale%=100.0  median_lag_ms=272.4
+  D=  100ms  trials=300  stale=300  stale%=100.0  median_lag_ms=313.8
+  D=  200ms  trials=300  stale=300  stale%=100.0  median_lag_ms=413.2
+  D=  250ms  trials=300  stale= 14  stale%=  4.7  median_lag_ms=257.7
+  D=  300ms  trials=300  stale=  0  stale%=  0.0  median_lag_ms=308.0
+  D=  500ms  trials=300  stale=  0  stale%=  0.0  median_lag_ms=507.9
+  D= 1000ms  trials=300  stale=  0  stale%=  0.0  median_lag_ms=1008.2
+  -> wrote results/experiment_a_stale_window.csv
+
+==================================================================
+EXPERIMENT B  the gate: naive vs LSN-gated routing (same op stream)
+==================================================================
+  5340 ops  (1552 writes, 3788 reads)  users=300, hot=10
+  naive: reads=3788  stale=1425 (37.6%)  replica=3788 (100.0%)  primary_fallback=0 (0.0%)
+  gated: reads=3788  stale=0 (0.0%)  replica=2363 (62.4%)  primary_fallback=1425 (37.6%)
+  -> wrote results/experiment_b_gate.csv
+
+  done. artifacts in results/

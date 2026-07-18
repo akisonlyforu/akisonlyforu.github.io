@@ -1,0 +1,17 @@
+PostgreSQL read-your-writes / LSN-gated routing benchmark
+postgres 16.14, replica recovery_min_apply_delay=250ms, seed=1234
+
+EXPERIMENT A  the stale window
+  read_after_write_ms  trials  stale  stale%  median_lag_ms
+                   0     300    300  100.0  310.0
+                  50     300    300  100.0  272.4
+                 100     300    300  100.0  313.8
+                 200     300    300  100.0  413.2
+                 250     300     14    4.7  257.7
+                 300     300      0    0.0  308.0
+                 500     300      0    0.0  507.9
+                1000     300      0    0.0  1008.2
+
+EXPERIMENT B  the gate
+  naive: total_reads=3788 stale=1425 (37.6%) replica_served=3788 (100.0%) primary_fallback=0 (0.0%)
+  gated: total_reads=3788 stale=0 (0.0%) replica_served=2363 (62.4%) primary_fallback=1425 (37.6%)
