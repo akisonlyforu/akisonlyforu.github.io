@@ -1,0 +1,2 @@
+rabbitmq_version,perftest_image_digest,rabbitmq_image_digest,producers_x,consumers_y,msg_size_bytes_s,duration_s_z,queue_type,rate,repeats,sweep_peak_window,sweep_peak_send_msgs_s
+4.0.9,sha256:b803911d60fdf6885fc6313f0d56a0c2c743bfdd27ac118f5e4b320c36c7b8c9,sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3,30,4,1000,12,quorum+persistent,unlimited(no -r),2,16,36598

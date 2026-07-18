@@ -1,0 +1,4 @@
+# benchmark.py drives the RabbitMQ PerfTest docker image via subprocess and
+# parses its stdout. It uses only the Python 3.9+ standard library, so there is
+# nothing to pip install. This file is intentionally empty (kept for the same
+# shape as the other benchmarks in this repo).
