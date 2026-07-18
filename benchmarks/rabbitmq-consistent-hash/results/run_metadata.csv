@@ -1,0 +1,2 @@
+rabbitmq_version,image_digest,amqp_port,mgmt_port,a_messages,a_distinct_keys,a_queues,a_ideal_per_queue,a_max_deviation_pct,b_keys,b_copies_per_key,b_consistent_hash_remapped,b_consistent_hash_remapped_pct,b_modulo_remapped,b_modulo_remapped_pct,c_affinity_holds,c_keys_checked
+4.0.9,sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3,6672,16672,100000,43126,8,12500.0,3.70,10000,3,1090,10.90,8873,88.73,yes,10000
