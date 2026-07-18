@@ -1,0 +1,2 @@
+redis_version,primary_port,replica_port,a_replica_dbsize,a_replica_reads_alive,c_peak_gap
+7.4.9,6391,6392,1000,0,0
