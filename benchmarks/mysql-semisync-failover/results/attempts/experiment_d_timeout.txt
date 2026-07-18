@@ -1,0 +1,6 @@
+EXPERIMENT D  semi-sync timeout fallback (kept under attempts/)
+With semi-sync on and the replica IO thread stopped, a single commit
+stalls ~rpl_semi_sync_source_timeout ms, then the primary falls back
+to async and Rpl_semi_sync_source_status flips OFF.
+
+stall_ms=10007.892083000002 status_after=OFF timeout_ms=10000 ok=True

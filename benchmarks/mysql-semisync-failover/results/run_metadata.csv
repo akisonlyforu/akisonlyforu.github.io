@@ -1,0 +1,2 @@
+mysql_version,image_digest,N,M,wait_point,semisync_timeout_ms,a_acked,a_present,a_lost,b_acked,b_present,b_lost,c_async_p50_ms,c_async_p99_ms,c_semisync_p50_ms,c_semisync_p99_ms,d_stall_ms,d_status_after
+8.0.46,sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b,1000,2000,AFTER_SYNC,10000,1000,0,1000,1000,1000,0,1.06,1.961,1.094,1.787,10007.892083000002,OFF
