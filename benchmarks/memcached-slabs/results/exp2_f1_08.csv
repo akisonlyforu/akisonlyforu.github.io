@@ -1,0 +1,6 @@
+slab_class,chunk_size,used_chunks,mem_requested,allocated,waste_bytes,waste_pct
+28,968,400000,378000000,387200000,9200000,2.38
+TOTAL,,,378000000,387200000,9200000,2.38
+
+global_bytes,378000000
+global_total_malloced,387973120

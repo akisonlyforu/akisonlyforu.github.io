@@ -1,0 +1,3 @@
+factor,num_slab_classes,landed_class,chunk_size,mem_requested,allocated,waste_pct
+1.25,39,12,1184,378000000,473600000,20.19
+1.08,63,28,968,378000000,387200000,2.38

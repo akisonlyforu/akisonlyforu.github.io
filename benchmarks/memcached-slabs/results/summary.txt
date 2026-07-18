@@ -1,0 +1,50 @@
+==================================================================
+memcached 1.6.45 | item overhead (header+key, key len 16): 75 bytes
+==================================================================
+
+slab-class ladder (class_id: chunk_size), factor 1.25:
+  11:944  12:1184  13:1480  14:1856  15:2320  16:2904  17:3632  18:4544
+
+chosen boundary: chunk 944 -> 1184 (step 240 bytes)
+  worst-case value = 870 B (ntotal just over 944, rounds to 1184)
+  snug     value = 1109 B (ntotal fills 1184)
+
+==================================================================
+EXPERIMENT 1  slab rounding waste  (400000 items each, -m 2048 -f 1.25)
+==================================================================
+  WORST (just over boundary)
+    value 870B -> class 12 (chunk 1184), stored 400000
+    mem_requested 378,000,000  allocated 473,600,000
+    WASTE 95,600,000 bytes = 20.2% of allocated RAM
+  BEST  (snug fit)
+    value 1109B -> class 12 (chunk 1184), stored 400000
+    mem_requested 473,600,000  allocated 473,600,000
+    WASTE 0 bytes = 0.0% of allocated RAM
+  => same 400000 items, same chunk 1184: 20.2% of allocated RAM wasted to rounding (worst) vs 0.0% (snug) — 96 MB thrown away holding identical data volume
+
+==================================================================
+EXPERIMENT 2  growth-factor knob  (worst-case 870B, 400000 items)
+==================================================================
+  -f 1.25: value lands in class 12 (chunk 1184), 39 slab classes total
+    mem_requested 378,000,000  allocated 473,600,000  WASTE 20.2%
+  -f 1.08: value lands in class 28 (chunk 968), 63 slab classes total
+    mem_requested 378,000,000  allocated 387,200,000  WASTE 2.4%
+  => tighter -f 1.08 cuts waste 20.2% -> 2.4%, cost = 63 slab classes vs 39
+
+==================================================================
+EXPERIMENT 3  slab calcification  (-m 64, small then large items)
+==================================================================
+  automove=0
+    phase A (small): wrote 365000, evictions 20957, small class 4 pages 63, large class 21 pages 1
+    phase B (large working set 5000, rewritten 15x, 1s apart):
+      large class pages 1, resident chunks 118, LARGE-CLASS evictions 74,882, OOM 0
+      global evictions since A 74,882, small free_chunks 0, curr_items 344,161
+  automove=2
+    phase A (small): wrote 365000, evictions 20957, small class 4 pages 63, large class 21 pages 1
+    phase B (large working set 5000, rewritten 15x, 1s apart):
+      large class pages 44, resident chunks 5000, LARGE-CLASS evictions 1,976, OOM 0
+      global evictions since A 236,799, small free_chunks 0, curr_items 114,220
+  => the large working set is the SAME size in both runs; only the allocator differs.
+     automove=0: large class frozen at 1 page, thrashes -> 74,882 large-class evictions
+     automove=2: rebalanced to 44 pages, working set resident -> 1,976 large-class evictions
+     => calcification (RAM locked to the dead small class) vs pages reassigned to where the load moved.
