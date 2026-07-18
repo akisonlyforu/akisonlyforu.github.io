@@ -18,7 +18,7 @@ If you've ever wondered why `deps/jemalloc` is sitting in the Redis source tree,
 
 ## The problem
 
-Redis doesn't use your system's `malloc`. It vendors its own copy of jemalloc and statically compiles it in, and that one decision quietly sets the shape of every memory number you read, including why your fragmentation ratio can look nothing like a coworker's on a different box running the same Redis. I wanted to know why Redis bothers, so I built the same Redis two ways and measured what actually changes.
+Redis doesn't use your system's `malloc`. It vendors its own copy of jemalloc and statically compiles it in, and that one decision drives every memory number you read, including why your fragmentation ratio can look nothing like a coworker's on a different box running the same Redis. I wanted to know why Redis bothers, so I built the same Redis two ways and measured what actually changes.
 
 ## What jemalloc even is
 
@@ -36,7 +36,7 @@ The short version is fragmentation, and jemalloc is structured specifically to k
 
 **Size classes.** This is the one that shows up in your numbers. jemalloc doesn't hand you exactly the number of bytes you asked for. It rounds every request up to the nearest of a fixed set of size classes, 8, 16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, and up from there. Ask for a 200-byte value and jemalloc gives you a 224-byte slot. Those 24 bytes are internal fragmentation, and you pay them on every allocation of that size.
 
-That sounds wasteful until you see what it buys. Because every allocation of a given size class is the same width, a freed slot is always a perfect fit for the next allocation of that size. There's no slow accumulation of oddly-sized holes that nothing quite fits into, which is the external fragmentation that eats a general allocator alive under Redis's churn. jemalloc trades a small, bounded, predictable amount of internal waste for not drowning in unpredictable external waste. That's the deal, and for Redis it's a good one.
+That sounds wasteful until you see what it buys. Because every allocation of a given size class is the same width, a freed slot is always a perfect fit for the next allocation of that size. There's no slow accumulation of oddly-sized holes that nothing quite fits into, which is the external fragmentation that eats a general allocator alive under Redis's churn. jemalloc trades a bit of predictable internal waste for not accumulating the unpredictable external kind, and under Redis's churn that's worth it.
 
 **Extents and dirty pages.** jemalloc grabs memory from the kernel in big chunks called extents and carves size-class slots out of them. When you free everything on a page, jemalloc doesn't immediately hand that page back to the kernel. It keeps freed-but-dirty pages around so it can reuse them fast, and only decays them back to the OS over time, governed by `dirty_decay_ms` and `muzzy_decay_ms`. This is the mechanism behind RSS lingering after a big delete, and it's a deliberate speed choice, not a bug. It also means the allocator you compiled in is directly responsible for the gap between `used_memory` and `used_memory_rss` that pages people at 3am. I wrote a whole [separate post about that gap turning into an OOM kill](/blog/redis-said-it-was-fine/), and jemalloc's decay behavior is the root of it.
 
@@ -132,7 +132,7 @@ The expected RSS win did not reproduce. After five churn rounds, jemalloc finish
 
 The no-churn control landed in almost the same place: 120.62M RSS on jemalloc and 107.30M on libc. So this shape did not expose a churn-driven external-fragmentation advantage for jemalloc. The `used_memory` result is consistent with Redis accounting allocator usable sizes rather than only the logical payload, which means my neat "that number is just the data" explanation was too neat. The allocator mattered here, but not by making jemalloc look better.
 
-## The part where jemalloc isn't optional
+## What the libc build can't do
 
 Even before the numbers, there's one thing the libc build straight up cannot do, and it's the reason the choice isn't really a toss-up. Redis active defragmentation only works with jemalloc.
 
@@ -144,7 +144,7 @@ The jemalloc probe also supplied a useful limit. Its allocator fragmentation rat
 
 ## A note for the Rust and module crowd
 
-If you write a Redis module, this comes back around in a way worth knowing. A module that allocates with the system `malloc` puts memory outside Redis's accounting, so `used_memory` undercounts what your module is really holding and `maxmemory` can't see it. Redis exposes its own allocation functions, `RedisModule_Alloc` and friends, that route through the same jemalloc Redis itself uses, so anything you allocate that way lands in the same pool and shows up in the same numbers. In Rust the redismodule bindings wire the global allocator to those functions for the same reason, so a `Vec` you grow inside a module is memory Redis knows about. It's the same lesson as the rest of this post from a different angle, which allocator your bytes come from is not an implementation detail Redis lets you ignore.
+If you write a Redis module, this comes back around in a way worth knowing. A module that allocates with the system `malloc` puts memory outside Redis's accounting, so `used_memory` undercounts what your module is really holding and `maxmemory` can't see it. Redis exposes its own allocation functions, `RedisModule_Alloc` and friends, that route through the same jemalloc Redis itself uses, so anything you allocate that way lands in the same pool and shows up in the same numbers. In Rust the redismodule bindings wire the global allocator to those functions for the same reason, so a `Vec` you grow inside a module is memory Redis knows about. It's the same lesson as the rest of this post from a different angle, which allocator your bytes come from actually matters, and Redis doesn't let you ignore it.
 
 ## Stuff worth remembering
 

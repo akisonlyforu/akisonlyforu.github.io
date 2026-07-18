@@ -8,7 +8,7 @@ categories: redis pub-sub distributed-systems operations
 
 If you've run a Redis pub/sub setup where the same node both publishes to a channel and subscribes to it, you may have watched that node react to its own messages. The first time it got me it looked like a cache-invalidation bug: a node would publish "drop `user:42`" so the rest of the fleet cleared their copies, and then immediately process that same invalidation itself and reload the key it had just written. Wasted work at best, and on a busier channel it turned into nodes chattering at themselves.
 
-It isn't a bug. It's just how the fanout works, and once you see it you'll never be surprised by it again.
+It isn't a bug, it's just how the fanout works.
 
 ## The problem
 
@@ -18,7 +18,7 @@ A node that both publishes to a Redis channel and subscribes to it receives its 
 
 Redis pub/sub is a dumb, fast fanout, and I mean that as a compliment. You `PUBLISH` to a channel, and every client currently subscribed to that channel gets the message. Every one of them. Redis doesn't track who published, and there's no "send to everyone except the sender" option like some message brokers hand you.
 
-A node that both publishes and subscribes is really running two connections, because a connection sitting in subscribe mode can't issue `PUBLISH` (it can only manage its subscriptions). So the node has one connection it publishes on and another it listens on. And that listening connection is a subscriber like any other on the channel, which means it receives the message the node just sent on its other connection. The node hears itself.
+A node that both publishes and subscribes is really running two connections, because a connection sitting in subscribe mode can't issue `PUBLISH` (it can only manage its subscriptions). So the node has one connection it publishes on and another it listens on. And that listening connection is a subscriber like any other on the channel, which means it receives the message the node just sent on its other connection. So the node ends up getting back a message it published.
 
 ## The fix
 

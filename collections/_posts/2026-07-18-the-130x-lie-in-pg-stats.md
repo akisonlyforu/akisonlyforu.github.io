@@ -283,4 +283,4 @@ Execution Time: 0.050 ms
 
 ## The takeaway
 
-The bit I keep coming back to is `Rows Removed by Filter`. When that number is enormous under a `LIMIT`, the index may be fine, the query may be fine, and the planner may simply believe it will get lucky much earlier than the data allows. Check the estimated rows, check `pg_stats`, then fix the estimate it is actually using.
+The bit I keep coming back to is `Rows Removed by Filter`. When that number is enormous under a `LIMIT`, the index may be fine, the query may be fine, and the planner may simply believe it will get lucky much earlier than the data allows. Check the estimated row count against `pg_stats`, then fix the estimate the planner is actually using.

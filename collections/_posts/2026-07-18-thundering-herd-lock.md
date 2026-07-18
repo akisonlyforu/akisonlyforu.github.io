@@ -194,4 +194,4 @@ All 300 at once became at most 47. Probabilistic refresh handles the single hot 
 
 ## The takeaway
 
-Reaching for a lock when a herd is trampling your database is the right instinct about the problem and the wrong tool for it. The recompute you actually want isn't the one you carefully allowed only one process to run. It's the one that already finished, a moment before anybody asked.
+Reaching for a lock when a herd is trampling your database is a reasonable instinct, it's just aimed at the wrong thing. It cuts the database load, which is real, but it leaves the latency alone, and the latency is what users actually felt. The recompute you want isn't the one you carefully let a single process run while everyone else waits, it's one that already finished in the background before the request even showed up.

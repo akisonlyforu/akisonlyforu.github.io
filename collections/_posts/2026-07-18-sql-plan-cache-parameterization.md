@@ -6,7 +6,7 @@ description:    Run the same query five hundred times with a different literal e
 categories: sql-server plan-cache parameterization databases
 ---
 
-If you've ever opened a SQL Server plan cache expecting a tidy handful of plans and found thousands instead, each with a use count of exactly one, this is for you. I wanted to make that happen on purpose, see how bad it gets, and then see what parameterizing the queries actually buys you, because it buys you a lot and then quietly charges you for something else.
+If you've ever opened a SQL Server plan cache expecting a tidy handful of plans and found thousands instead, each with a use count of exactly one, this is for you. I wanted to make that happen on purpose, see how bad it gets, and then see what parameterizing the queries actually buys you, because it fixes the bloat and then hands you a different problem.
 
 ## The problem
 
@@ -174,7 +174,7 @@ The first time it ran, I ran it for `refunded`. The optimizer saw a value matchi
   <figcaption>The plan compiled for the rare value ran the common value 7.5x slower than a plan that got to see the real value. Same query, same data, the only difference is which value was in the room when the plan was built.</figcaption>
 </figure>
 
-Seven and a half times slower, and the only thing that changed was which value the plan happened to be built for. This is the flip side of the reuse you wanted. Sharing one plan across every value is a huge win when the plan fits everyone, and a trap when the right plan actually depends on the value.
+Seven and a half times slower, and the only thing that changed was which value the plan happened to be built for. This is the flip side of the reuse you wanted. One shared plan is great as long as it fits every value, but on a skewed column the right plan depends on the value, and then the shared one bites you.
 
 ## Stuff worth remembering
 
@@ -186,4 +186,4 @@ Seven and a half times slower, and the only thing that changed was which value t
 
 ## The takeaway
 
-Parameterize the hot queries and you trade a cache full of single-use plans for one shared plan that compiles once, which is almost always the right trade. The catch is that the shared plan is built for the first value it sees, so on skewed columns keep `OPTION (RECOMPILE)` in reach for the queries where the good plan genuinely depends on the value. Parameterize everything you can, and recompile the handful where one plan can't fit every value.
+Parameterize the hot queries and you trade a cache full of single-use plans for one shared plan that compiles once, which is almost always the right trade. The catch is that the shared plan is built for the first value it sees, so on skewed columns keep `OPTION (RECOMPILE)` in reach for the queries where the good plan genuinely depends on the value. So parameterize where you can, and reach for `OPTION (RECOMPILE)` on the few queries where one plan can't fit every value.
