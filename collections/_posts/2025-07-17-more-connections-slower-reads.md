@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      More Connections, Slower Reads
-date:       2026-07-19
+date:       2025-07-17
 description:    A read-heavy database falls behind, so you add app instances and raise max_connections to let more callers in. Throughput barely moves and the p99 goes to 1.7 seconds. The same 512 callers over a pool of 8 backend connections answered at 42ms. Here's the reproduction.
 categories: mysql connection-pooling databases performance
 ---
