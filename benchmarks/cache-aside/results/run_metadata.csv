@@ -1,0 +1,20 @@
+key,value
+run_at_utc,2026-07-18T08:37:12.878769+00:00
+platform,macOS-15.7.3-arm64-arm-64bit
+python,3.9.6
+docker,"Docker version 28.3.2, build 578ccf6"
+docker_compose,Docker Compose version v2.38.2-desktop.1
+postgres_image,postgres:16
+redis_image,redis:7
+seed_rows,100000
+race_sampler_interval_ms,5.0
+race_duration_s,3.0
+race_writer_interval_ms,250.0
+race_expiry_to_write_gap_ms,2.0
+stampede_reader_count,500
+stampede_loader_delay_ms,10.0
+jitter_key_count,5000
+jitter_base_ttl_ms,2000
+jitter_percent,10
+baseline_request_count,20000
+baseline_zipf_alpha,1.2

@@ -1,0 +1,3 @@
+strategy,requests,concurrency,cache_hits,hit_rate_pct,db_hits,db_qps,request_qps,p50_ms,p99_ms,wall_time_ms
+uncached,20000,32,0,0.0,20000,29376.675,29376.675,0.83,2.832,680.812
+cached,20000,32,16456,82.28,3544,2255.912,12730.881,1.699,10.188,1570.983
