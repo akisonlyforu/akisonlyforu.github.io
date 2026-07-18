@@ -1,0 +1,2 @@
+python_version,zstandard_version,platform,seed,n_events,batch_sizes,mean_raw_event_bytes
+3.9.6,0.23.0,macOS-15.7.3-arm64-arm-64bit,42,40000,1 5 10 25 50 100 250 500 1000,292.69

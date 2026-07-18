@@ -1,0 +1,29 @@
+Analytics event batching + compression -- benchmark summary
+============================================================
+seed=42  n_events=40000  mean raw event size=292.7 bytes
+
+A. Per-event amortization (zstd-3):
+   batch=1     comp/event = 227.21 B
+   batch=1000  comp/event = 62.24 B
+   raw bytes/event ~ 292.62 B (single-event batch)
+
+B. Compression ratio vs batch size (zstd-3):
+   batch=   1  ratio=1.289x  +/-0.023  (n=2000)
+   batch=  10  ratio=3.15x  +/-0.05  (n=2000)
+   batch= 100  ratio=4.618x  +/-0.024  (n=400)
+   batch=1000  ratio=4.719x  +/-0.009  (n=50)
+
+C. Codec + level shootout at batch 500:
+   codec       ratio    comp_ms   decomp_ms      MB/s
+   none         1.0x     0.0001      0.0001 2109687.6
+   gzip-6     4.709x     1.3714      0.1763     107.1
+   zstd-3     4.431x     0.2885       0.072     509.0
+   zstd-9     5.046x     1.2026      0.0641     122.1
+   zstd-19    5.807x    31.0513      0.0589       4.7
+
+D. At-least-once duplicates & dedup:
+   p=0.005  dup_rate=0.46%  duplicates=185  unique_after_dedup=40000 (N=40000)
+   p=0.01   dup_rate=1.05%  duplicates=423  unique_after_dedup=40000 (N=40000)
+   p=0.02   dup_rate=1.99%  duplicates=813  unique_after_dedup=40000 (N=40000)
+   p=0.05   dup_rate=5.08%  duplicates=2143  unique_after_dedup=40000 (N=40000)
+
