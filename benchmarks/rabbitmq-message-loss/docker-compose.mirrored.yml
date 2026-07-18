@@ -1,0 +1,46 @@
+# Experiment A: RabbitMQ 3.13, a 3-node cluster for classic MIRRORED (HA) queues.
+#
+# Digest-pinned, multi-arch (runs native on arm64 / Apple Silicon). All host ports
+# are bound to 127.0.0.1 on non-default numbers (57xx / 157xx) so this never
+# clashes with a local broker or the other benchmark harnesses.
+#
+# The three nodes share RABBITMQ_ERLANG_COOKIE and use classic_config peer
+# discovery (see rabbitmq.conf) so they deterministically form ONE cluster.
+# container_name is pinned so benchmark.py can `docker kill rmq0` by name.
+x-node: &node
+  image: rabbitmq:3.13-management@sha256:e582c0bc7766f3342496d8485efb5a1df782b5ce3886ad017e2eaae442311f69
+  environment:
+    RABBITMQ_ERLANG_COOKIE: benchpost-mirrored-cookie
+    RABBITMQ_DEFAULT_USER: guest
+    RABBITMQ_DEFAULT_PASS: guest
+  volumes:
+    - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+  healthcheck:
+    test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+    interval: 3s
+    timeout: 10s
+    retries: 40
+    start_period: 20s
+
+services:
+  rmq0:
+    <<: *node
+    hostname: rmq0
+    container_name: rmq0
+    ports:
+      - "127.0.0.1:5772:5672"     # AMQP
+      - "127.0.0.1:15772:15672"   # management HTTP API
+  rmq1:
+    <<: *node
+    hostname: rmq1
+    container_name: rmq1
+    ports:
+      - "127.0.0.1:5773:5672"
+      - "127.0.0.1:15773:15672"
+  rmq2:
+    <<: *node
+    hostname: rmq2
+    container_name: rmq2
+    ports:
+      - "127.0.0.1:5774:5672"
+      - "127.0.0.1:15774:15672"

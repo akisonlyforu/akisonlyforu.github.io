@@ -1,0 +1,39 @@
+======================================================================
+EXPERIMENT A  classic MIRRORED queue, confirmed-message loss (RabbitMQ 3.13)
+======================================================================
+  cluster whole, RabbitMQ 3.13.7, connected via rmq0
+  policy ha-all set: ha-mode=all, ha-sync-mode=manual, ha-promote-on-failure=always, ha-promote-on-shutdown=always
+  declared durable classic queue 'ha.q' on rmq0 (master=rabbit@rmq0)
+  docker kill rmq1 rmq2  (mirrors go down)
+  publishing 5000 persistent messages with publisher confirms...
+  broker positively confirmed: 5000 / 5000   (master depth now 5000)
+  docker start rmq1 rmq2  (mirrors rejoin, but UNSYNCHRONISED under manual sync)
+  rabbitmqctl list_queues name messages slave_pids synchronised_slave_pids:
+      ha.q	5000	[<rabbit@rmq2.1784393907.623.0>, <rabbit@rmq1.1784393907.613.0>]	[]
+  docker kill rmq0  (crash the master; an UNSYNCHRONISED mirror is promoted)
+  promoted new master: rabbit@rmq2
+
+  >>> confirmed = 5000   recovered = 0   LOST = 5000  (100.0% of confirmed messages)
+
+
+======================================================================
+EXPERIMENT B  QUORUM queue survives leader loss (RabbitMQ 4.0)
+======================================================================
+  cluster whole, RabbitMQ 4.0.9, connected via rmq0
+  declared quorum queue 'qq' (x-queue-type=quorum)
+  quorum members: 3 -> ['rabbit@rmq0', 'rabbit@rmq1', 'rabbit@rmq2']
+  publishing 5000 persistent messages with publisher confirms...
+  broker positively confirmed: 5000 / 5000   (queue depth 5000)
+  current leader: rabbit@rmq0  ->  docker kill rmq0
+  new leader elected: rabbit@rmq1
+
+  >>> confirmed = 5000   recovered = 5000   LOST = 0  (0.0% of confirmed messages)
+
+======================================================================
+EXPERIMENT C  QUORUM queue availability vs surviving-node count (RabbitMQ 4.0)
+======================================================================
+  quorum queue 'qq.avail' declared, members=3
+  3 nodes up (majority)  : 50/50 confirmed
+  2 nodes up (majority)  : 50/50 confirmed
+  1 node up  (MINORITY)  : 0/50 confirmed  (expected 0: no quorum -> consistency over availability)
+
