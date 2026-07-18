@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Query That Asked Every Shard
-date:       2026-07-18
+date:       2025-04-06
 description:    One Postgres table outgrows one machine, so you split it across eight. Then you find out that a query carrying the shard key touches one shard in 2ms, and the same query without it has to ask all eight and comes back in 12. The shard key wasn't a detail. It was the whole design.
 categories: postgres sharding databases scaling
 ---

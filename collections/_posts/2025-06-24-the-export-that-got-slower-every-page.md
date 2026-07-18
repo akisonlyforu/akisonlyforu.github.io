@@ -1,7 +1,7 @@
 ---
 layout: post
 title: The Export That Got Slower Every Page
-date: 2026-07-19
+date: 2025-06-24
 description: A CSV export paged through a million rows with LIMIT/OFFSET and slowed down the deeper it went. Deep OFFSET re-walks every row it skips, so the last page reads almost the whole table. Measured on Postgres 16.
 categories: [postgres, performance, databases]
 ---

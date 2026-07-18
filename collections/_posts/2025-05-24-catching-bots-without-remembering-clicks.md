@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Catching the Bots Without Remembering the Clicks
-date:       2026-07-18
+date:       2025-05-24
 description:    A click firehose has bots hammering it from a handful of sources, and the obvious way to flag them is a counter keyed by source. That counter grows forever. Count-Min Sketch, Top-K and a Bloom filter do the same job in a fixed few megabytes. Measured on Redis 7.4.7.
 categories: redis probabilistic-data-structures streaming fraud
 ---
@@ -100,7 +100,7 @@ A Count-Min Sketch is a small grid of counters, and every source hashes to one c
   <h3>Source counting: exact dict vs Count-Min Sketch</h3>
   <div class="cb-bar-row"><span>exact dict</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">126.8 MB</span></div>
   <div class="cb-bar-row"><span>Count-Min Sketch</span><span class="cb-track"><span class="cb-fill" style="--value:0.63%;--bar:var(--cb-green)"></span></span><span class="cb-value">0.80 MB</span></div>
-  <figcaption>Both counted the same 2.43M-click stream. The sketch (width 20000, depth 5) is 0.80MB no matter how many sources it sees. On the 20 planted bots, true count 50,000, the sketch read a mean of 50,057 — overestimating by 57, about 0.11%. Measured on Redis 7.4.7, results in benchmarks/redis-heavy-hitters/results/.</figcaption>
+  <figcaption>Both counted the same 2.43M-click stream. The sketch (width 20000, depth 5) is 0.80MB no matter how many sources it sees. On the 20 planted bots, true count 50,000, the sketch read a mean of 50,057, overestimating by 57, about 0.11%. Measured on Redis 7.4.7, results in benchmarks/redis-heavy-hitters/results/.</figcaption>
 </figure>
 
 The bots came out at 50,000 true and roughly 50,057 estimated, an overshoot of 57 on fifty thousand, noise you'd never notice. Here's the honest part, though, and it's not a bug. That same collision floor added a mean of 58 to the humans too, and a human's real count was 1 to 4, so the sketch reported ordinary sources as having clicked 58, 70, 80 times. If you'd tried to use the sketch to tell two humans apart it would be useless, the floor is bigger than their entire signal. But you don't care about two humans, you care about the twenty sources sitting five hundred times above the floor, and against 50,000 a floor of 58 vanishes. So the sketch can't separate one quiet source from another, the floor drowns them, but the twenty hitters sit so far above it that the noise doesn't reach them, and those twenty are the only ones you were counting for.
@@ -113,7 +113,7 @@ Count-Min gives you a count if you name a source, but it won't hand you the list
   <h3>Top-K leaderboard: planted bot vs the busiest human that made the list</h3>
   <div class="cb-bar-row"><span>planted bot (×20)</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">50,000</span></div>
   <div class="cb-bar-row"><span>top human in list</span><span class="cb-track"><span class="cb-fill" style="--value:0.008%;--bar:var(--cb-muted)"></span></span><span class="cb-value">4</span></div>
-  <figcaption>Top-K (k=50, width 1000, depth 8) is 0.067MB fixed. All 20 planted bots landed in ranks 1 through 20 at count 50,000 — recall 20/20. The remaining 30 slots are ordinary humans at count 4, and not one human ranked above any bot. Measured on Redis 7.4.7, results in benchmarks/redis-heavy-hitters/results/.</figcaption>
+  <figcaption>Top-K (k=50, width 1000, depth 8) is 0.067MB fixed. All 20 planted bots landed in ranks 1 through 20 at count 50,000, recall 20/20. The remaining 30 slots are ordinary humans at count 4, and not one human ranked above any bot. Measured on Redis 7.4.7, results in benchmarks/redis-heavy-hitters/results/.</figcaption>
 </figure>
 
 Every one of the twenty bots was in the top twenty, at their true 50,000, and the rest of the fifty-slot board was filled with humans stuck at 4, which is the whole point, the gap between a bot and the busiest non-bot is 50,000 to 4 and nothing crosses it. Sixty-seven kilobytes to carry the answer you were about to spend 126 megabytes computing. You still want the sketch alongside it, Top-K tells you who the hitters are and roughly how hard, the sketch lets you interrogate a specific source on demand, but neither of them is holding a key per source.
@@ -126,7 +126,7 @@ The other half of the job is the replayed clicks, the same click id showing up a
   <h3>Deduping click-ids: exact set vs Bloom filter</h3>
   <div class="cb-bar-row"><span>exact set</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">190.0 MB</span></div>
   <div class="cb-bar-row"><span>Bloom filter</span><span class="cb-track"><span class="cb-fill" style="--value:2.6%;--bar:var(--cb-green)"></span></span><span class="cb-value">4.94 MB</span></div>
-  <figcaption>Both deduped 2,138,760 unique ids out of 2.43M clicks. The Bloom filter (capacity 2.5M, target error 0.1%) caught 100% of the 292,105 replays and wrongly flagged 0.011% of genuinely-new ids as seen — 22 out of 200,000. Measured on Redis 7.4.7, results in benchmarks/redis-heavy-hitters/results/.</figcaption>
+  <figcaption>Both deduped 2,138,760 unique ids out of 2.43M clicks. The Bloom filter (capacity 2.5M, target error 0.1%) caught 100% of the 292,105 replays and wrongly flagged 0.011% of genuinely-new ids as seen, 22 out of 200,000. Measured on Redis 7.4.7, results in benchmarks/redis-heavy-hitters/results/.</figcaption>
 </figure>
 
 The Bloom filter never missed a real replay, it can't, if you've seen an id its bits are set, so recall was a flat 100%. What it costs you is the other direction, 0.011% of genuinely-new clicks came back marked as already-seen, twenty-two of two hundred thousand, clicks you'd wrongly drop as duplicates. That measured rate came in under the 0.1% I'd sized it for, and that's not luck either, a Bloom filter runs below its nominal error until it fills up, and 2.14 million ids in a filter built for 2.5 million never quite got there. Size it too tight and that false-positive rate climbs; the number you pick is the number of real clicks you're willing to throw away.

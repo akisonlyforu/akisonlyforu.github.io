@@ -1,6 +1,6 @@
 # Redis OOM benchmark harness
 
-This is the harness behind [Redis Said It Was Fine. The OOM Killer Didn't.](../../collections/_posts/2026-07-19-redis-said-it-was-fine.md). It runs a digest-pinned Redis 7.4 container under a hard cgroup memory limit (`mem_limit`) and reproduces the memory fragmentation gap between Redis `used_memory` and OS `used_memory_rss`, leading to cgroup OOM kills.
+This is the harness behind [Redis Said It Was Fine. The OOM Killer Didn't.](../../collections/_posts/2025-02-06-redis-said-it-was-fine.md). It runs a digest-pinned Redis 7.4 container under a hard cgroup memory limit (`mem_limit`) and reproduces the memory fragmentation gap between Redis `used_memory` and OS `used_memory_rss`, leading to cgroup OOM kills.
 
 The benchmark loads a queue-shaped workload of 220,000 small keys (each with a 200-byte value) to establish a baseline memory footprint. It then bulk deletes all of them, showing that while Redis `used_memory` drops immediately to ~1MB, `used_memory_rss` remains pinned near its peak because the jemalloc allocator holds onto the freed pages. It demonstrates that Redis eviction (`maxmemory` eviction) does not fire because it compares against `used_memory` rather than RSS, resulting in an OOM kill under cgroup enforcement. Finally, it validates two fixes: enabling active defragmentation (`activedefrag yes` with low threshold overrides to allow scanning) and incremental deletes (`UNLINK` in batches).
 

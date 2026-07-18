@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Sharding RabbitMQ Without Reshuffling Everything
-date:       2026-07-18
+date:       2025-03-30
 description:    One queue can't keep up, so you add more and hash messages across them. Then you add a queue and a naive hash reshuffles 89% of your keys mid-flight. RabbitMQ's consistent hash exchange moved 11% instead. Here's the reproduction.
 categories: rabbitmq consistent-hashing queues operations
 ---
@@ -110,7 +110,7 @@ This is the one that matters. I took 10,000 distinct keys and recorded which que
   <h3>Keys that moved queues when going from 8 to 9 (of 10,000)</h3>
   <div class="cb-bar-row"><span>naive hash % N</span><span class="cb-track"><span class="cb-fill" style="--value:88.73%;--bar:var(--cb-orange)"></span></span><span class="cb-value">88.73%</span></div>
   <div class="cb-bar-row"><span>consistent hash exchange</span><span class="cb-track"><span class="cb-fill" style="--value:10.9%;--bar:var(--cb-green)"></span></span><span class="cb-value">10.90%</span></div>
-  <figcaption>Adding one queue moved 8,873 of 10,000 keys under modulo hashing, and 1,090 under the consistent hash exchange. 10.90% is essentially the textbook 1/9 (11.1%) — only the keys near the new queue's ring points move. The other 89% stay exactly where they were, and keep their ordering.</figcaption>
+  <figcaption>Adding one queue moved 8,873 of 10,000 keys under modulo hashing, and 1,090 under the consistent hash exchange. 10.90% is essentially the textbook 1/9 (11.1%). Only the keys near the new queue's ring points move. The other 89% stay exactly where they were, and keep their ordering.</figcaption>
 </figure>
 
 The modulo version moved 8,873 of the 10,000 keys. Adding a single queue picked up almost every key and dropped it somewhere new, which during a live migration means almost every in-flight user briefly has messages in two queues at once, being drained by two consumers, out of order. The consistent hash exchange moved 1,090, which is 10.90%, near enough the 1/9 you'd predict. The other 89% of keys never noticed the ninth queue existed.

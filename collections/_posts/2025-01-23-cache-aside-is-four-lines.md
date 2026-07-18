@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Everything I Got Wrong About Cache-Aside
-date:       2026-07-18
+date:       2025-01-23
 description:    Cache-aside is four lines and everyone writes it the same way, myself included. Then it serves a stale row until its TTL, melts the database when one hot key expires, and fills up Redis at 3am. Here's the pattern, when I actually reach for it, and every sharp edge that has personally bitten me.
 categories: caching redis distributed-systems performance
 ---
@@ -252,7 +252,7 @@ I warmed one key for 200 ms, waited for it to expire, then released 500 readers 
 
 Three ways out, pick by how much staleness you can live with.
 
-**Single-flight lock** — exactly one request gets to recompute, everyone else waits:
+**Single-flight lock**: exactly one request gets to recompute, everyone else waits:
 
 ```python
 def get_with_lock(key, loader, ttl=300, lock_ttl=10):
@@ -274,7 +274,7 @@ def get_with_lock(key, loader, ttl=300, lock_ttl=10):
         return deserialize(val) if val is not None else loader()  # last-resort fallthrough
 ```
 
-**Probabilistic early expiration (XFetch)** — the clever one. Instead of waiting for the TTL to hit zero, you refresh the key a little *early*, with a probability that climbs as expiry gets closer, so one lucky request rebuilds it while everyone else is still being served the perfectly good live value. Store how long the recompute took (`delta`) next to the value, and refresh early when:
+**Probabilistic early expiration (XFetch)**: the clever one. Instead of waiting for the TTL to hit zero, you refresh the key a little *early*, with a probability that climbs as expiry gets closer, so one lucky request rebuilds it while everyone else is still being served the perfectly good live value. Store how long the recompute took (`delta`) next to the value, and refresh early when:
 
 ```
 now - delta * beta * ln(rand())  >=  expiry_time      # beta ~1, crank it up to refresh earlier
@@ -282,7 +282,7 @@ now - delta * beta * ln(rand())  >=  expiry_time      # beta ~1, crank it up to 
 
 No lock, no herd, no coordination, the randomness spreads the single refresh out over time on its own. This is my favourite when I can afford to stash a little metadata per key.
 
-**Stale-while-revalidate** — serve the expired value right now and kick off the refresh in the background. Nobody waits, the price is one round of knowingly-stale responses. Perfect for content, wrong for anything where a stale answer actually hurts someone.
+**Stale-while-revalidate**: serve the expired value right now and kick off the refresh in the background. Nobody waits, the price is one round of knowingly-stale responses. Perfect for content, wrong for anything where a stale answer actually hurts someone.
 
 ## The keys that don't exist
 

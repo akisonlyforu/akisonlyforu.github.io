@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Cranking Up the Confirm Window Made RabbitMQ Slower
-date:       2026-07-18
+date:       2025-05-14
 description:    Turn on publisher confirms, throughput drops, so you widen the in-flight window to win it back. Past a moderate sweet spot, widening it made throughput go down, not up. And fire-and-forget's higher number turned out to be a backlog, not throughput. Measured with PerfTest.
 categories: rabbitmq flow-control throughput operations
 ---
@@ -90,7 +90,7 @@ I ran it against a real RabbitMQ 4.0.9 broker, one quorum queue with persistent 
     <text x="478" y="230">256</text>
     <text x="588" y="230">1000</text>
   </svg>
-  <figcaption>Send rate in msg/s, confirm window on the x-axis (1, 2, 4, 8, 16, 32, 64, 128, 256, 1000). Lockstep at window 1 does 9,520; it peaks at window 16 (36,598) and then falls to 24,060 at window 256 — about a third below the peak. Measured on RabbitMQ 4.0.9, quorum queue, 30 producers, results in benchmarks/rabbitmq-publisher-confirms/results/.</figcaption>
+  <figcaption>Send rate in msg/s, confirm window on the x-axis (1, 2, 4, 8, 16, 32, 64, 128, 256, 1000). Lockstep at window 1 does 9,520; it peaks at window 16 (36,598) and then falls to 24,060 at window 256, about a third below the peak. Measured on RabbitMQ 4.0.9, quorum queue, 30 producers, results in benchmarks/rabbitmq-publisher-confirms/results/.</figcaption>
 </figure>
 
 Lockstep, at window 1, managed 9,520 msg/s, the publisher spending all its time waiting. It climbs fast as the window opens up, 26,196 at 2, then 31,592, then 34,838, and peaks at window 16 with 36,598 msg/s. And then it turns over. By window 128 it's down to 27,624, at 256 it's 24,060, a third slower than the peak, and cranking it all the way to 1000 didn't rescue it. So the "just make the window huge" instinct is the wrong one, the throughput lives in a moderate window, 16 on this box.
@@ -107,7 +107,7 @@ Then the other question, why keep confirms at all if fire-and-forget is faster. 
   <div class="cb-bar-row"><span>fire-and-forget, received</span><span class="cb-track"><span class="cb-fill" style="--value:61.4%;--bar:var(--cb-muted)"></span></span><span class="cb-value">29,322</span></div>
   <div class="cb-bar-row"><span>confirms (-c 2), sent</span><span class="cb-track"><span class="cb-fill" style="--value:49.4%;--bar:var(--cb-green)"></span></span><span class="cb-value">23,628</span></div>
   <div class="cb-bar-row"><span>confirms (-c 2), received</span><span class="cb-track"><span class="cb-fill" style="--value:49.5%;--bar:var(--cb-green)"></span></span><span class="cb-value">23,632</span></div>
-  <figcaption>msg/s. Fire-and-forget publishes 47,790 but only 29,322 is drained, so 18,468 msg/s is piling up in the queue. With a confirm window of 2, sent and received are 23,628 and 23,632, near identical — the bounded window holds the publisher to what's actually landing.</figcaption>
+  <figcaption>msg/s. Fire-and-forget publishes 47,790 but only 29,322 is drained, so 18,468 msg/s is piling up in the queue. With a confirm window of 2, sent and received are 23,628 and 23,632, near identical. The bounded window holds the publisher to what's actually landing.</figcaption>
 </figure>
 
 Fire-and-forget, no confirms at all, published 47,790 msg/s, well above any confirmed run, which looks like a clear win until you look at how fast the consumers were draining it, 29,322 msg/s. The publisher is shoving 47,790 messages a second into a queue that's emptying at 29,322, so 18,468 messages a second are just accumulating. That's not sustained throughput, that's a backlog forming, and on a real broker that backlog eventually hits a memory or length limit and the broker slams the publishers with flow control. With confirms and a window of 2, the send and receive rates came out at 23,628 and 23,632, basically the same number, because the bounded window keeps the publisher in step with what's actually getting drained. A lower headline number, but one you can hold all day.

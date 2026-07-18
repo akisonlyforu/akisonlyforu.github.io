@@ -1,6 +1,6 @@
 # redis pub/sub self-message proof
 
-This is the harness behind [Your Redis Pub/Sub Node Hears Its Own Messages](../../collections/_posts/2026-07-18-redis-pubsub-hears-itself.md).
+This is the harness behind [Your Redis Pub/Sub Node Hears Its Own Messages](../../collections/_posts/2025-02-24-redis-pubsub-hears-itself.md).
 
 It is **not** a performance benchmark. It's a behavior proof: two nodes subscribe
 to the same channel, `node-A` publishes one event, and the demo prints exactly

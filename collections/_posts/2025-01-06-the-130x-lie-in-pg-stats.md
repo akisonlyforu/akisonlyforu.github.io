@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Lie in pg_stats
-date:       2026-07-18
+date:       2025-01-06
 description:    Postgres had the right index and still walked 18 million rows for a LIMIT 1 query. I built the failure locally, followed the planner's estimate back into pg_stats, and fixed it with a higher per-column statistics target.
 categories: postgres query-planner databases performance
 ---
@@ -217,7 +217,7 @@ rows ≈ reltuples × (1 − null_frac) / n_distinct
 
 That lands exactly on the plan's estimate. Once I saw that, the mystery index choice stopped being mysterious, the planner was doing reasonable arithmetic with a bad input.
 
-At the default statistics target of 100, `ANALYZE` aims for a sample of about 30,000 rows and estimates distinct values with the Haas–Stokes estimator. The physical layout is what makes this awkward. Each sampled block can show the estimator the same session ID over and over because all 180 events for that session were inserted together. It sees far less variety than the table really has, then underestimates `n_distinct`.
+At the default statistics target of 100, `ANALYZE` aims for a sample of about 30,000 rows and estimates distinct values with the Haas-Stokes estimator. The physical layout is what makes this awkward. Each sampled block can show the estimator the same session ID over and over because all 180 events for that session were inserted together. It sees far less variety than the table really has, then underestimates `n_distinct`.
 
 ## The fix
 

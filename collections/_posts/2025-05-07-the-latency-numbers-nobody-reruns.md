@@ -1,24 +1,24 @@
 ---
 layout:     post
 title:      The Latency Numbers Nobody Reruns
-date:       2026-07-18
-description:    Everyone quotes "L1 1ns, main memory 100ns, SSD 16µs" from a table that's fifteen years old. I reran the whole thing on my laptop with a pointer-chase harness — some rows moved 20x, one hasn't budged since 2012, and one got slower than the number everybody memorized.
+date:       2025-05-07
+description:    Everyone quotes "L1 1ns, main memory 100ns, SSD 16µs" from a table that's fifteen years old. I reran the whole thing on my laptop with a pointer-chase harness. Some rows moved 20x, one hasn't budged since 2012, and one got slower than the number everybody memorized.
 categories: latency hardware memory performance benchmarks
 ---
 
-You've seen the table. *Latency Numbers Every Programmer Should Know* — L1 cache 1ns, branch mispredict a few ns, main memory 100ns, SSD read 16µs, a network round trip 500µs. It's in every interview-prep deck, half the design docs I've ever read, and the back of my own head. I've quoted it in meetings. I have never once checked a single row of it against a machine I actually own.
+You've seen the table. *Latency Numbers Every Programmer Should Know*: L1 cache 1ns, branch mispredict a few ns, main memory 100ns, SSD read 16µs, a network round trip 500µs. It's in every interview-prep deck, half the design docs I've ever read, and the back of my own head. I've quoted it in meetings. I have never once checked a single row of it against a machine I actually own.
 
-So I did. The whole table, on the laptop I'm typing this on — an Apple M4.
+So I did. The whole table, on the laptop I'm typing this on, an Apple M4.
 
 ## The problem
 
-Those numbers trace back to a slide Jeff Dean gave around 2010, popularized and updated a few times since. Call it 2012 vintage. Hardware has not moved uniformly since then. Some rows are off by 20x. One hasn't moved at all. And one is *slower* than the figure everyone memorized. The trouble is you can't tell which is which by looking — the table reads like a set of physical constants, so people quote a 2012 SSD number in a 2026 capacity estimate and the error hides inside a spreadsheet.
+Those numbers trace back to a slide Jeff Dean gave around 2010, popularized and updated a few times since. Call it 2012 vintage. Hardware has not moved uniformly since then. Some rows are off by 20x. One hasn't moved at all. And one is *slower* than the figure everyone memorized. The trouble is you can't tell which is which by looking. The table reads like a set of physical constants, so people quote a 2012 SSD number in a 2026 capacity estimate and the error hides inside a spreadsheet.
 
-The only way to know which rows rotted is to rerun them. That has to happen natively — the whole point is the host's real memory hierarchy and SSD, and a Linux VM on macOS would put a translation layer between me and the DRAM and quietly lie about every number. So no Docker here, just clang and the bare machine.
+The only way to know which rows rotted is to rerun them. That has to happen natively. The whole point is the host's real memory hierarchy and SSD, and a Linux VM on macOS would put a translation layer between me and the DRAM and quietly lie about every number. So no Docker here, just clang and the bare machine.
 
 ## The memory ladder
 
-The trick behind the whole table is one benchmark: chase a pointer through an array, and grow the array until the latency jumps. Each jump is a cache boundary. The catch is you have to defeat the prefetcher — walk the array in a *random* cycle, not in order, so the CPU can't guess the next address and pre-load it. And each read has to depend on the last one, or the loads run in parallel and you measure throughput instead of latency:
+The trick behind the whole table is one benchmark: chase a pointer through an array, and grow the array until the latency jumps. Each jump is a cache boundary. The catch is you have to defeat the prefetcher: walk the array in a *random* cycle, not in order, so the CPU can't guess the next address and pre-load it. And each read has to depend on the last one, or the loads run in parallel and you measure throughput instead of latency:
 
 ```c
 /* arr is a random permutation cycle: arr[i] points to the next slot */
@@ -92,7 +92,7 @@ That `idx = arr[idx]` is the entire experiment. The address of the next read is 
   .cb-bar-row { grid-template-columns: minmax(6rem, 1.3fr) minmax(5rem, 3fr) minmax(3.6rem, 0.8fr); gap: 0.4rem; }
 }
 </style>
-<h3>Latency per access vs working-set size (log–log)</h3>
+<h3>Latency per access vs working-set size (log-log)</h3>
 <svg class="cb-svg" viewBox="0 0 720 300" role="img" aria-label="Memory access latency in nanoseconds against working-set size from 4 kilobytes to 256 megabytes, log-log axes, showing an L1 plateau, an L2 ramp, and a DRAM plateau">
   <line class="grid" x1="48" y1="254.4" x2="706" y2="254.4"/>
   <line class="grid" x1="48" y1="134.2" x2="706" y2="134.2"/>
@@ -113,12 +113,12 @@ That `idx = arr[idx]` is the entire experiment. The address of the next read is 
   <text x="330" y="140">L2 · rising to 16MB</text>
   <text x="700" y="34" text-anchor="end">DRAM · 93ns</text>
 </svg>
-<figcaption>Random dependent pointer chase, median of 5 trials, 60M–300M accesses per point. The line sits flat at 0.93ns out to 128KB, steps up at 256KB, climbs through the L2 to ~14ns at 16MB, then ramps to a 93ns plateau in DRAM. Measured on Apple M4 (macOS 15.7.3, clang 17), results in benchmarks/latency-numbers/results/mem_latency.csv.</figcaption>
+<figcaption>Random dependent pointer chase, median of 5 trials, 60M to 300M accesses per point. The line sits flat at 0.93ns out to 128KB, steps up at 256KB, climbs through the L2 to ~14ns at 16MB, then ramps to a 93ns plateau in DRAM. Measured on Apple M4 (macOS 15.7.3, clang 17), results in benchmarks/latency-numbers/results/mem_latency.csv.</figcaption>
 </figure>
 
-The nice part: I never told the harness anything about the chip. The line drew the M4's cache sizes on its own — 0.93ns flat out to exactly 128KB, which is the P-core's L1 data cache, then a long climb that flattens near 16MB, which is the P-core's L2. The hardware spec sheet is sitting right there in the shape of the curve.
+The nice part: I never told the harness anything about the chip. The line drew the M4's cache sizes on its own: 0.93ns flat out to exactly 128KB, which is the P-core's L1 data cache, then a long climb that flattens near 16MB, which is the P-core's L2. The hardware spec sheet is sitting right there in the shape of the curve.
 
-And the number that matters most: **main memory came in at 93ns.** The 2012 table says 100ns. Fifteen years, and DRAM access latency got about 7% faster. That's the wall everyone talks about — the cores got wider, the caches got bigger, the SSDs got an order of magnitude quicker, and the trip out to a DRAM row is still ~100ns because that's set by physics and the memory bus, not by transistor count. If you trust one row of the old table for the next decade, trust that one.
+And the number that matters most: **main memory came in at 93ns.** The 2012 table says 100ns. Fifteen years, and DRAM access latency got about 7% faster. That's the wall everyone talks about: the cores got wider, the caches got bigger, the SSDs got an order of magnitude quicker, and the trip out to a DRAM row is still ~100ns because that's set by physics and the memory bus, not by transistor count. If you trust one row of the old table for the next decade, trust that one.
 
 ## Sequential versus random
 
@@ -128,10 +128,10 @@ The ladder above is the random case, on purpose. Walk the same buffer *in order*
 <h3>256MB buffer, 64-byte cache lines</h3>
 <div class="cb-bar-row"><span>sequential</span><span class="cb-track"><span class="cb-fill" style="--value:27.8%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.97 ns/line</span></div>
 <div class="cb-bar-row"><span>random</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">3.49 ns/line</span></div>
-<figcaption>Time per 64-byte cache line touched, median of 3 trials, buffer far larger than the L2. Sequential is 3.6× faster per line — same DRAM, but the prefetcher hides the latency when it can predict the stride. Results in benchmarks/latency-numbers/results/seq_vs_random.csv.</figcaption>
+<figcaption>Time per 64-byte cache line touched, median of 3 trials, buffer far larger than the L2. Sequential is 3.6× faster per line, same DRAM, but the prefetcher hides the latency when it can predict the stride. Results in benchmarks/latency-numbers/results/seq_vs_random.csv.</figcaption>
 </figure>
 
-3.6x, from nothing but access order. This is why "read 1MB sequentially" is even a row in the table — sequential and random aren't the same operation slowed down, they're two different costs, and the gap is the prefetcher doing its job.
+3.6x, from nothing but access order. This is why "read 1MB sequentially" is even a row in the table. Sequential and random aren't the same operation slowed down, they're two different costs, and the gap is the prefetcher doing its job.
 
 ## The whole table, remeasured
 
@@ -141,7 +141,7 @@ Here's every row I could measure locally, laid next to the canonical 2012 figure
 <h3>Canonical latencies: Apple M4 (2026) vs the 2012 table</h3>
 <div class="cb-panels">
 <div>
-<p class="cb-panel-title">Measured — Apple M4, 2026</p>
+<p class="cb-panel-title">Measured: Apple M4, 2026</p>
 <div class="cb-bar-row"><span>L1 reference</span><span class="cb-track"><span class="cb-fill" style="--value:4.3%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.93 ns</span></div>
 <div class="cb-bar-row"><span>Branch mispredict</span><span class="cb-track"><span class="cb-fill" style="--value:15.5%;--bar:var(--cb-blue)"></span></span><span class="cb-value">4.77 ns</span></div>
 <div class="cb-bar-row"><span>Mutex lock/unlock</span><span class="cb-track"><span class="cb-fill" style="--value:14.6%;--bar:var(--cb-blue)"></span></span><span class="cb-value">4.18 ns</span></div>
@@ -153,7 +153,7 @@ Here's every row I could measure locally, laid next to the canonical 2012 figure
 <div class="cb-bar-row"><span>Loopback RTT</span><span class="cb-track"><span class="cb-fill" style="--value:70.1%;--bar:var(--cb-blue)"></span></span><span class="cb-value">13 µs</span></div>
 </div>
 <div>
-<p class="cb-panel-title">Canonical — 2012 table</p>
+<p class="cb-panel-title">Canonical: 2012 table</p>
 <div class="cb-bar-row"><span>L1 reference</span><span class="cb-track"><span class="cb-fill" style="--value:4.8%;--bar:var(--cb-orange)"></span></span><span class="cb-value">1 ns</span></div>
 <div class="cb-bar-row"><span>Branch mispredict</span><span class="cb-track"><span class="cb-fill" style="--value:12.3%;--bar:var(--cb-orange)"></span></span><span class="cb-value">3 ns</span></div>
 <div class="cb-bar-row"><span>Mutex lock/unlock</span><span class="cb-track"><span class="cb-fill" style="--value:24.3%;--bar:var(--cb-orange)"></span></span><span class="cb-value">17 ns</span></div>
@@ -170,20 +170,20 @@ Here's every row I could measure locally, laid next to the canonical 2012 figure
 
 Reading down the list, the rows split into three stories.
 
-Some rows moved because the hardware genuinely got better. Mutex lock/unlock went from 17ns to 4.18ns — uncontended locking is nearly free now. Reading 1MB sequentially from SSD went from 1ms to 54µs, roughly 18x, which is NVMe earning its keep over the SATA SSD the old number assumed.
+Some rows moved because the hardware genuinely got better. Mutex lock/unlock went from 17ns to 4.18ns. Uncontended locking is nearly free now. Reading 1MB sequentially from SSD went from 1ms to 54µs, roughly 18x, which is NVMe earning its keep over the SATA SSD the old number assumed.
 
-One row moved for a reason that has nothing to do with what it's named. "Read 1MB sequentially from memory" dropped from 250µs to 49µs, about 5x. That looks like RAM got five times faster — except we just measured that it didn't, DRAM latency barely moved. What actually happened is the L2 grew to 16MB, so 1MB now fits comfortably in cache and the read mostly never touches DRAM at all. The number moved because the caches grew *around* it. Quote it as "memory got faster" and you've learned the wrong lesson.
+One row moved for a reason that has nothing to do with what it's named. "Read 1MB sequentially from memory" dropped from 250µs to 49µs, about 5x. That looks like RAM got five times faster, except we just measured that it didn't, DRAM latency barely moved. What actually happened is the L2 grew to 16MB, so 1MB now fits comfortably in cache and the read mostly never touches DRAM at all. The number moved because the caches grew *around* it. Quote it as "memory got faster" and you've learned the wrong lesson.
 
-And a couple got worse, or were never a fair comparison to begin with. SSD random 4KB read came in at 54µs against the canonical 16µs — slower than the number everyone recites. The old 16µs was an optimistic enterprise-SSD figure; a real 4KB random read on this machine, with the OS page cache bypassed so it actually hits the device, is 54µs through the full storage stack. And notice random-4K and sequential-1MB both landed at ~54µs — at these sizes you're paying for the syscall and the device round trip, not for the bytes.
+And a couple got worse, or were never a fair comparison to begin with. SSD random 4KB read came in at 54µs against the canonical 16µs, slower than the number everyone recites. The old 16µs was an optimistic enterprise-SSD figure; a real 4KB random read on this machine, with the OS page cache bypassed so it actually hits the device, is 54µs through the full storage stack. And notice random-4K and sequential-1MB both landed at ~54µs. At these sizes you're paying for the syscall and the device round trip, not for the bytes.
 
-Two rows I'm flagging rather than trusting. Compress 1KB shows 7.7µs, but I ran zlib and the old table measured Google's Zippy (Snappy), which trades ratio for speed — different algorithm, not a fair fight, so I'm not claiming compression got slower. And the 13µs "loopback RTT" is my kernel talking to itself over TCP, not a real datacenter hop; a genuine same-datacenter round trip is still ~500µs because that's wire and switches, not memcpy. I left both in as floors, clearly labelled, not as matches.
+Two rows I'm flagging rather than trusting. Compress 1KB shows 7.7µs, but I ran zlib and the old table measured Google's Zippy (Snappy), which trades ratio for speed, different algorithm, not a fair fight, so I'm not claiming compression got slower. And the 13µs "loopback RTT" is my kernel talking to itself over TCP, not a real datacenter hop; a genuine same-datacenter round trip is still ~500µs because that's wire and switches, not memcpy. I left both in as floors, clearly labelled, not as matches.
 
-One more bit of honesty. The DRAM middle of the ladder jittered on the first run because the scheduler kept bouncing the benchmark between the M4's performance and efficiency cores — that run is saved under `results/attempts/`. And my first branch-mispredict test measured a flat 0ns, because clang looked at my careful branch and quietly compiled it to branchless code. Ask me how I know. The 4.77ns figure is from a version rewritten to force a real, mispredictable branch.
+One more bit of honesty. The DRAM middle of the ladder jittered on the first run because the scheduler kept bouncing the benchmark between the M4's performance and efficiency cores. That run is saved under `results/attempts/`. And my first branch-mispredict test measured a flat 0ns, because clang looked at my careful branch and quietly compiled it to branchless code. Ask me how I know. The 4.77ns figure is from a version rewritten to force a real, mispredictable branch.
 
 ## The takeaway
 
 Memorize the shape, not the digits. The orders of magnitude and the gaps between them are the durable part: L1 is about 100x faster than DRAM, DRAM is a few hundred times faster than an SSD, an SSD is roughly 10x faster than a network hop. Those ratios are the intuition you actually reach for in a design review, and they've held.
 
-The specific microseconds rot, and they rot unevenly. Cache sizes grow and silently move rows that look like they're about memory. SSDs get faster in sequential and can look slower in random once you stop measuring the page cache. And exactly one number — main memory at ~100ns — hasn't moved in fifteen years and probably won't in the next fifteen. So the next time you're about to anchor a real capacity number on a row from that table, spend the four minutes to run it on the machine you'll actually deploy on. Mine disagreed with the famous version on more rows than it agreed with.
+The specific microseconds rot, and they rot unevenly. Cache sizes grow and silently move rows that look like they're about memory. SSDs get faster in sequential and can look slower in random once you stop measuring the page cache. And exactly one number, main memory at ~100ns, hasn't moved in fifteen years and probably won't in the next fifteen. So the next time you're about to anchor a real capacity number on a row from that table, spend the four minutes to run it on the machine you'll actually deploy on. Mine disagreed with the famous version on more rows than it agreed with.
 
-The harness — the pointer chase, the SSD reads with the cache bypassed, and the full table — is here: [benchmarks/latency-numbers](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/latency-numbers). These are laptop numbers meant to build intuition, not capacity-planning figures for your fleet — but the machine on your desk is the one you can actually measure, so measure it.
+The harness (the pointer chase, the SSD reads with the cache bypassed, and the full table) is here: [benchmarks/latency-numbers](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/latency-numbers). These are laptop numbers meant to build intuition, not capacity-planning figures for your fleet, but the machine on your desk is the one you can actually measure, so measure it.

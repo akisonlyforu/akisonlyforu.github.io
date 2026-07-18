@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      The Memory Redis Wouldn't Give Back
-date:       2026-07-18
+date:       2025-02-06
 description:    used_memory sat there calm while RSS climbed to the cgroup limit and the kernel killed the process. Everyone said leak. It wasn't. I reproduced it locally and chased down why the memory number Redis shows you isn't the one that gets you killed.
 categories: redis memory jemalloc operations
 ---

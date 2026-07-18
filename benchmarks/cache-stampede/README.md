@@ -1,6 +1,6 @@
 # cache-stampede harness
 
-This is the harness behind [Our Fix for the Thundering Herd Was a Lock](../../collections/_posts/2026-07-18-thundering-herd-lock.md).
+This is the harness behind [Our Fix for the Thundering Herd Was a Lock](../../collections/_posts/2025-03-20-thundering-herd-lock.md).
 
 64 concurrent workers hammer one hot key backed by a ~300ms recompute, against a
 digest-pinned Redis 7.4. It measures four strategies for the thundering-herd

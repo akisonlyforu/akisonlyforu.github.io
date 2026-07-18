@@ -1,6 +1,6 @@
 # Rate-limiter benchmark harness
 
-This is the harness behind the measurements in [Everything I Got Wrong About Rate Limiting](../../collections/_posts/2026-07-18-rate-limiter-is-three-lines.md). It runs a Redis 7 primary and replica locally, then exercises the five behaviors discussed in the post.
+This is the harness behind the measurements in [Everything I Got Wrong About Rate Limiting](../../collections/_posts/2025-01-13-rate-limiter-is-three-lines.md). It runs a Redis 7 primary and replica locally, then exercises the five behaviors discussed in the post.
 
 The results compare strategies on one laptop under Docker. They are useful for the shape of a trade-off, not as production capacity numbers.
 

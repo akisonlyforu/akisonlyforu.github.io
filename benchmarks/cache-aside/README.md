@@ -1,6 +1,6 @@
 # Cache-aside benchmark harness
 
-This is the harness behind the measurements in [Everything I Got Wrong About Cache-Aside](../../collections/_posts/2026-07-18-cache-aside-is-four-lines.md). It runs PostgreSQL 16 and Redis 7 locally, seeds 100,000 users, then exercises the four failure modes discussed in the post.
+This is the harness behind the measurements in [Everything I Got Wrong About Cache-Aside](../../collections/_posts/2025-01-23-cache-aside-is-four-lines.md). It runs PostgreSQL 16 and Redis 7 locally, seeds 100,000 users, then exercises the four failure modes discussed in the post.
 
 The numbers are useful for comparing the shape of each approach on the same machine. They are not capacity numbers for production hardware.
 
