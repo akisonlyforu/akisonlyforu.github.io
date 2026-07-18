@@ -1,0 +1,21 @@
+# RabbitMQ 4.0 for the priority / head-of-line-blocking demo.
+# Digest-pinned, multi-arch (native on arm64). Bound to loopback on non-default
+# host ports (6672 AMQP, 16672 management) so it doesn't clash with a local broker.
+# No plugins needed - priority queues (x-max-priority) are core, so there is no
+# enabled_plugins file to mount.
+services:
+  rabbitmq:
+    image: rabbitmq:4.0-management@sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3
+    hostname: prio-hol-bench
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "127.0.0.1:6672:5672"     # AMQP
+      - "127.0.0.1:16672:15672"   # management HTTP API
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 3s
+      timeout: 10s
+      retries: 30
+      start_period: 20s

@@ -1,0 +1,47 @@
+RabbitMQ 4.0.9  |  priority / head-of-line-blocking demo  |  image sha256:ad4268113c27d02f08ac1151f9651d6e475c955f81c3a5ad522b79955ce11cf3
+backlog=20000  otp=200  service_time=0.5ms  warmup=500
+
+======================================================================
+EXPERIMENT A  single FIFO queue (the problem)
+======================================================================
+  priority queue : no (plain FIFO)
+  prefetch_count : 5000
+  backlog        : 20000 bulk (prio -), then 200 OTP (prio -) injected after 500 drained
+  service time   : 0.5 ms/msg
+  OTPs measured  : 200
+  bulk drain rate:   1323.2 msg/s
+  OTP latency    : p50   14780.7 ms   p99   14849.7 ms   max   14851.2 ms   (min 14711.1, mean 14780.9)
+
+======================================================================
+EXPERIMENT B  priority queue + HIGH prefetch (the fix that doesn't work)
+======================================================================
+  priority queue : yes (x-max-priority=10)
+  prefetch_count : 5000
+  backlog        : 20000 bulk (prio 0), then 200 OTP (prio 9) injected after 500 drained
+  service time   : 0.5 ms/msg
+  OTPs measured  : 200
+  bulk drain rate:   1299.8 msg/s
+  OTP latency    : p50    3905.0 ms   p99    3971.1 ms   max    3972.5 ms   (min 3837.5, mean 3904.7)
+
+======================================================================
+EXPERIMENT C  priority queue + prefetch=1 (the real fix)
+======================================================================
+  priority queue : yes (x-max-priority=10)
+  prefetch_count : 1
+  backlog        : 20000 bulk (prio 0), then 200 OTP (prio 9) injected after 500 drained
+  service time   : 0.5 ms/msg
+  OTPs measured  : 200
+  bulk drain rate:    669.4 msg/s
+  OTP latency    : p50     138.2 ms   p99     273.0 ms   max     275.9 ms   (min 3.5, mean 137.3)
+
+======================================================================
+SUMMARY  OTP end-to-end latency (delivery to consumer), ms
+======================================================================
+  exp  priority   prefetch        p50        p99        max  drain msg/s
+  A    no             5000    14780.7    14849.7    14851.2       1323.2
+  B    yes            5000     3905.0     3971.1     3972.5       1299.8
+  C    yes               1      138.2      273.0      275.9        669.4
+
+  A -> B  adding priority alone: p99 14850 ms -> 3971 ms
+  B -> C  dropping prefetch to 1: p99 3971 ms -> 273.0 ms
+
