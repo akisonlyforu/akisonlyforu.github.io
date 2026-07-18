@@ -6,7 +6,7 @@ description:    used_memory sat there calm while RSS climbed to the cgroup limit
 categories: redis memory jemalloc operations
 ---
 
-If you've ever watched `used_memory` sit there calm and reasonable while the OOM killer took the process anyway, and everyone in the channel immediately said leak, this is for you. Most of the time it isn't a leak, it's fragmentation, and the reason nobody believes that at first is that the number they're all staring at genuinely does look fine.
+If you've ever watched `used_memory` sit there calm and reasonable while the OOM killer took the process anyway, and everyone in the channel immediately said leak, this is for you. The OOM killer, if you haven't met it, is the Linux kernel's out-of-memory killer, the thing that picks a process and terminates it when the machine (or the cgroup) runs out of memory. Most of the time it isn't a leak, it's fragmentation, and the reason nobody believes that at first is that the number they're all staring at genuinely does look fine.
 
 I wanted to reproduce this the same way I reproduce anything I don't fully trust myself to explain, small enough to run on a laptop and argue with the same allocator that's doing it to you in production. The setup is a queue-shaped workload: load a pile of small keys, pretend to batch-process them, then delete millions of them at once, which is the part that matters. That mass delete is where `used_memory` and the actual resident footprint stop agreeing.
 
