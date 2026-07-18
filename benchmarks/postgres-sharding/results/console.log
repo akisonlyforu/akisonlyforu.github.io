@@ -1,0 +1,24 @@
+
+==================================================================
+EXPERIMENT B  scaling: same total rows redistributed at N=1,2,4,8
+==================================================================
+  N=1: single_p99=5.397ms scatter_p99=7.840ms | single_mean=1.041ms scatter_mean=1.724ms (scatter_mean/single_mean=1.7x)
+  N=2: single_p99=4.941ms scatter_p99=6.943ms | single_mean=1.081ms scatter_mean=2.336ms (scatter_mean/single_mean=2.2x)
+  N=4: single_p99=5.014ms scatter_p99=10.048ms | single_mean=0.879ms scatter_mean=3.215ms (scatter_mean/single_mean=3.7x)
+  N=8: single_p99=2.819ms scatter_p99=11.677ms | single_mean=0.796ms scatter_mean=5.000ms (scatter_mean/single_mean=6.3x)
+==================================================================
+EXPERIMENT A  routing at N=8 shards (500 timed iters each)
+==================================================================
+  single-shard (WHERE file_key): p50=0.401ms p99=2.244ms mean=0.586ms  shards_touched=1
+  scatter-gather (WHERE created_by): p50=4.214ms p99=11.647ms mean=4.796ms  shards_touched=8
+  physical shard-queries: single=500  scatter=4000
+  p99 ratio scatter/single = 5.2x
+
+==================================================================
+EXPERIMENT C  colocation at N=8 shards
+==================================================================
+  colocated join (same file_key -> 1 shard): p50=0.315ms p99=2.070ms  shards_touched=1
+  cross-shard join (comments2 by author -> fan out): p50=6.675ms p99=20.965ms  shards_touched=8
+  p99 ratio cross/colocated = 10.1x
+
+  PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu | artifacts in /Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/postgres-sharding/results

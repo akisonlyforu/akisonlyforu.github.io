@@ -1,0 +1,2 @@
+postgres_version,image_digest,n_shards_AC,scaling_N,total_rows,iterations,warmup,seed,A_single_p99_ms,A_scatter_p99_ms,A_p99_ratio,C_colo_p99_ms,C_cross_p99_ms,C_p99_ratio
+PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu,sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20,8,1;2;4;8,50000,500,25,1234,2.2436,11.6465,5.19,2.0703,20.9648,10.13

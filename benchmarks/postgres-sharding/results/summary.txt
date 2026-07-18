@@ -1,0 +1,19 @@
+PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu
+params: n_shards(A,C)=8  scaling N=1,2,4,8  total_rows=50000  iterations=500  warmup=25  seed=1234
+
+EXPERIMENT A  routing (N=8)
+  single-shard : p50=0.401 p99=2.244 mean=0.586 ms | shards_touched=1 | shard_queries=500 | rows=2500
+  scatter      : p50=4.214 p99=11.647 mean=4.796 ms | shards_touched=8 | shard_queries=4000 | rows=49779
+  p99 scatter/single = 5.2x
+
+EXPERIMENT B  scaling (ms)
+  n_shards  single_p99  scatter_p99  single_mean  scatter_mean  mean_ratio
+  1         5.397       7.840        1.041        1.724         1.7x
+  2         4.941       6.943        1.081        2.336         2.2x
+  4         5.014       10.048       0.879        3.215         3.7x
+  8         2.819       11.677       0.796        5.000         6.3x
+
+EXPERIMENT C  colocation (N=8)
+  colocated join   : p50=0.315 p99=2.070 ms | shards_touched=1
+  cross-shard join : p50=6.675 p99=20.965 ms | shards_touched=8
+  p99 cross/colocated = 10.1x

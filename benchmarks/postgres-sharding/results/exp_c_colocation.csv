@@ -1,0 +1,3 @@
+join_type,shards_touched,p50_ms,p99_ms,mean_ms
+colocated,1,0.3145,2.0703,0.5196
+cross_shard,8,6.6747,20.9648,7.4011
