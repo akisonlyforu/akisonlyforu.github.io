@@ -10,6 +10,10 @@ We had a pricing endpoint that cached an expensive aggregate for 60 seconds. It 
 
 The fix looked obvious. Put a lock around the recompute so only one request does the work and everyone else waits for it. We shipped `SET NX` as a recompute lock, watched the database load spike flatten out, and felt good about it. The p99 did not get better. And a couple of weeks later, when a pod got killed mid-recompute during a deploy, the p99 didn't just stay bad, it went to three and a half seconds.
 
+## The problem
+
+A hot cached value expires, every app instance misses at the same instant, and the whole fleet stampedes the database at once. The obvious fix is a lock so only one request recomputes, and it doesn't work the way you'd hope: the lock leaves the user-facing latency exactly where it was, and the day a lock holder dies mid-recompute it stalls everyone for the lock's full TTL. This walks through the herd, the failed lock fix, and the thing that actually works, all measured.
+
 I rebuilt the whole thing to understand why the obvious fix was the wrong one. 64 concurrent workers hammering one hot key, a recompute that takes about 300 ms, a 2-second TTL to keep the run short, and four strategies measured back to back.
 
 <style>
@@ -170,5 +174,7 @@ All 300 at once became at most 47. Probabilistic refresh handles the single hot 
 - Probabilistic early recomputation is the fix for the latency. One reader refreshes ahead of expiry in the background, so the value is never cold when a request arrives and nobody blocks. It sits right on top of a normal cache read, a few lines, no coordination.
 - Jitter your TTLs. Seeding many instances or many keys with the same absolute expiry is what builds the herd; a little randomness in the TTL stops them from expiring in lockstep.
 - These are laptop numbers demonstrating the mechanism, [the load generator and the four strategies are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/cache-stampede). The milliseconds are from my machine; the shapes hold anywhere.
+
+## The takeaway
 
 Reaching for a lock when a herd is trampling your database is the right instinct about the problem and the wrong tool for it. The recompute you actually want isn't the one you carefully allowed only one process to run. It's the one that already finished, a moment before anybody asked.

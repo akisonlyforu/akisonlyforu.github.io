@@ -8,6 +8,10 @@ categories: redis replication expiry operations
 
 If you run Redis with a read replica and you've ever trusted a key count coming off that replica, this one's worth a couple of minutes. I went in chasing a specific bit of folklore, that a replica will happily hand you back a lock that expired twenty seconds ago, and the reproduction talked me out of half of what I believed and left the other half quieter and more dangerous than I expected.
 
+## The problem
+
+A read replica will report keys that expired a while ago. Expiring a key is the primary's job: it removes the key and tells the replica, and until that message arrives the replica physically still holds the dead key. So any decision made from a replica's key count, a `DBSIZE` gauge or a running-jobs dashboard, is counting ghosts, and on an older Redis even a plain `GET` off the replica handed back the stale value. This is exactly what a replica does with expired keys, measured across versions.
+
 The setup is the usual idempotency guard. You take a lock per job with `SET job:{id} owner NX EX 30` so two workers can't run the same job, and because that lock lives in Redis you also point a read replica at it to power a "currently running jobs" dashboard and a cheap pre-check, the kind of thing where you glance at the replica before bothering the primary. The pre-check and the dashboard are both reading key state off a node that, it turns out, has opinions about expiry that differ from the primary's.
 
 ## Replicas don't expire keys, they wait to be told
@@ -131,3 +135,7 @@ That drift is real when replication is lagging or the primary's expire cycle is 
 - Don't make a TTL-sensitive correctness call off a replica's key presence or its counts. A replica pre-check is a fine optimization, but the source of truth for a lock or an idempotency guard has to be the primary.
 - If you need a "how many are running" number off a replica, store an explicit `expires_at` in the value and filter by it yourself, or treat the count as an upper bound that includes ghosts.
 - The whole thing is reproducible in a couple of minutes, [primary, replica, and the script are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/redis-replica-expiry). The default compose runs 7.4 (watch the replica count a thousand keys that every read swears are gone); a second `docker-compose.legacy.yml` runs 3.0 against the same script so you can watch the old unmasked-read version too.
+
+## The takeaway
+
+A replica holds expired keys until the primary tells it to drop them, so its key counts include the dead even when modern reads correctly say they're gone. The rule that falls out of that: don't make a TTL-sensitive decision, a lock check, an idempotency guard, a count, from a replica. Read those off the primary, or store an explicit `expires_at` in the value and judge it against your own clock. Keep the replica for the load you can afford to be a little wrong about.

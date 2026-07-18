@@ -16,6 +16,10 @@ Redis wasn't using my system's `malloc`. It had brought its own. And once I noti
 
 If you've ever wondered why `deps/jemalloc` is sitting in the Redis source tree, or why your fragmentation ratio looks nothing like the one a coworker on a different distro is quoting, this is for you.
 
+## The problem
+
+Redis doesn't use your system's `malloc`. It vendors its own copy of jemalloc and statically compiles it in, and that one decision quietly sets the shape of every memory number you read, including why your fragmentation ratio can look nothing like a coworker's on a different box running the same Redis. I wanted to know why Redis bothers, so I built the same Redis two ways and measured what actually changes.
+
 ## What jemalloc even is
 
 jemalloc is a general-purpose memory allocator that Jason Evans originally wrote for FreeBSD's libc. The "je" is his initials, which tells you it started as one person's `malloc` and grew into the thing Facebook, Redis, Rust's early runtime, and a pile of other memory-sensitive systems ended up reaching for.
@@ -148,5 +152,7 @@ If you write a Redis module, this comes back around in a way worth knowing. A mo
 - jemalloc rounds every allocation up to a size class, so a 200-byte value costs you a 224-byte slot. That internal waste is the price of not accumulating the unpredictable external fragmentation that sinks a general allocator under churn.
 - The lingering gap between `used_memory` and `used_memory_rss` is jemalloc holding dirty pages on purpose for reuse speed, decayed back to the kernel slowly. It's a feature until a hard memory limit turns it into an OOM.
 - `activedefrag` needs jemalloc. On a libc build your only way to reclaim fragmented RSS is a restart, which is reason enough to leave the default alone.
+
+## The takeaway
 
 I went into this thinking the allocator was a box I'd never have to open. It turned out to be sitting right there in the source tree, statically linked, quietly deciding the shape of every memory number I look at. If your fragmentation ratio ever looks wrong, the first thing to confirm is which `malloc` is even reporting it.

@@ -10,6 +10,10 @@ If you've run a Redis pub/sub setup where the same node both publishes to a chan
 
 It isn't a bug. It's just how the fanout works, and once you see it you'll never be surprised by it again.
 
+## The problem
+
+A node that both publishes to a Redis channel and subscribes to it receives its own messages back. Redis fans every published message out to every subscriber on the channel with no way to skip the sender, so a node that reacts to what it just published ends up doing duplicate work or, in an invalidation setup, chasing its own tail. It isn't a bug, and the fix is small, but you have to know it's happening first.
+
 ## Why it happens
 
 Redis pub/sub is a dumb, fast fanout, and I mean that as a compliment. You `PUBLISH` to a channel, and every client currently subscribed to that channel gets the message. Every one of them. Redis doesn't track who published, and there's no "send to everyone except the sender" option like some message brokers hand you.
@@ -71,3 +75,7 @@ Same publish, same fanout. `node-A` sees its own message arrive and drops it, `n
 - A node that publishes and subscribes uses two connections, and the subscriber connection is just another subscriber, so it hears the node's own publishes.
 - Put a node id in the message envelope and ignore your own on receipt. It's two lines and it saves you from a node processing its own events, which in an invalidation or event-propagation setup is how you get duplicate work or a feedback loop.
 - Same thing applies to anything built on the fanout, including keyspace notifications you're also acting on from the node that caused them.
+
+## The takeaway
+
+Redis pub/sub will always hand a node its own messages, because the fanout doesn't know or care who published. There's no server-side switch for it, so the fix is one field: stamp every message with the id of the node that sent it, and have each subscriber drop anything carrying its own id. Two lines on the read side, and a node stops reacting to events it caused.

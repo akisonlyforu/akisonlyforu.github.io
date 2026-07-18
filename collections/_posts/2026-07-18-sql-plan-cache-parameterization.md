@@ -8,6 +8,10 @@ categories: sql-server plan-cache parameterization databases
 
 If you've ever opened a SQL Server plan cache expecting a tidy handful of plans and found thousands instead, each with a use count of exactly one, this is for you. I wanted to make that happen on purpose, see how bad it gets, and then see what parameterizing the queries actually buys you, because it buys you a lot and then quietly charges you for something else.
 
+## The problem
+
+Run the same query over and over with a different literal value baked into the text each time, and SQL Server compiles and caches a separate plan for every one, filling the plan cache with hundreds of plans that each run once and burning CPU recompiling. Parameterizing the query collapses all of that to one shared plan, which is the fix, except that the one shared plan then gets compiled for whatever value showed up first, and on skewed data that plan can be badly wrong for everyone else. This measures both halves.
+
 The setup is the most ordinary thing in the world. You have a query you run constantly, the same shape every time, with a different value plugged in. Look up customer `4123`, then `5561`, then `9080`. Same query, different literal. What SQL Server does with that depends entirely on whether the literal is baked into the text or handed in as a parameter, and the difference is much bigger than it looks.
 
 ## What the cache is keyed on
@@ -179,3 +183,7 @@ Seven and a half times slower, and the only thing that changed was which value t
 - Parameterizing gives you one shared plan compiled for the first value it sees. On skewed columns that's parameter sniffing, and the common value can end up running a plan built for a rare one. `OPTION (RECOMPILE)` on the specific queries where the good plan depends on the value fixes it, at the cost of compiling each time; `OPTIMIZE FOR` and `OPTIMIZE FOR UNKNOWN` are the gentler tools when you know the shape.
 - Database-level forced parameterization will kill the bloat wholesale, but it makes sniffing everyone's problem at once, so it's a heavier hammer than it first looks.
 - These are laptop numbers demonstrating the mechanism, [the SQL Server container and the script are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/sqlserver-plan-cache). The megabytes and milliseconds came off my machine; the shape of the problem shows up on any SQL Server you point this at.
+
+## The takeaway
+
+Parameterize the hot queries and you trade a cache full of single-use plans for one shared plan that compiles once, which is almost always the right trade. The catch is that the shared plan is built for the first value it sees, so on skewed columns keep `OPTION (RECOMPILE)` in reach for the queries where the good plan genuinely depends on the value. Parameterize everything you can, and recompile the handful where one plan can't fit every value.

@@ -8,6 +8,10 @@ categories: caching redis distributed-systems performance
 
 The first cache I ever shipped ran clean for months. Then traffic climbed past some threshold, concurrency got high enough, and one morning it started quietly serving stale data and hammering the database it was supposed to be protecting. I spent that morning staring at a dashboard trying to work out how a thing built to make the database do *less* work had talked it into doing more.
 
+## The problem
+
+Cache-aside is four lines that everyone writes the same way, and it holds up right until the load gets real. Then it serves a stale row after a write, melts the database when one hot key expires under a burst, and quietly caches the absence of rows that were never there. This is every one of those failure modes reproduced on a real Redis and Postgres, and the small, boring discipline that keeps the four lines honest.
+
 Cache-aside is four lines. Check the cache, on a miss read the database, put the result in the cache, return it. You'll write it, I wrote it, everyone writes the same four lines and they all work in the demo. Then concurrency and real traffic show up and you find out the four lines were hiding about six different ways to be wrong. This is the stuff I wish someone had told me before I learned it the expensive way, one page at a time.
 
 I wanted numbers before writing the rest of this, so I put Postgres and Redis in Docker and ran every failure mode below on this laptop. The whole [harness, schema, raw CSVs, and exact command are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/cache-aside). Treat these as comparisons between two runs on one machine, not as capacity numbers. Both services are one loopback hop away, the rows are tiny, and the race test deliberately lines an expiry up with a write. I widened the reader's DB-to-cache gap by 0, 5, and 20 ms and plotted all three instead of quietly picking the one that made the chart exciting.
@@ -376,5 +380,7 @@ Everything above, squeezed into the list I'd actually paste into a code review:
 ## So is it worth it
 
 After all that, yeah, I still reach for cache-aside first and it's still the right default. It's simple, the cache isn't load-bearing so losing it doesn't take you down, and it only ever caches the stuff something actually asked for. The four lines were never really the problem, they just leave out everything I listed above. And every one of those things traces back to the same boring fact, the moment you cache something you're keeping two copies of it, and two copies of anything drift apart eventually. No pattern anywhere fixes that, caching just costs what it costs. What I've come to like about cache-aside is that it doesn't pretend otherwise, all the bookkeeping sits right there in your code where you can see it.
+
+## The takeaway
 
 So the actual discipline is small and kind of boring. Delete on write, keep a jittered TTL running underneath as a backstop, single-flight your hot keys, cache your misses, version your keys, set an eviction policy on purpose. Do those six things and the four lines hold up under the traffic that would otherwise find every one of these edges for you, on a Monday, the expensive way. Ask me how I know.
