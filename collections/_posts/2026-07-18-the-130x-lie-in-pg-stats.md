@@ -6,7 +6,7 @@ description:    Postgres had the right index and still walked 18 million rows fo
 categories: postgres query-planner databases performance
 ---
 
-If you've ever stared at a Postgres plan and wondered why it walked straight past the index you built for that exact query, this is for you. I wanted to reproduce one of the nastier versions of that failure, the `ORDER BY ... LIMIT 1` trap, small enough that anyone could run it locally and argue with the same planner I was arguing with.
+Postgres has an index built for exactly the query you're running, and it walks straight past it to scan millions of rows instead. If you've stared at a plan doing that and couldn't work out why, this one's yours. I wanted to reproduce one of the nastier versions of that failure, the `ORDER BY ... LIMIT 1` trap, small enough that anyone could run it locally and argue with the same planner I was arguing with.
 
 ## The problem
 
