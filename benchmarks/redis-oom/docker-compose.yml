@@ -1,0 +1,24 @@
+services:
+  redis:
+    image: redis:7.4@sha256:a8f08480e1f88f2647fed492d1178c06abb0d0c1fbf02c682a61e2f483fb3954
+    container_name: redis-oom-redis
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --maxmemory
+      - "80mb"
+      - --maxmemory-policy
+      - allkeys-lru
+      - --activedefrag
+      - "no"
+    ports:
+      - "127.0.0.1:56379:6379"
+    mem_limit: 95m
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30

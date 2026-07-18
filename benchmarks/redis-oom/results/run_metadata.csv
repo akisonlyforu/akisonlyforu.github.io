@@ -1,0 +1,2 @@
+redis_version,mem_allocator,keys_count_arg,value_bytes_arg,maxmemory_arg,delete_batch_arg,oom_killed,container_exit_code,container_status,oom_triggered_exception
+7.4.0,jemalloc-5.3.0,220000,200,95m,1000,True,137,exited,True
