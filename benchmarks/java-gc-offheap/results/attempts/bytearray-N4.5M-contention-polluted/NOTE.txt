@@ -1,0 +1,16 @@
+Variant: byte[][] slab, N=4,500,000 (~65% heap occupancy).
+
+The on-heap run reproduced the phenomenon strongly (40 concurrent-mark cycles,
+25.3s concurrent time, ~60% of wall spent in GC). BUT the off-heap run was polluted
+by host contention: a concurrent unrelated container (observed via docker stats as
+`funny_stonebraker`, 4.3GiB / 265% CPU) consumed the Docker VM's RAM, leaving only
+~2.4GiB free while the off-heap process needed heap(1.5G)+direct(864M). That pushed
+the Linux VM into reclaim/near-swap, inflating off-heap young pauses to 1359ms (vs
+~100ms in a clean run) and dropping off-heap throughput BELOW on-heap -- the opposite
+of the mechanism. Rejected for the contention artifact, not the GC result.
+
+Re-run at N=3,500,000 (smaller footprint, less swap risk) in a quieter window.
+
+[caveat] This attempt was collected before benchmark.py was fixed to parse
+rotated -Xlog segments (filecount=0). Its parsed GC-cycle/time CSVs read only the
+active log segment and therefore UNDERCOUNT; treat them as directional. The checked-in primary run under results/ uses the corrected single-file logging.

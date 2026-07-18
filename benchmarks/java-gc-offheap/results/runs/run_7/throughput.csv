@@ -1,0 +1,3 @@
+mode,iterations,wall_seconds,throughput_ops_sec,lookup_p50_ns,lookup_p90_ns,lookup_p99_ns,lookup_p999_ns,n_entries,payload_bytes
+onheap,40000000,13.614943,2937948.37,292,417,625,834,3500000,192
+offheap,40000000,10.655747,3753842.89,250,375,625,750,3500000,192

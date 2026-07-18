@@ -1,0 +1,2 @@
+mode,iterations,wall_seconds,throughput_ops_sec,checksum,garbage_sink,n_entries,payload_bytes,garbage_bytes,build_ms
+onheap,40000000,44.084371,907351.04,-3824967232,-38963200,4500000,192,2048,320

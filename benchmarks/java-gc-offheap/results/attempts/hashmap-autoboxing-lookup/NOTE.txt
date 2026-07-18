@@ -1,0 +1,17 @@
+Variant: on-heap population stored as HashMap<Long, byte[]>.
+
+This run reproduced the GC phenomenon cleanly (38 concurrent-mark cycles on-heap,
+0 off-heap, ~99% total GC-time reduction, +45% throughput). However the per-lookup
+LATENCY tradeoff came out opposite to the real-service story: off-heap p50 (250ns)
+was LOWER than on-heap p50 (333ns), because HashMap.get(Long) autoboxes the key and
+walks a hash bucket -- that is not a pure pointer dereference, and it also allocates
+extra short-lived garbage on every lookup. The on-heap samples are additionally
+inflated by concurrent-mark CPU contention.
+
+The primary (checked-in) run therefore uses a byte[][] slab for the on-heap
+population, so the on-heap lookup is a true arr[key] pointer dereference and the
+off-heap byte-copy decode cost shows up as the expected higher median latency.
+
+[caveat] This attempt was collected before benchmark.py was fixed to parse
+rotated -Xlog segments (filecount=0). Its parsed GC-cycle/time CSVs read only the
+active log segment and therefore UNDERCOUNT; treat them as directional. The checked-in primary run under results/ uses the corrected single-file logging.

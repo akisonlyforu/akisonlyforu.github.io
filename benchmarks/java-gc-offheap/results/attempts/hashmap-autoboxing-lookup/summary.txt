@@ -1,0 +1,26 @@
+Java G1GC: on-heap vs off-heap long-lived population
+========================================================
+
+heap=-Xmx1500m -Xms1500m  G1GC  mem=3g cpus=4
+N=3500000 entries  payload=192B  iters=40000000  garbage=2048B/iter
+
+metric                                    onheap         offheap
+----------------------------------------------------------------
+concurrent-mark cycles                        38               0
+concurrent-mark time (ms)               9442.705             0.0
+total STW pause time (ms)                427.141         103.108
+total GC time (ms)                      9869.846         103.108
+young pauses (count)                         106              89
+mixed pauses (count)                          17               0
+full GCs (count)                               0               0
+wall clock (s)                         15.542724       10.693585
+throughput (ops/sec)                     2573551         3740561
+lookup p50 (ns)                              333             250
+lookup p90 (ns)                              500             334
+lookup p99 (ns)                              708             625
+lookup p999 (ns)                            2000             791
+
+concurrent-mark time reduction off-heap: 100.0%
+total GC time reduction off-heap:       99.0%
+throughput change off-heap:             +45.3%
+lookup p50 change off-heap:             -24.9%
