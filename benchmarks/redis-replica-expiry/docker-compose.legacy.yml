@@ -1,0 +1,45 @@
+# Pre-3.2 Redis, for the contrast run: replicas did NOT mask expired keys on read,
+# so a GET on the replica returns the stale value. Same benchmark.py, same ports.
+# Image is amd64-only; runs under emulation on arm64 hosts (slow but fine for this).
+services:
+  primary:
+    image: redis:3.0@sha256:730b765df9fe96af414da64a2b67f3a5f70b8fd13a31e5096fee4807ed802e20
+    platform: linux/amd64
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+    ports:
+      - "127.0.0.1:6391:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  replica:
+    image: redis:3.0@sha256:730b765df9fe96af414da64a2b67f3a5f70b8fd13a31e5096fee4807ed802e20
+    platform: linux/amd64
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --slaveof
+      - primary
+      - "6379"
+      - --slave-read-only
+      - "yes"
+    depends_on:
+      primary:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:6392:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30

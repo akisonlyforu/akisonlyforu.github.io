@@ -32,13 +32,31 @@ python benchmark.py | tee results/summary.txt
 docker compose down -v
 ```
 
+## The pre-3.2 contrast run
+
+Replica read masking landed in Redis 3.2. To see the older, scarier behavior,
+where a `GET` on the replica returns the expired value itself, run the same
+script against a pinned Redis 3.0:
+
+```bash
+docker compose -f docker-compose.legacy.yml up -d --wait     # 3.0, same ports
+RESULTS_DIR="$PWD/results/legacy" python benchmark.py | tee results/legacy/summary.txt
+docker compose -f docker-compose.legacy.yml down -v
+```
+
+On 3.0 the replica returns `owner` for the expired lock and `EXISTS` says `1`;
+on 7.4 both are masked. The `docker-compose.legacy.yml` image is amd64-only and
+runs under emulation on arm64 hosts (slow, but fine for this).
+
 ## Results
 
-- `summary.txt` — the captured console run used in the post.
+- `summary.txt` — the captured console run used in the post (Redis 7.4.9).
+- `legacy/summary.txt` — the same script on Redis 3.0.7 (unmasked reads).
 - `command_behavior.csv` — the per-command table from experiment B.
 - `dbsize_timeline.csv` — primary vs replica `DBSIZE` samples from experiment C.
 - `run_metadata.csv` — Redis version, ports, and the headline numbers.
 
-The checked-in run is Redis 7.4.9. The masking behavior is the same on 8.x; the
-mechanism is not version-specific, only the exact set of commands that mask has
-tightened over Redis versions.
+The mechanism (replicas wait for the primary's `DEL`) is not version-specific.
+What changed across versions is how much the replica masks on read: nothing
+pre-3.2, and `GET`/`EXISTS`/`TTL`/`SCAN` by 7.4. `DBSIZE` counts the ghosts on
+every version.

@@ -19,7 +19,7 @@ import redis
 HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
 PPORT = int(os.environ.get("PRIMARY_PORT", "6391"))
 RPORT = int(os.environ.get("REPLICA_PORT", "6392"))
-RESULTS = os.path.join(os.path.dirname(__file__), "results")
+RESULTS = os.environ.get("RESULTS_DIR", os.path.join(os.path.dirname(__file__), "results"))
 
 
 def c(port):
@@ -69,8 +69,9 @@ def experiment_a(p, r):
     print(f"  set {n} keys with EX 2 on primary, waited 3s (all expired)")
     print(f"  primary DBSIZE : {p_db}")
     print(f"  replica DBSIZE : {r_db}")
-    print(f"  of those {r_db} replica keys, how many return a value on GET: {reads_alive}")
-    print(f"  => the replica reports {r_db} keys; {r_db - reads_alive} are ghosts (GET masks them)")
+    masked = r_db - reads_alive
+    print(f"  of those {r_db} replica keys, {reads_alive} still return a value on GET")
+    print(f"  => {masked} read back as gone (masked), {reads_alive} returned their stored value")
     return {"keys": n, "primary_dbsize": p_db, "replica_dbsize": r_db, "replica_reads_alive": reads_alive}
 
 
