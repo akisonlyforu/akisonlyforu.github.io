@@ -1,0 +1,4 @@
+statistics_target,warmup_runs,target_session,plan,planner_estimated_rows,actual_matching_rows,rows_removed_by_filter,shared_hits,shared_reads,execution_time_ms,plan_file
+100,1,c92b26f6-8689-c7af-56b0-b08721897732,primary_key_scan,551,180,17999000,0,223880,1409.73,explain_target_100.txt
+2000,1,c92b26f6-8689-c7af-56b0-b08721897732,session_id_index,180,180,0,9,0,0.067,explain_target_2000.txt
+5000,1,c92b26f6-8689-c7af-56b0-b08721897732,session_id_index,179,180,0,9,0,0.05,explain_target_5000.txt

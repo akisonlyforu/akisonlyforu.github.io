@@ -1,0 +1,9 @@
+strategy,gap_ms,threads,attempts,admitted,allowed_budget,admitted_vs_budget_pct,overshoot,overshoot_pct
+naive_two_command,0,8,3048,3018,3000,100.6,18,0.6
+atomic_lua,0,8,3030,3000,3000,100.0,0,0.0
+naive_two_command,5,8,3066,3036,3000,101.2,36,1.2
+atomic_lua,5,8,3030,3000,3000,100.0,0,0.0
+naive_two_command,10,8,3077,3047,3000,101.567,47,1.567
+atomic_lua,10,8,3030,3000,3000,100.0,0,0.0
+naive_two_command,25,8,3130,3100,3000,103.333,100,3.333
+atomic_lua,25,8,3030,3000,3000,100.0,0,0.0
