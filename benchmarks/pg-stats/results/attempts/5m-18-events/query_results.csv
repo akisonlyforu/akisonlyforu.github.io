@@ -1,4 +1,4 @@
 statistics_target,warmup_runs,target_session,plan,planner_estimated_rows,actual_matching_rows,rows_removed_by_filter,shared_hits,shared_reads,execution_time_ms,plan_file
-100,1,1b0c7224-5723-24e8-772d-17a2cc5134a5,session_id_index,27,18,0,7,0,0.023,explain_target_100.txt
-2000,1,1b0c7224-5723-24e8-772d-17a2cc5134a5,session_id_index,18,18,0,7,0,0.021,explain_target_2000.txt
-5000,1,1b0c7224-5723-24e8-772d-17a2cc5134a5,session_id_index,18,18,0,7,0,0.019,explain_target_5000.txt
+100,1,1b0c7224-5723-24e8-772d-17a2cc5134a5,session_id_index,29,18,0,7,0,0.019,explain_target_100.txt
+2000,1,1b0c7224-5723-24e8-772d-17a2cc5134a5,session_id_index,18,18,0,7,0,0.018,explain_target_2000.txt
+5000,1,1b0c7224-5723-24e8-772d-17a2cc5134a5,session_id_index,18,18,0,7,0,0.028,explain_target_5000.txt

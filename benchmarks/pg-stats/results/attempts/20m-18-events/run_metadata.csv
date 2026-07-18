@@ -4,7 +4,7 @@ platform,macOS-15.7.3-arm64-arm-64bit
 python,3.9.6
 docker,"Docker version 28.3.2, build 578ccf6"
 docker_compose,Docker Compose version v2.38.2-desktop.1
-postgres_image,postgres:16.14
+postgres_image,postgres:16.14@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
 postgres_server,"PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"
 seed_rows,20000000
 block_size,100
