@@ -28,6 +28,7 @@ RSS_PROXY_URL = "https://api.rss2json.com/v1/api.json?rss_url={}"
 CONTENT_TAG = "{http://purl.org/rss/1.0/modules/content/}encoded"
 GENERATED_MARKER = "<!-- Generated from Substack. Edit the Substack post instead. -->"
 MAX_FEED_BYTES = 10 * 1024 * 1024
+MIN_BODY_CHARS = 16
 MAX_IMAGE_BYTES = 15 * 1024 * 1024
 MAX_IMAGES_PER_POST = 40
 BLOCKED_TAGS = {"script", "style", "iframe", "object", "embed", "form"}
@@ -279,6 +280,13 @@ def plain_description(source: str) -> str:
     return re.sub(r"\s+", " ", " ".join(parser.parts)).strip()[:240]
 
 
+def is_placeholder(post: FeedPost) -> bool:
+    """Skip empty or placeholder Substack drafts (e.g. a one-letter test post
+    like "A"). These are drafts published by accident, not real articles."""
+    body = plain_description(post.body_html or post.description_html)
+    return len(body.strip()) < MIN_BODY_CHARS
+
+
 def atomic_write(path: Path, content: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
@@ -367,6 +375,9 @@ def sync(posts: Iterable[FeedPost], posts_dir: Path, assets_root: Path, mirror_a
     existing = existing_generated_posts(posts_dir)
     changes = 0
     for post in posts:
+        if is_placeholder(post):
+            print(f"skipping placeholder/empty post {post.url}", file=sys.stderr)
+            continue
         slug, rendered = render_post(post, assets_root, mirror_assets)
         target = existing.get(post.identifier)
         if target is None:
