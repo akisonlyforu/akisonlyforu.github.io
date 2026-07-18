@@ -1,0 +1,5 @@
+shards,key_distribution,processes,pipeline_size,decisions,wall_time_s,decisions_per_sec
+1,spread,16,256,856064,3.017,283791.327
+1,hot,16,256,959232,3.011,318595.119
+2,spread,16,256,1203200,3.008,400031.507
+2,hot,16,256,901632,3.012,299301.086
