@@ -1,0 +1,8 @@
+metric,resource_type,mode,value
+lock_count,KEY,,0
+lock_count,PAGE,,0
+lock_count,OBJECT,X,1
+escalated,,,True
+baseline_point_select_ms,,,33.4
+blocked_point_select_ms,,,3001
+updater_hold_ms,,,3010

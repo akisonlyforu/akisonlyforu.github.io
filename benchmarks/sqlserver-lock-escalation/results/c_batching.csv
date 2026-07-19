@@ -1,0 +1,4 @@
+arm,updater_total_ms,concurrent_selects_n,select_p50_ms,select_p99_ms,select_max_ms,select_blocked_n
+naive_single_update,3101,457,0.4,2.4,1007.5,3
+batched_2000,3192,5210,0.3,1.2,7.1,0
+lock_escalation_disable,3081,5234,0.3,0.6,2.7,0

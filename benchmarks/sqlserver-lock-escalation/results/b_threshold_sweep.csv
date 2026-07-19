@@ -1,0 +1,12 @@
+update_size,key_locks,page_locks,object_lock_mode,escalated,concurrent_select_ms,concurrent_select_blocked
+500,500,8,IX,False,0.7,False
+1000,1000,16,IX,False,0.9,False
+2000,2000,32,IX,False,0.7,False
+4000,4000,64,IX,False,2.0,False
+4900,4900,78,IX,False,0.5,False
+5000,5000,80,IX,False,2.5,False
+5500,5500,88,IX,False,1.2,False
+6000,6000,96,IX,False,0.5,False
+7000,0,0,X,True,801.7,True
+8000,0,0,X,True,803.8,True
+12000,0,0,X,True,802.6,True
