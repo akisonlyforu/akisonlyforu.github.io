@@ -3,7 +3,7 @@ layout: page
 title: Library
 permalink: /library/
 tags: library read_list
-description: Books Avinash Kumar has read, recommends, or plans to read across technology, engineering, and ideas.
+description: Books I have read, recommends, or plans to read across technology, engineering, and ideas.
 ---
 
 Books I've read/want to read and recommend:
@@ -11,19 +11,20 @@ Books I've read/want to read and recommend:
 <section style="display: flex; justify-content: space-between; flex-wrap: wrap">
 {% for member in site.data.library limit:120 %}
     {% if member.review_path %}
-        <a target="_blank" rel="noopener noreferrer" href="{{ site.baseurl }}/reviews/{{ member.review_path }}" style="color: #333333; flex: 1; width: 100%; min-width: 200px; padding-top: 5%;">
+        {% assign book_url = site.baseurl | append: "/reviews/" | append: member.review_path %}
     {% else %}
-        <a target="_blank" rel="noopener noreferrer" href="https://openlibrary.org/isbn/{{ member.isbn }}" style="color: #333333; flex: 1; width: 100%; min-width: 200px; padding-top: 5%;">
+        {% assign book_url = "https://openlibrary.org/isbn/" | append: member.isbn %}
     {% endif %}
+    <div style="flex: 1; width: 100%; min-width: 200px; padding-top: 5%;">
         <div style="width: 200px">
-            <img class="grow-me" src="https://covers.openlibrary.org/b/ISBN/{{ member.isbn }}-L.jpg" alt="{{ member.title }} by {{ member.author }}" loading="lazy">
+            <img class="grow-me library-book-cover" data-lightbox="false" src="https://covers.openlibrary.org/b/ISBN/{{ member.isbn }}-L.jpg" alt="{{ member.title }} by {{ member.author }}" loading="lazy">
         </div>
-        <div style="width: 200px">
+        <a target="_blank" rel="noopener noreferrer" href="{{ book_url }}" style="color: #333333; display: block; width: 200px;">
             <h4>{{ member.title }}</h4>
             <h6>{{ member.author }}</h6>
             <h6>{{ member.rating }}</h6>
-        </div>
-    </a>
+        </a>
+    </div>
 {% endfor %}
 </section>
 
@@ -49,6 +50,10 @@ Books I've read/want to read and recommend:
 
 .grow-me:hover {
   transform: scale(1.02);
+}
+
+.library-book-cover {
+  cursor: default;
 }
 
 </style>

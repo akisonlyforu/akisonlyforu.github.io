@@ -229,7 +229,7 @@
 
   // --- Image Lightbox ---
   function initLightbox() {
-    var images = document.querySelectorAll('.post-content img');
+    var images = document.querySelectorAll('.post-content img:not([data-lightbox="false"])');
     if (images.length === 0) return;
 
     // Create overlay
