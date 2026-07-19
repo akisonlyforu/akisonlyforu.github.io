@@ -101,6 +101,14 @@ This is where I was wrong going in. I expected the bad flame graph to be dominat
 
 `AbstractQueuedSynchronizer.signalNext` is more than three-quarters of the samples, and `SpinBug`'s own loop body, the code I actually wrote, is only about 15%. What's burning the core isn't idling, it's `ArrayBlockingQueue`'s internal `ReentrantLock` getting acquired and released billions of times a second by a thread that has nothing to do with the result each time. Ten threads spinning at that rate against ten separate queues still means real, measurable contention machinery running underneath something that looks, from the outside, like plain idling.
 
+![Flame graph of the spin-bad run, with AbstractQueuedSynchronizer.signalNext, ReentrantLock$Sync frames, and ArrayBlockingQueue.poll stacked wide above a narrow SpinBug.lambda$run$0](/images/posts/java-high-cpu-debugging/flame-spin-bad.jpg)
+
+`AbstractQueuedSynchronizer.signalNext` and its neighboring `ReentrantLock$Sync`/`AbstractQueuedSynchronizer.release` frames run nearly the full width of the graph, sitting above `ArrayBlockingQueue.poll`. `SpinBug.lambda$run$0`, the loop I actually wrote, is the thin sliver underneath carrying all of it. Here's the same ten threads with the blocking `poll(50ms)` instead:
+
+![Flame graph of the spin-fixed run, dominated by Unsafe_Park, Parker::park, and LockSupport.parkNanos frames, the thread parked and waiting instead of spinning](/images/posts/java-high-cpu-debugging/flame-spin-fixed.jpg)
+
+Almost the entire stack is `LockSupport.parkNanos` and `Unsafe_Park` down into the OS-level `Parker::park`. The thread isn't running at all for most of the sample window, it's parked, which is exactly what "idle" is supposed to look like and exactly what the bad run never actually achieved.
+
 That's a more useful lesson than "spinning wastes CPU," which everyone already knows. The specific thing it's wasting CPU on is lock acquisition overhead for a lock nobody needed to take.
 
 ## Stuff worth remembering

@@ -125,6 +125,14 @@ The bad flame graph doesn't have one dominant frame the way the regex bug did. I
 
 `Field.get` is reflection pulling each managed entity's current field values so they can be compared against what Hibernate loaded them with. `Long.equals` is that comparison. `AbstractFlushingEventListener.prepareEntityFlushes`, `Cascade.cascade`, `DefaultFlushEntityEventListener.performDirtyCheck`, and `DirtyHelper.findDirty` are the flush event pipeline itself, walking the persistence context entity by entity. None of that is the `SELECT`. The actual query, the thing the code visibly asks for, doesn't even register as a named hot frame, it's buried in whatever's left in "everything else." The bug isn't in the query. It's in everything that has to happen before Hibernate will let the query run.
 
+![Flame graph of the hibernate-bad run, wide bands of org/hibernate/event/internal flush and dirty-check frames, Cascade.cascade, Field.get, and Long.equals, above the actual query buried at the edges](/images/posts/java-high-cpu-debugging/flame-hibernate-bad.jpg)
+
+`AbstractFlushingEventListener.flushEverythingToExecutions`, `Cascade.cascade`, `DefaultFlushEntityEventListener.onFlushEntity`, `EntityPersister.getPropertyValues`, all of it Hibernate's own flush pipeline, fills most of the width above `autoPreFlush` and `autoFlushIfRequired`. The query that actually runs is the narrow strip on the far right. Here's the same lookup with `FlushMode.COMMIT` set:
+
+![Flame graph of the hibernate-fixed run, dominated by real H2 query execution frames like IndexCursor.find, TableFilter.next, and MVPrimaryIndex, with no Hibernate flush machinery at all](/images/posts/java-high-cpu-debugging/flame-hibernate-fixed.jpg)
+
+No flush frames anywhere. What's left is what the query actually costs: H2's own `IndexCursor.find`, `TableFilter.next`, and the `MVStore`/`MVPrimaryIndex` b-tree lookup underneath it, plus the JDBC and Hibernate SQL-execution plumbing that has to run for any query regardless of flush mode. This is what a one-row indexed SELECT is supposed to look like on a flame graph.
+
 ## Stuff worth remembering
 
 - `FlushMode.AUTO` means every query pays for a full dirty-check of the whole persistence context first, and that cost scales with however many entities happen to be managed, not with the query.

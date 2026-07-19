@@ -112,6 +112,14 @@ The bad flame graph isn't subtle once you open it. Two frames account for about 
   <figcaption>CharPropertyGreedy.match is the greedy ".*" retrying its match at each offset. Pattern$Slice.match is the literal "ERROR" check it keeps retrying against. Together, almost nine out of ten samples. The fixed run doesn't touch the regex engine at all.</figcaption>
 </figure>
 
+![Flame graph of the regex-bad run, showing java/util/regex/Pattern$CharPropertyGreedy.match and Pattern$Slice.match dominating the stack above String.matches](/images/posts/java-high-cpu-debugging/flame-regex-bad.jpg)
+
+That's the actual async-profiler flame graph, not a mockup. `Pattern$CharPropertyGreedy.match` and `Pattern$Slice.match` sit stacked directly above `Matcher.match`, `Pattern.matches`, and `String.matches`, exactly where you'd expect the backtracking cost to show up. Here's the same 35 seconds with `String.contains()` instead:
+
+![Flame graph of the regex-fixed run, a flat stack of RegexBug.run over a thin sliver of os::javaTimeMillis clock calls, no regex engine frames at all](/images/posts/java-high-cpu-debugging/flame-regex-fixed.jpg)
+
+No `Pattern` or `Matcher` frames anywhere. What little stack there is belongs to the clock calls the CPU sampler itself makes once a second. The regex engine simply never gets invoked.
+
 `CharPropertyGreedy.match` is the greedy quantifier doing its backtracking, `Pattern$Slice.match` is the literal-string matcher it keeps re-invoking against the shifted offset. Nothing else in the call stack gets a look-in. `regex-fixed`'s flame graph, by contrast, barely has a call stack worth mentioning; `String.contains()` is a single pass and doesn't leave much of a shadow.
 
 ## Stuff worth remembering
