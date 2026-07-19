@@ -27,5 +27,19 @@ layout: none
         "categories": {{ thought.categories | jsonify }}
       }{% unless forloop.last %},{% endunless %}
     {% endfor %}
+  ],
+  "interview": [
+    {% assign interview_pages = site.pages | where_exp: "ipage", "ipage.path contains 'interview/'" %}
+    {% for ipage in interview_pages %}
+      {
+        "title": {{ ipage.title | default: "" | jsonify }},
+        "url": {{ ipage.url | absolute_url | jsonify }},
+        "date": {% if ipage.date %}{{ ipage.date | date: '%B %d, %Y' | jsonify }}{% else %}""{% endif %},
+        "excerpt": {{ ipage.description | default: "" | strip_html | strip_newlines | truncatewords: 50 | jsonify }},
+        "content": {{ ipage.content | default: "" | strip_html | strip_newlines | jsonify }},
+        "type": "interview",
+        "categories": {{ ipage.categories | default: "" | split: " " | jsonify }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
   ]
 } 

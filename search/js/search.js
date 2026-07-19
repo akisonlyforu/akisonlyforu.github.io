@@ -61,14 +61,15 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(data => {
       debugLog('Parsed data:', data);
-      if (!data || (!data.posts && !data.thoughts)) {
+      if (!data || (!data.posts && !data.thoughts && !data.interview)) {
         throw new Error('Invalid data structure');
       }
 
-      // Combine posts and thoughts into single searchable array
+      // Combine posts, thoughts, and interview pages into single searchable array
       const posts = data.posts || [];
       const thoughts = data.thoughts || [];
-      debugState.content = [...posts, ...thoughts];
+      const interview = data.interview || [];
+      debugState.content = [...posts, ...thoughts, ...interview];
 
       if (debugState.content.length === 0) {
         resultsContainer.innerHTML = '<p>No content found.</p>';
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
       debugLog('Content loaded:', {
         posts: posts.length,
         thoughts: thoughts.length,
+        interview: interview.length,
         total: debugState.content.length
       });
       
@@ -246,8 +248,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const html = results.map(item => {
-      const contentType = item.type === 'thought' ? 'Musing' : 'Post';
-      const badgeClass = item.type === 'thought' ? 'badge-thought' : 'badge-post';
+      const contentType = item.type === 'thought' ? 'Musing' : (item.type === 'interview' ? 'Interview' : 'Post');
+      const badgeClass = item.type === 'thought' ? 'badge-thought' : (item.type === 'interview' ? 'badge-interview' : 'badge-post');
 
       // Highlighted title (escape first so `<mark>` tags from highlightText survive)
       const escapedTitle = escapeHTML(item.title || 'Untitled');
