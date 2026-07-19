@@ -75,4 +75,6 @@ classDiagram
 
 A facade doesn't replace the subsystem classes or simplify what they do, it just moves the coordination logic into one place instead of leaving it implicit in every caller's head. If two different call sites are calling your subsystem methods in a slightly different order, that's the smell that tells you a facade was missing.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/facade).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

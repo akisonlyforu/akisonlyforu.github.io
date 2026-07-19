@@ -62,4 +62,6 @@ Any feature that needs to roll back to a prior state, undo/redo in an editor, ro
 
 Memento buys you encapsulation-preserving history at the cost of memory, every saved state is a full snapshot, not a diff. Cap your `CareTaker`'s history size the way this implementation does with `maxHistorySize`, an unbounded undo stack is a memory leak with extra steps.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/memento).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

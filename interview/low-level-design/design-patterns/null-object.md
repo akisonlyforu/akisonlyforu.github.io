@@ -56,4 +56,6 @@ Optional collaborators, objects your code calls but which are allowed to legitim
 
 Don't use Null Object to swallow error states, it's for "this collaborator is legitimately absent," not "something went wrong and I don't want to deal with it." If the null case should actually surface an error somewhere, a no-op object just hides the bug quietly instead of failing loudly.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/null_object).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

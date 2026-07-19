@@ -60,4 +60,6 @@ classDiagram
 
 The adapter doesn't fix the old interface, it just hides the mismatch from everyone downstream. If you find yourself writing more than a thin pass-through in the adapter, you've probably drifted into doing real work there, and that work belongs somewhere else.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/adapter).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

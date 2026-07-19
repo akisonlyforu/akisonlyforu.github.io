@@ -64,4 +64,6 @@ Many-to-many communication where the coordination logic itself is the hard part,
 
 The mediator ends up as the one class that knows everything, which is the whole point, but it also means all your coordination bugs live in one place instead of scattered across every component. That's usually a good trade, just watch that the mediator doesn't quietly grow business logic that has nothing to do with coordination.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/mediator).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

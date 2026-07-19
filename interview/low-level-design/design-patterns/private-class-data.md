@@ -65,4 +65,6 @@ classDiagram
 
 This isn't really a structural trick, it's a discipline: no setters on the data holder, no method that hands the data object itself back to a caller. If either of those slips in, you've quietly undone the whole point.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/structural/private_class_data).
+
 [← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)

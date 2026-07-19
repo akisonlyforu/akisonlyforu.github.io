@@ -66,4 +66,6 @@ Database connection pools, thread pools, buffer pools, anything where constructi
 
 The two things that make this pattern actually work are reset() being mandatory on release and the factory existing to solve Java's "can't new a generic type" problem. Miss either one and you either leak state between users or you can't write the pool at all.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/creational/object_pool).
+
 [← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)

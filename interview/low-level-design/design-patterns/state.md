@@ -54,4 +54,6 @@ Any entity whose valid operations, and their outcomes, depend on which stage of 
 
 Watch for state explosion. Three states and six methods, like this example, is fine, but a state machine with a dozen states each implementing a dozen methods gets unwieldy fast. If most transitions and behaviors are actually shared and only one or two methods differ, you might be overpaying for a full `State` object per state.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/state).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

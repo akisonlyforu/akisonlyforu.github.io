@@ -66,4 +66,6 @@ Small, stable grammars: config languages, rule engines, places where you evaluat
 
 Don't reach for this past a handful of operators, each new grammar rule is a new class, and a deep expression tree means a deep call stack, that's a real limit, not a theoretical one. Past a certain grammar size you want a parser generator, not more expression classes.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/interpreter).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

@@ -60,4 +60,6 @@ Whenever a caller needs to walk a collection without knowing, or being allowed t
 
 The pattern is mostly invisible once your language has built-in iteration protocols, Java's for-each, Python's generators, you're using Iterator constantly without ever writing the interface yourself. Write your own version, like `EmployeeIterator` here, only when the built-in one can't express what you need, resettable position, a non-standard order, something specific like that.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/iterator).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

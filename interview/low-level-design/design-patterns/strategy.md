@@ -64,4 +64,6 @@ Whenever you need to swap an algorithm at runtime and the algorithms genuinely d
 
 If your "strategies" only differ by which numbers they plug into the same formula, you don't need Strategy, you need a config table. Reach for the interface only when the actual logic changes between implementations, not just the inputs.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/strategy).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

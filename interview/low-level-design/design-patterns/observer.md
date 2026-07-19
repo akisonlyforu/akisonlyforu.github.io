@@ -55,4 +55,6 @@ One-to-many notification where the "one" doesn't need to know who's listening or
 
 The most common way this pattern breaks in production isn't the notify loop, it's forgetting to unsubscribe. A listener that outlives its usefulness but stays in the list is a memory leak and a source of notifications firing into dead code. If your listeners have a shorter lifetime than the publisher, make sure something calls unsubscribe when they're done.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/behavioral/observer).
+
 [← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)

@@ -57,4 +57,6 @@ Any object with more than a couple of optional fields, or where the required/opt
 
 The private constructor plus static nested builder is what actually enforces "required fields at compile time, optional fields whenever you want them." The director is a bonus for naming your common configurations, not the core of the pattern.
 
+Read the full source on [GitHub](https://github.com/akisonlyforu/design-patterns/tree/master/src/creational/builder).
+
 [← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
