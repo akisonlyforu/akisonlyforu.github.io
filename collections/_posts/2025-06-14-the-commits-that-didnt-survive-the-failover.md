@@ -22,6 +22,69 @@ Async replication makes exactly zero promises about either one at commit time. T
 
 To make the receipt gap deterministic instead of racing it under load, I stopped the replica's IO thread before the burst, `STOP REPLICA IO_THREAD`, which models a replica whose receipt has fallen behind. Then I wrote a thousand single-row inserts to the primary, every one of them returning success, and hard-killed the primary with `docker kill`, a crash and not a clean shutdown. Then I promoted the replica and counted.
 
+<style>
+.cache-bench {
+  --cb-bg: #f7f9fb;
+  --cb-text: #333333;
+  --cb-muted: #666666;
+  --cb-grid: rgba(0, 0, 0, 0.12);
+  --cb-blue: #0076df;
+  --cb-orange: #d65f3c;
+  --cb-green: #23856d;
+  --cb-purple: #7b5bb5;
+  margin: 1.8rem 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--cb-grid);
+  border-radius: 8px;
+  background: var(--cb-bg);
+  color: var(--cb-text);
+}
+.cache-bench h3 { margin: 0 0 1rem; color: var(--cb-text); font-size: 1rem; }
+.cache-bench figcaption { margin-top: 0.9rem; color: var(--cb-muted); font-size: 0.82rem; line-height: 1.45; }
+.cb-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.cb-panel-title { margin: 0 0 0.55rem; color: var(--cb-muted); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.cb-bar-row { display: grid; grid-template-columns: minmax(6.5rem, 1.2fr) minmax(7rem, 4fr) minmax(3.8rem, 0.8fr); gap: 0.55rem; align-items: center; margin: 0.42rem 0; font-size: 0.78rem; }
+.cb-track { height: 0.72rem; overflow: hidden; border-radius: 999px; background: var(--cb-grid); }
+.cb-fill { display: block; width: var(--value); min-width: 2px; height: 100%; border-radius: inherit; background: var(--bar, var(--cb-blue)); }
+.cb-value { color: var(--cb-muted); text-align: right; font-variant-numeric: tabular-nums; }
+.cb-group { padding-top: 0.8rem; border-top: 1px solid var(--cb-grid); }
+.cb-group:first-of-type { padding-top: 0; border-top: 0; }
+.cb-group-label { margin: 0 0 0.35rem; color: var(--cb-muted); font-size: 0.78rem; font-weight: 700; }
+.cb-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cb-svg text { fill: var(--cb-muted); font: 12px system-ui, sans-serif; }
+.cb-svg .grid { stroke: var(--cb-grid); stroke-width: 1; }
+.cb-svg .fixed { fill: none; stroke: var(--cb-orange); stroke-width: 3; stroke-linejoin: round; }
+.cb-svg .jittered { fill: none; stroke: var(--cb-blue); stroke-width: 3; stroke-linejoin: round; }
+.cb-legend { display: flex; gap: 1rem; margin-top: 0.5rem; color: var(--cb-muted); font-size: 0.78rem; }
+.cb-swatch { width: 0.8rem; height: 0.22rem; margin-right: 0.3rem; display: inline-block; vertical-align: middle; background: var(--swatch); }
+@media (prefers-color-scheme: dark) {
+  .cache-bench {
+    --cb-bg: #252525;
+    --cb-text: #e0e0e0;
+    --cb-muted: #b0b0b0;
+    --cb-grid: rgba(255, 255, 255, 0.14);
+    --cb-blue: #4dabf7;
+    --cb-orange: #ff8a65;
+    --cb-green: #51cf66;
+    --cb-purple: #b197fc;
+  }
+}
+:root[data-theme="dark"] .cache-bench {
+  --cb-bg: #252525;
+  --cb-text: #e0e0e0;
+  --cb-muted: #b0b0b0;
+  --cb-grid: rgba(255, 255, 255, 0.14);
+  --cb-blue: #4dabf7;
+  --cb-orange: #ff8a65;
+  --cb-green: #51cf66;
+  --cb-purple: #b197fc;
+}
+@media (max-width: 620px) {
+  .cb-panels { grid-template-columns: 1fr; }
+  .cb-bar-row { grid-template-columns: minmax(6rem, 1.3fr) minmax(5rem, 3fr) minmax(3.6rem, 0.8fr); gap: 0.4rem; }
+}
+</style>
+
 <figure class="cache-bench">
   <h3>Rows surviving failover, of 1,000 acknowledged commits</h3>
   <div class="cb-bar-row"><span>async, acknowledged</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">1000</span></div>
