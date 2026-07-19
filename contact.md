@@ -1,6 +1,8 @@
 ---
 layout: page
 permalink: /contact/
+title: Contact Avinash Kumar
+description: Contact Avinash Kumar to discuss backend engineering, distributed systems, and software architecture.
 ---
 
 <div class="contact-container">

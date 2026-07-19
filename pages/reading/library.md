@@ -3,6 +3,7 @@ layout: page
 title: Library
 permalink: /library/
 tags: library read_list
+description: Books Avinash Kumar has read, recommends, or plans to read across technology, engineering, and ideas.
 ---
 
 Books I've read/want to read and recommend:
