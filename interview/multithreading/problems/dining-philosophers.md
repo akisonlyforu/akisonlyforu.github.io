@@ -24,12 +24,12 @@ Five philosophers sit around a table, one fork between each pair. To eat, a phil
 
 ### Clarify before solving
 
-- How many philosophers can eat simultaneously? (Floor(5/2) = 2, your solution shouldn't be more restrictive than necessary, but a correct-but-conservative solution is acceptable if you name the trade-off.)
+- How many philosophers can eat simultaneously? (Floor(5/2) = 2 — your solution shouldn't be more restrictive than necessary, but a correct-but-conservative solution is acceptable if you name the trade-off.)
 - Is starvation-freedom required or just deadlock-freedom? (Usually deadlock-freedom; know the difference.)
 
 ### Why this problem matters
 
-THE vehicle for deadlock. You're expected to (a) show the deadlock cycle, (b) name the four Coffman conditions, (c) present at least two fixes and say which condition each fix breaks. That structure (cycle, conditions, targeted break) is reusable on every deadlock question you'll ever get, including "tell me about a deadlock you've seen in production".
+THE vehicle for deadlock. You're expected to (a) show the deadlock cycle, (b) name the four Coffman conditions, (c) present at least two fixes and say which condition each fix breaks. That structure — cycle, conditions, targeted break — is reusable on every deadlock question you'll ever get, including "tell me about a deadlock you've seen in production".
 
 ---
 
@@ -37,7 +37,7 @@ THE vehicle for deadlock. You're expected to (a) show the deadlock cycle, (b) na
 
 ### Classify
 
-Multi-resource acquisition. The danger isn't a data race (each fork is trivially a mutex), it's the **acquisition ORDER** across multiple locks.
+Multi-resource acquisition. The danger isn't a data race (each fork is trivially a mutex) — it's the **acquisition ORDER** across multiple locks.
 
 ### Invariant
 
@@ -45,27 +45,27 @@ Each fork held by ≤1 philosopher; a philosopher eats only while holding both a
 
 ### First: construct the deadlock (do this before fixing anything)
 
-All five simultaneously grab their left fork. Now everyone holds one fork and waits for the right one, which is someone else's left. Waits-for graph: P0→P1→P2→P3→P4→P0. A cycle. Nobody can proceed, nobody will release. Check the four Coffman conditions: mutual exclusion (forks are exclusive) ✓, hold-and-wait (holding left, waiting for right) ✓, no preemption (can't snatch a fork) ✓, circular wait (the cycle) ✓. All four hold → deadlock is possible. **Every fix works by breaking exactly one condition. Always say which.**
+All five simultaneously grab their left fork. Now everyone holds one fork and waits for the right one, which is someone else's left. Waits-for graph: P0→P1→P2→P3→P4→P0. A cycle. Nobody can proceed, nobody will release. Check the four Coffman conditions: mutual exclusion (forks are exclusive) ✓, hold-and-wait (holding left, waiting for right) ✓, no preemption (can't snatch a fork) ✓, circular wait (the cycle) ✓. All four hold → deadlock is possible. **Every fix works by breaking exactly one condition — always say which.**
 
 ### The three standard fixes
 
-1. **Resource ordering** (breaks circular wait). Number the forks 0..4. Every philosopher picks up their LOWER-numbered fork first. Four philosophers order left-then-right, but one (the one between fork 4 and fork 0) is forced right-then-left. A cycle now needs everyone to wait for a higher-numbered fork while holding a lower one, but the ordering makes a closed loop of "higher" impossible. This is also the production answer for "lock A then B in one code path, B then A in another": **define a global lock order.**
-2. **Limit diners to N-1** (breaks hold-and-wait at the system level). A multiplex, Semaphore(4), around the table: at most 4 philosophers may even reach for forks. With 5 forks among ≤4 fork-grabbers, the pigeonhole principle guarantees someone gets both forks, eats, and releases. Simple to reason about; slightly conservative.
-3. **tryLock with backoff** (breaks hold-and-wait per philosopher). Grab left; try right; if unavailable, PUT LEFT BACK and retry later. No one ever holds-and-waits indefinitely. Cost: theoretical livelock (all five could cycle in lockstep). Mention randomized backoff as the mitigation. This maps to real systems: tryLock + timeout is how you defend when you can't control lock order.
+1. **Resource ordering** (breaks circular wait). Number the forks 0..4. Every philosopher picks up their LOWER-numbered fork first. Four philosophers order left-then-right, but one (the one between fork 4 and fork 0) is forced right-then-left. A cycle now needs everyone to wait for a higher-numbered fork while holding a lower one — but the ordering makes a closed loop of "higher" impossible. This is also the production answer for "lock A then B in one code path, B then A in another": **define a global lock order.**
+2. **Limit diners to N-1** (breaks hold-and-wait at the system level). A multiplex — Semaphore(4) — around the table: at most 4 philosophers may even reach for forks. With 5 forks among ≤4 fork-grabbers, the pigeonhole principle guarantees someone gets both forks, eats, and releases. Simple to reason about; slightly conservative.
+3. **tryLock with backoff** (breaks hold-and-wait per philosopher). Grab left; try right; if unavailable, PUT LEFT BACK and retry later. No one ever holds-and-waits indefinitely. Cost: theoretical livelock (all five could cycle in lockstep) — mention randomized backoff as the mitigation. This maps to real systems: tryLock + timeout is how you defend when you can't control lock order.
 
 ### Which to code in an interview
 
-Resource ordering: shortest and the most transferable idea. Offer the other two verbally.
+Resource ordering — shortest and the most transferable idea. Offer the other two verbally.
 
 ### Starvation note (senior differentiator)
 
-Deadlock-freedom ≠ starvation-freedom: under fix 1 an unlucky philosopher can lose the race repeatedly. If asked: fair semaphores/locks (FIFO queuing) or the N-1 semaphore in fair mode. Don't volunteer complexity, answer when probed.
+Deadlock-freedom ≠ starvation-freedom: under fix 1 an unlucky philosopher can lose the race repeatedly. If asked: fair semaphores/locks (FIFO queuing) or the N-1 semaphore in fair mode. Don't volunteer complexity — answer when probed.
 
 ### Pitfalls
 
-1. Presenting a fix without showing the deadlock first. You skipped the understanding.
-2. "Just use one global mutex for the whole table", correct but serializes all eating (one diner at a time instead of two); name that cost if you offer it as a baseline.
-3. In fix 3, retrying without releasing the left fork, that IS hold-and-wait; you fixed nothing.
+1. Presenting a fix without showing the deadlock first — you skipped the understanding.
+2. "Just use one global mutex for the whole table" — correct but serializes all eating (one diner at a time instead of two); name that cost if you offer it as a baseline.
+3. In fix 3, retrying without releasing the left fork — that IS hold-and-wait; you fixed nothing.
 
 ### Check your understanding
 
@@ -76,4 +76,4 @@ Deadlock-freedom ≠ starvation-freedom: under fix 1 an unlucky philosopher can 
 
 ### Transfers to
 
-Every multi-lock deadlock question, bank transfer problem (lock both accounts: order by account id!), conceptual #6, and your "deadlock war story" prep.
+Every multi-lock deadlock question, bank transfer problem (lock both accounts — order by account id!), conceptual #6, and your "deadlock war story" prep.
