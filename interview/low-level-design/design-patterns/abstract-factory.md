@@ -26,7 +26,7 @@ flowchart TD
     B --> D[App running]
     C --> D
     D --> E[VlcAudioPlayer paired with WindowsVideoPlayer<br/>in the same playback session]
-    E --> F[Audio and video assume different platform conventions,<br/>stream desyncs, and the bug report says nothing<br/>about "someone forgot a call site"]
+    E --> F[Audio and video assume different platform conventions,<br/>stream desyncs, and the bug report says nothing<br/>about 'someone forgot a call site']
 ```
 
 Nothing in the naive version stops that pairing. AudioPlayer and VideoPlayer are constructed independently, so the fact that they're supposed to travel together as a "Windows family" or a "VLC family" only exists in the programmer's head, not in the code.
