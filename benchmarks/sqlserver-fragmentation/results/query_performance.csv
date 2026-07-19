@@ -1,0 +1,4 @@
+state,avg_logical_reads,avg_elapsed_ms
+fragmented,548.0,11.715
+after_rebuild,282.0,12.504
+after_reorganize,283.0,11.976

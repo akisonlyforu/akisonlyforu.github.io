@@ -1,0 +1,5 @@
+level,operation,frag_before,frag_after,elapsed_s
+low,REBUILD,19.07,0.17,0.16
+low,REORGANIZE,19.05,0.33,1.621
+high,REBUILD,99.16,0.16,0.221
+high,REORGANIZE,99.3,0.46,5.419

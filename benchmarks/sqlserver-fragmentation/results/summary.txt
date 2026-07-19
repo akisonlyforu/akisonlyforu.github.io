@@ -1,0 +1,48 @@
+  Microsoft SQL Server 2022 (RTM-CU26) (KB5093420) - 16.0.4265.3 (X64) 
+  database frag_bench created, recovery model SIMPLE (keeps the log-growth comparison in experiment B clean)
+
+========================================================================
+EXPERIMENT A  building fragmentation and watching it happen
+========================================================================
+  checkpoint  cum churn   frag %  page use %   pages   reads       ms
+  baseline            0     0.17       99.90    5440     275   11.497
+  churn-1           200     7.11       96.44    5636     284   11.452
+  churn-2           600    18.91       90.50    6007     303   11.456
+  churn-3          1400    37.12       81.34    6686     337   11.693
+  churn-4          3000    58.83       70.43    7727     377   11.371
+  churn-5          6200    80.59       59.54    9154     456   11.725
+  churn-6         12600    93.88       53.00   10317     526   11.438
+  churn-7         25400    98.80       50.80   10832     543   11.852
+  churn-8         51000    99.21       51.22   10879     546   12.787
+
+========================================================================
+EXPERIMENT B  REBUILD vs REORGANIZE from an identical fragmented state
+========================================================================
+  building two independent tables with the same deterministic base load + churn...
+  starting fragmentation   rebuild-copy=99.16%   reorg-copy=99.30%  (should match closely - same churn)
+
+  operation     elapsed s  frag % after  page use % after  log growth MB
+  REBUILD            0.22          0.16             99.93           0.41
+  REORGANIZE         5.42          0.46             99.61         254.96
+  => REORGANIZE took 24.5x as long and generated 615.8x the log of REBUILD for a comparable fragmentation result
+
+========================================================================
+EXPERIMENT C  does REORGANIZE keep up as starting fragmentation rises?
+========================================================================
+  level operation     frag before  frag after  elapsed s
+  low   REBUILD             19.07        0.17      0.160
+  low   REORGANIZE          19.05        0.33      1.621
+  high  REBUILD             99.16        0.16      0.221
+  high  REORGANIZE          99.30        0.46      5.419
+  => REBUILD elapsed time barely moves with starting fragmentation (0.16s low -> 0.22s high); REORGANIZE's does (1.62s low -> 5.42s high)
+
+========================================================================
+EXPERIMENT D  range-query cost: fragmented vs after REBUILD vs after REORGANIZE
+========================================================================
+  state                avg logical reads  avg elapsed ms
+  fragmented                       548.0          11.715
+  after_rebuild                    282.0          12.504
+  after_reorganize                 283.0          11.976
+
+  total runtime: 62.1s
+  artifacts in results/
