@@ -47,15 +47,15 @@ Object-oriented design and clean architecture principles.
 ## Concepts
 
 - **[Design Patterns](#design-patterns)**, all 26, Creational/Structural/Behavioral, full writeups below.
-
-Coming soon...
-
-- **SOLID**
+- **[SOLID Principles](/interview/low-level-design/solid)**, all five, each with the failure it prevents.
   - Single Responsibility
   - Open/Closed
   - Liskov Substitution
   - Interface Segregation
   - Dependency Inversion
+
+Coming soon...
+
 - UML Diagrams
 - Class Design
 - Interface Design
