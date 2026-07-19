@@ -234,11 +234,81 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 {% if site.enable_anchorjs %}
+<style>
+  .anchorjs-link.anchor-copied::after {
+    content: 'Copied!';
+    position: absolute;
+    right: 100%;
+    margin-right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 2px 6px;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+    border-radius: 3px;
+    background: var(--link-color, #2a7ae2);
+    color: #fff;
+    opacity: 1;
+  }
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
 <script>
     anchors.options.visible = 'hover';
     anchors.options.placement = 'left';
-    anchors.add('article h2, article h3, article h5, article h5, article h6');
+    anchors.add('article h2, article h3, article h4, article h5, article h6');
+
+    // Clicking a heading anchor copies its shareable URL to the clipboard.
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest('.anchorjs-link');
+      if (!link) return;
+      event.preventDefault();
+
+      var hash = link.getAttribute('href'); // e.g. "#invariant"
+      var url = window.location.origin + window.location.pathname + hash;
+
+      // Keep the address bar in sync without triggering a jump-scroll flash.
+      if (history.replaceState) {
+        history.replaceState(null, '', hash);
+      } else {
+        window.location.hash = hash;
+      }
+
+      function showCopied() {
+        var original = link.getAttribute('aria-label') || '';
+        link.classList.add('anchor-copied');
+        link.setAttribute('aria-label', 'Link copied!');
+        setTimeout(function () {
+          link.classList.remove('anchor-copied');
+          link.setAttribute('aria-label', original);
+        }, 1500);
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(showCopied).catch(function () {
+          fallbackCopy(url, showCopied);
+        });
+      } else {
+        fallbackCopy(url, showCopied);
+      }
+    });
+
+    function fallbackCopy(text, onDone) {
+      var textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        onDone();
+      } catch (err) {
+        console.error('Anchor copy failed', err);
+      }
+      document.body.removeChild(textArea);
+    }
 </script>
 {% endif %}
 <script src="https://instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>
