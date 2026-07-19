@@ -1,0 +1,31 @@
+key,value
+run_at_utc,2026-07-19T18:46:42.334224+00:00
+platform,macOS-15.7.3-arm64-arm-64bit
+python,3.9.6
+docker,"Docker version 28.3.2, build 578ccf6"
+docker_compose,Docker Compose version v2.38.2-desktop.1
+postgres_image,postgres:16.14@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
+postgres_server,PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu
+cycles,50
+insert_batch,5000
+remove_batch,4900
+latency_iterations,1000
+seed,1234
+bloat_experiment_seconds,5.56
+index_build_seconds_partial,0.0103
+final_hard_total_bytes,15351808
+final_soft_total_bytes,66142208
+final_hard_table_bytes,1662976
+final_soft_table_bytes,44359680
+final_hard_secondary_index_bytes,8552448
+final_soft_secondary_index_bytes,10215424
+final_hard_n_live_tup,5034
+final_soft_n_live_tup,250000
+total_bytes_ratio_soft_over_hard,4.3084
+table_bytes_ratio_soft_over_hard,26.6749
+secondary_index_ratio_soft_over_hard,1.1944
+active_rows_p99_ratio_soft_over_hard,1.3278
+partial_index_bytes,131072
+full_index_bytes,10215424
+partial_index_size_ratio,77.9375
+partial_index_p99_speedup,1.7513

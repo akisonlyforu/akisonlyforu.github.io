@@ -1,0 +1,5 @@
+Index Scan using soft_delete_orders_pkey on soft_delete_orders  (cost=0.42..8.44 rows=1 width=136) (actual time=0.004..0.004 rows=1 loops=1)
+  Index Cond: (id = 200709)
+  Buffers: shared hit=4
+Planning Time: 0.008 ms
+Execution Time: 0.007 ms

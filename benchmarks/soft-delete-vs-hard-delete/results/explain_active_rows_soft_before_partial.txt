@@ -1,0 +1,8 @@
+Limit  (cost=0.42..149.50 rows=50 width=31) (actual time=0.006..0.235 rows=50 loops=1)
+  Buffers: shared hit=1993
+  ->  Index Scan using soft_delete_orders_created_at_idx on soft_delete_orders  (cost=0.42..15006.69 rows=5033 width=31) (actual time=0.006..0.233 rows=50 loops=1)
+        Filter: (deleted_at IS NULL)
+        Rows Removed by Filter: 1948
+        Buffers: shared hit=1993
+Planning Time: 0.010 ms
+Execution Time: 0.239 ms

@@ -1,0 +1,5 @@
+table_name,query_type,iterations,p50_ms,p95_ms,p99_ms,mean_ms,min_ms,max_ms
+hard_delete_orders,pk_lookup,1000,0.2052,0.2398,0.2585,0.2092,0.169,1.0535
+hard_delete_orders,active_rows,1000,0.2739,0.3208,0.848,0.2884,0.2192,1.3725
+soft_delete_orders,pk_lookup,1000,0.2118,0.26,0.656,0.2315,0.1703,3.3311
+soft_delete_orders,active_rows,1000,0.5033,0.5745,1.126,0.5239,0.455,3.828

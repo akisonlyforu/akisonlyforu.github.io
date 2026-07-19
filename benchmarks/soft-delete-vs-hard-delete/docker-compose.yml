@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16.14@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
+    environment:
+      POSTGRES_DB: soft_delete_bench
+      POSTGRES_USER: bench
+      POSTGRES_PASSWORD: bench
+    command:
+      - postgres
+      - -c
+      - max_connections=100
+    ports:
+      - "127.0.0.1:55445:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bench -d soft_delete_bench"]
+      interval: 1s
+      timeout: 3s
+      retries: 30

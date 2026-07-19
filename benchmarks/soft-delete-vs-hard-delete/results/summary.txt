@@ -1,0 +1,22 @@
+soft-delete vs hard-delete bloat benchmark
+PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu
+params: cycles=50 insert_batch=5000 remove_batch=4900 latency_iterations=1000 seed=1234
+
+EXPERIMENT 1  table/index bloat under churn (50 cycles, 5.6s)
+  hard_delete_orders  total=14.64 MB  table=1.59 MB  secondary_index=8.16 MB  live=5034  dead=0
+  soft_delete_orders  total=63.08 MB  table=42.30 MB  secondary_index=9.74 MB  live=250000  dead=0
+  ratio (soft/hard): total=4.31x  table=26.67x  secondary_index=1.19x
+
+EXPERIMENT 2  query latency after bloat accumulated
+  hard_delete_orders   pk_lookup    p50=  0.2052ms  p95=  0.2398ms  p99=  0.2585ms  mean=  0.2092ms
+  hard_delete_orders   active_rows  p50=  0.2739ms  p95=  0.3208ms  p99=  0.8480ms  mean=  0.2884ms
+  soft_delete_orders   pk_lookup    p50=  0.2118ms  p95=  0.2600ms  p99=  0.6560ms  mean=  0.2315ms
+  soft_delete_orders   active_rows  p50=  0.5033ms  p95=  0.5745ms  p99=  1.1260ms  mean=  0.5239ms
+  active_rows p99 ratio (soft/hard) = 1.33x
+
+EXPERIMENT 3  partial index fix
+  soft_delete_original_index   p50=  0.5098ms  p95=  0.9569ms  p99=  1.9152ms  rows_removed_by_filter=1948   index_size=9976.0 KB
+  soft_delete_partial_index    p50=  0.2754ms  p95=  0.3340ms  p99=  1.0936ms  rows_removed_by_filter=0      index_size=128.0 KB
+  hard_delete_baseline         p50=  0.2789ms  p95=  0.3175ms  p99=  0.6682ms  rows_removed_by_filter=0      index_size=8352.0 KB
+  partial index is 77.9x smaller than the full index (128.0 KB vs 9976.0 KB)
+  active_rows p99 improves 1.75x after adding the partial index (1.9152ms -> 1.0936ms)

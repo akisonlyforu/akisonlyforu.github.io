@@ -1,0 +1,4 @@
+variant,iterations,p50_ms,p95_ms,p99_ms,mean_ms,min_ms,max_ms,index_used,index_size_bytes,rows_removed_by_filter
+soft_delete_original_index,1000,0.5098,0.9569,1.9152,0.5946,0.4305,12.4144,soft_delete_orders_created_at_idx (full),10215424,1948
+soft_delete_partial_index,1000,0.2754,0.334,1.0936,0.3001,0.2005,1.9098,soft_delete_orders_active_created_at_idx (partial),131072,0
+hard_delete_baseline,1000,0.2789,0.3175,0.6682,0.2906,0.2141,1.3205,"hard_delete_orders_created_at_idx (full, all rows live)",8552448,0

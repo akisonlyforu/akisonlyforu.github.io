@@ -1,0 +1,5 @@
+table_name,query_type,file,plan_top_line,execution_time_ms,rows_removed_by_filter,shared_hit_blocks,shared_read_blocks
+hard_delete_orders,pk_lookup,explain_pk_lookup_hard.txt,Index Scan using hard_delete_orders_pkey on hard_delete_orders  (cost=0.41..8.43 rows=1 width=136) (actual time=0.002..0.003 rows=1 loops=1),0.005,0,4,0
+hard_delete_orders,active_rows,explain_active_rows_hard.txt,Limit  (cost=0.41..50.00 rows=50 width=31) (actual time=0.002..0.016 rows=50 loops=1),0.019,0,53,0
+soft_delete_orders,pk_lookup,explain_pk_lookup_soft.txt,Index Scan using soft_delete_orders_pkey on soft_delete_orders  (cost=0.42..8.44 rows=1 width=136) (actual time=0.004..0.004 rows=1 loops=1),0.007,0,4,0
+soft_delete_orders,active_rows,explain_active_rows_soft.txt,Limit  (cost=0.42..149.50 rows=50 width=31) (actual time=0.005..0.230 rows=50 loops=1),0.233,1948,1993,0

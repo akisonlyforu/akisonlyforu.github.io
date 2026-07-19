@@ -1,0 +1,6 @@
+Limit  (cost=0.28..9.09 rows=50 width=31) (actual time=0.003..0.016 rows=50 loops=1)
+  Buffers: shared hit=39
+  ->  Index Scan using soft_delete_orders_active_created_at_idx on soft_delete_orders  (cost=0.28..847.39 rows=4808 width=31) (actual time=0.003..0.014 rows=50 loops=1)
+        Buffers: shared hit=39
+Planning Time: 0.010 ms
+Execution Time: 0.020 ms

@@ -1,0 +1,57 @@
+==============================================================================
+soft-delete vs hard-delete bloat benchmark  (PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu)
+params: cycles=50 insert_batch=5000 remove_batch=4000 latency_iterations=300 seed=1234
+==============================================================================
+
+experiment 1: table/index bloat under churn ...
+  cycle   1/50  hard:    1000 live tup /   1.18 MB   soft:    5000 live tup /   1.95 MB
+  cycle   5/50  hard:    5000 live tup /   2.96 MB   soft:   19637 live tup /   6.88 MB
+  cycle  10/50  hard:   10000 live tup /   5.16 MB   soft:   41532 live tup /  13.01 MB
+  cycle  15/50  hard:   15000 live tup /   7.16 MB   soft:   65353 live tup /  19.19 MB
+  cycle  20/50  hard:   20000 live tup /   8.95 MB   soft:   89999 live tup /  25.33 MB
+  cycle  25/50  hard:   25000 live tup /  10.92 MB   soft:  115117 live tup /  31.36 MB
+  cycle  30/50  hard:   30000 live tup /  12.93 MB   soft:  140462 live tup /  37.15 MB
+  cycle  35/50  hard:   35000 live tup /  14.82 MB   soft:  165920 live tup /  42.77 MB
+  cycle  40/50  hard:   40000 live tup /  16.80 MB   soft:  191466 live tup /  48.39 MB
+  cycle  45/50  hard:   45000 live tup /  18.79 MB   soft:  217133 live tup /  54.02 MB
+  cycle  50/50  hard:   50000 live tup /  20.81 MB   soft:  242764 live tup /  59.64 MB
+  done in 5.2s
+  final hard_delete_orders: total=20.81 MB table=8.62 MB idx=7.69 MB live=50000 dead=0
+  final soft_delete_orders: total=59.64 MB table=41.85 MB idx=9.65 MB live=242764 dead=0
+  ratios (soft/hard): total=2.87x table=4.86x secondary_index=1.26x
+
+experiment 2: query latency (pk lookup + active-rows scan) ...
+  hard_delete_orders   pk_lookup   p50=0.2627ms p95=0.7703ms p99=1.3674ms
+  hard_delete_orders   active_rows p50=4.8926ms p95=8.0662ms p99=10.5100ms  (rows_removed_by_filter=0, plan=Limit  (cost=1611.30..1611.43 rows=50 width=56) (actual time=5.868..5.871 rows=50 loops=1))
+  soft_delete_orders   pk_lookup   p50=0.2206ms p95=0.2783ms p99=0.3044ms
+  soft_delete_orders   active_rows p50=0.3168ms p95=0.3785ms p99=0.8470ms  (rows_removed_by_filter=2, plan=Limit  (cost=0.42..1236.39 rows=50 width=56) (actual time=0.002..0.008 rows=50 loops=1))
+  active_rows p99 ratio (soft/hard): 0.08x
+
+experiment 3: partial index fix ...
+  partial index 1112.0 KB vs full index 9880.0 KB (8.9x smaller), build took 0.02s
+  active_rows p99: original_index=3.4540ms  partial_index=0.7293ms  (4.74x faster)  hard_delete_ref=11.5347ms
+
+soft-delete vs hard-delete bloat benchmark
+PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu
+params: cycles=50 insert_batch=5000 remove_batch=4000 latency_iterations=300 seed=1234
+
+EXPERIMENT 1  table/index bloat under churn (50 cycles, 5.2s)
+  hard_delete_orders  total=20.81 MB  table=8.62 MB  secondary_index=7.69 MB  live=50000  dead=0
+  soft_delete_orders  total=59.64 MB  table=41.85 MB  secondary_index=9.65 MB  live=242764  dead=0
+  ratio (soft/hard): total=2.87x  table=4.86x  secondary_index=1.26x
+
+EXPERIMENT 2  query latency after bloat accumulated
+  hard_delete_orders   pk_lookup    p50=  0.2627ms  p95=  0.7703ms  p99=  1.3674ms  mean=  0.3265ms
+  hard_delete_orders   active_rows  p50=  4.8926ms  p95=  8.0662ms  p99= 10.5100ms  mean=  5.3501ms
+  soft_delete_orders   pk_lookup    p50=  0.2206ms  p95=  0.2783ms  p99=  0.3044ms  mean=  0.2316ms
+  soft_delete_orders   active_rows  p50=  0.3168ms  p95=  0.3785ms  p99=  0.8470ms  mean=  0.3298ms
+  active_rows p99 ratio (soft/hard) = 0.08x
+
+EXPERIMENT 3  partial index fix
+  soft_delete_original_index   p50=  0.2962ms  p95=  1.2412ms  p99=  3.4540ms  rows_removed_by_filter=2      index_size=9880.0 KB
+  soft_delete_partial_index    p50=  0.2635ms  p95=  0.3900ms  p99=  0.7293ms  rows_removed_by_filter=0      index_size=1112.0 KB
+  hard_delete_baseline         p50=  5.0807ms  p95=  7.2622ms  p99= 11.5347ms  rows_removed_by_filter=0      index_size=7872.0 KB
+  partial index is 8.9x smaller than the full index (1112.0 KB vs 9880.0 KB)
+  active_rows p99 improves 4.74x after adding the partial index (3.4540ms -> 0.7293ms)
+
+benchmark complete; results written to /Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/soft-delete-vs-hard-delete/results
