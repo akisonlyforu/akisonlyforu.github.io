@@ -1,0 +1,2 @@
+mode=spin-fixed resultsDir=/Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/java-high-cpu-debugging/results pid=57268
+[spin-fixed] threads=10 polls=6572 items=70 throughput=187.8 polls/sec

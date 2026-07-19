@@ -1,0 +1,2 @@
+mode=spin-bad resultsDir=/Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/java-high-cpu-debugging/results pid=56885
+[spin-bad] threads=10 polls=47564167099 items=70 throughput=1358976202.8 polls/sec

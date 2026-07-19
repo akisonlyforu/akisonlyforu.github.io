@@ -1,0 +1,2 @@
+mode=regex-fixed resultsDir=/Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/java-high-cpu-debugging/results pid=56455
+[regex-fixed] lines=517657058 matched=25106369 throughput=14790201.7 lines/sec

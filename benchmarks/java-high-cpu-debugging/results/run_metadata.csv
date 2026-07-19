@@ -1,0 +1,13 @@
+key,value
+timestamp_utc,2026-07-19T19:06:25.229384+00:00
+java_version,"openjdk version ""25.0.1"" 2025-10-21 | OpenJDK Runtime Environment Homebrew (build 25.0.1) | OpenJDK 64-Bit Server VM Homebrew (build 25.0.1, mixed mode, sharing)"
+async_profiler_version,Async-profiler 4.4 built on Apr 15 2026
+maven_version,Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)
+host_os,Darwin
+host_os_release,24.6.0
+host_arch,arm64
+workload_duration_sec,35
+profile_duration_sec,30
+warmup_sec,2.0
+hibernate_n,8000
+modes,regex-bad;regex-fixed;spin-bad;spin-fixed;hibernate-bad;hibernate-fixed

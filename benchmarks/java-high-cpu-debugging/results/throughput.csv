@@ -1,0 +1,7 @@
+mode,ops_label,total_ops,elapsed_s,ops_per_sec,note
+regex-bad,lines_matched_per_sec,65011674,35.0,1857476.400,matched=3510628
+regex-fixed,lines_matched_per_sec,517657058,35.0,14790201.657,matched=25106369
+spin-bad,polls_per_sec,47564167099,35.0,1358976202.829,threads=10 items_processed=70
+spin-fixed,polls_per_sec,6572,35.0,187.771,threads=10 items_processed=70
+hibernate-bad,checks_per_sec,47986,35.0,1371.029,N=8000 found=47986 setup_ms=180
+hibernate-fixed,checks_per_sec,30742429,35.0,878355.114,N=8000 found=30742429 setup_ms=191

@@ -1,0 +1,39 @@
+==============================================================================
+Java high-CPU debugging lab: 3 bugs, bad vs fixed
+==============================================================================
+workload duration: 35s   profile window: 30s   hibernate N: 8000
+laptop numbers demonstrating the mechanism, not capacity planning.
+
+------------------------------------------------------------------------------
+Bug 1: unanchored regex (.*ERROR.* backtracking)
+------------------------------------------------------------------------------
+  variant      avg_cpu%   max_cpu%     throughput (lines/sec)
+  bad               9.9      10.84                1,857,476.4
+  fixed           10.05      11.31               14,790,201.7
+  fixed does 8.0x the throughput of bad
+  takeaway: unanchored .* forces the backtracking engine to retry every offset on
+  every non-matching line -- anchoring/contains() turns an O(n^2)-ish scan into O(n).
+
+------------------------------------------------------------------------------
+Bug 2: busy-spin queue.poll()
+------------------------------------------------------------------------------
+  variant      avg_cpu%   max_cpu%     throughput (polls/sec)
+  bad             91.77      97.01            1,358,976,202.8
+  fixed            0.22       1.37                      187.8
+  bad burns 417x the CPU of fixed for the same (near-empty) queue
+  takeaway: a non-blocking poll() in a hot loop burns a full core per idle consumer thread;
+  poll(timeout) parks the thread and lets the OS wake it only when there's work.
+
+------------------------------------------------------------------------------
+Bug 3: Hibernate AUTO-flush dirty-check scan
+------------------------------------------------------------------------------
+  variant      avg_cpu%   max_cpu%    throughput (checks/sec)
+  bad             10.46      15.94                    1,371.0
+  fixed            10.5      24.14                  878,355.1
+  fixed does 640.7x the throughput of bad
+  takeaway: with FlushMode.AUTO, every single query first dirty-checks the WHOLE
+  persistence context (O(N) per call) before running a 1-row lookup;
+  FlushMode.COMMIT skips that scan and the query goes back to being O(1).
+
+------------------------------------------------------------------------------
+artifacts: flame-<mode>.html (6), <bug>_cpu.csv (3), throughput.csv, run_metadata.csv

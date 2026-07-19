@@ -1,0 +1,2 @@
+mode=regex-bad resultsDir=/Users/akisonlyforu/Code/akisonlyforu.github.io/benchmarks/java-high-cpu-debugging/results pid=55422
+[regex-bad] lines=65011674 matched=3510628 throughput=1857476.4 lines/sec
