@@ -2,7 +2,7 @@
 title: Avinash Kumar
 email: kumaravinashinbox@gmail.com
 description: >-
-  Backend engineering deep dives on distributed systems, data-intensive applications, and software architecture by Avinash Kumar.
+  Backend engineering deep dives on distributed systems, data-intensive applications, and software architecture.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://akisonlyforu.com" # the base hostname & protocol for your site
 date_format: "%b %-d, %Y"
