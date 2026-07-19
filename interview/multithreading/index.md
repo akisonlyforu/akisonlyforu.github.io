@@ -57,6 +57,8 @@ Families 1 to 7 are the coordination core, learn these first and in order. Famil
 - [Asymmetric Access & Readers-Writers](/interview/multithreading/patterns/asymmetric-access). The lightswitch, and choosing who starves
   - **Problems**
     - [Reader-Writer Lock](/interview/multithreading/problems/reader-writer-lock)
+    - [The Unisex Bathroom](/interview/multithreading/problems/unisex-bathroom)
+    - [Search-Insert-Delete](/interview/multithreading/problems/search-insert-delete)
 - [Task Lifecycle, Async & Parallelism](/interview/multithreading/patterns/task-lifecycle). Where is the work, and who is counting it
   - **Problems**
     - [Multithreaded Web Crawler](/interview/multithreading/problems/web-crawler-multithreaded)
