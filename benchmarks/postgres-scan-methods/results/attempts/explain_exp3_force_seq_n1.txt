@@ -1,0 +1,13 @@
+Aggregate  (cost=104178.99..104179.00 rows=1 width=8) (actual time=136.150..136.150 rows=1 loops=1)
+  Buffers: shared hit=16220 read=25447 written=21
+  I/O Timings: shared read=16.260 write=0.029
+  ->  Seq Scan on events  (cost=0.00..104166.80 rows=4877 width=4) (actual time=0.048..135.886 rows=5000 loops=1)
+        Filter: (bucket < 1)
+        Rows Removed by Filter: 4995000
+        Buffers: shared hit=16220 read=25447 written=21
+        I/O Timings: shared read=16.260 write=0.029
+Settings: work_mem = '64MB', max_parallel_workers_per_gather = '0', jit = 'off', enable_bitmapscan = 'off', enable_indexonlyscan = 'off', enable_indexscan = 'off'
+Planning:
+  Buffers: shared hit=4
+Planning Time: 0.010 ms
+Execution Time: 136.156 ms

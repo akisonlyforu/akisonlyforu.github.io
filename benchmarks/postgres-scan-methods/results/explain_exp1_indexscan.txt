@@ -1,0 +1,10 @@
+Index Scan using idx_events_user_id on events  (cost=0.43..24.52 rows=5 width=34) (actual time=0.010..0.013 rows=5 loops=1)
+  Index Cond: (user_id = 500001)
+  Buffers: shared hit=3 read=5
+  I/O Timings: shared read=0.008
+Settings: work_mem = '64MB', max_parallel_workers_per_gather = '0', jit = 'off'
+Planning:
+  Buffers: shared hit=35 read=2
+  I/O Timings: shared read=0.009
+Planning Time: 0.073 ms
+Execution Time: 0.021 ms

@@ -1,0 +1,8 @@
+Index Scan using idx_events_user_id on events  (cost=0.43..17563.60 rows=4601 width=8) (actual time=0.006..1.889 rows=5005 loops=1)
+  Index Cond: ((user_id >= 500000) AND (user_id <= 501000))
+  Buffers: shared hit=5015
+Settings: work_mem = '64MB', max_parallel_workers_per_gather = '0', jit = 'off', enable_bitmapscan = 'off'
+Planning:
+  Buffers: shared hit=6
+Planning Time: 0.027 ms
+Execution Time: 1.989 ms

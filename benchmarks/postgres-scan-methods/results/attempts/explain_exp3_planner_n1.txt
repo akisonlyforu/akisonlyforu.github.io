@@ -1,0 +1,17 @@
+Aggregate  (cost=13966.18..13966.19 rows=1 width=8) (actual time=10.158..10.158 rows=1 loops=1)
+  Buffers: shared hit=1585 read=3422 written=2955
+  I/O Timings: shared read=3.041 write=3.172
+  ->  Bitmap Heap Scan on events  (cost=58.23..13953.99 rows=4877 width=4) (actual time=0.556..9.964 rows=5000 loops=1)
+        Recheck Cond: (bucket < 1)
+        Heap Blocks: exact=5000
+        Buffers: shared hit=1585 read=3422 written=2955
+        I/O Timings: shared read=3.041 write=3.172
+        ->  Bitmap Index Scan on idx_events_bucket  (cost=0.00..57.01 rows=4877 width=0) (actual time=0.214..0.214 rows=5000 loops=1)
+              Index Cond: (bucket < 1)
+              Buffers: shared hit=7
+Settings: work_mem = '64MB', max_parallel_workers_per_gather = '0', jit = 'off'
+Planning:
+  Buffers: shared hit=9 read=1 written=1
+  I/O Timings: shared read=0.001 write=0.002
+Planning Time: 0.036 ms
+Execution Time: 10.169 ms

@@ -1,0 +1,30 @@
+key,value
+run_at_utc,2026-07-19T19:18:08.096841+00:00
+platform,macOS-15.7.3-arm64-arm-64bit
+python,3.9.6
+docker,"Docker version 28.3.2, build 578ccf6"
+docker_compose,Docker Compose version v2.38.2-desktop.1
+postgres_image,postgres:16.14@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
+postgres_server,"PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"
+seed_rows_requested,5000000
+seed_rows_actual,5000000
+distinct_user_id,1000000
+user_id_modulus,1000000
+events_total_size,616 MB
+events_heap_size,326 MB
+reps,100
+reps_exp3,20
+exp2_range_width,1000
+exp3_sweep,1;2;5;10;50;100;200;500;900
+query_warmup_runs,1
+seed_seconds,3.710
+pg_cpu_index_tuple_cost,0.005
+pg_cpu_tuple_cost,0.01
+pg_effective_cache_size,524288
+pg_jit,off
+pg_max_parallel_workers_per_gather,0
+pg_random_page_cost,4
+pg_seq_page_cost,1
+pg_shared_buffers,16384
+pg_track_io_timing,on
+pg_work_mem,65536

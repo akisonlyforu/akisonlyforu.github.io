@@ -1,0 +1,8 @@
+Seq Scan on events  (cost=0.00..104167.50 rows=6 width=34) (actual time=14.391..131.850 rows=5 loops=1)
+  Filter: (user_id = 500001)
+  Rows Removed by Filter: 4999995
+  Buffers: shared hit=12401 read=29266
+  I/O Timings: shared read=16.661
+Settings: work_mem = '64MB', max_parallel_workers_per_gather = '0', jit = 'off'
+Planning Time: 0.028 ms
+Execution Time: 131.865 ms

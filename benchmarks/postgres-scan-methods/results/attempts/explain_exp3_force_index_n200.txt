@@ -1,0 +1,8 @@
+Aggregate  (cost=189488.37..189488.38 rows=1 width=8) (actual time=251.213..251.214 rows=1 loops=1)
+  Buffers: shared hit=1000847
+  ->  Index Scan using idx_events_bucket on events  (cost=0.43..187050.38 rows=975197 width=4) (actual time=0.009..217.340 rows=1000000 loops=1)
+        Index Cond: (bucket < 200)
+        Buffers: shared hit=1000847
+Settings: work_mem = '64MB', max_parallel_workers_per_gather = '0', jit = 'off', enable_seqscan = 'off', enable_bitmapscan = 'off', enable_indexonlyscan = 'off'
+Planning Time: 0.033 ms
+Execution Time: 251.226 ms

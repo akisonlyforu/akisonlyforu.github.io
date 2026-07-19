@@ -1,0 +1,3 @@
+method,target_user_id,rows_returned,plan_type,execution_time_ms,heap_fetches,shared_hit,shared_read,reps,min_ms,median_ms,p95_ms,mean_ms,plan_file
+seq_scan_no_index,500001,5,Seq Scan,131.865,,12401,29266,100,127.7949,134.0301,146.0805,135.4776,explain_exp1_seqscan.txt
+index_scan_btree,500001,5,Index Scan,0.021,,3,5,100,0.1991,0.2234,0.2638,0.2378,explain_exp1_indexscan.txt

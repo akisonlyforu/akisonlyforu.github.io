@@ -1,0 +1,41 @@
+PostgreSQL scan-method benchmark -- Seq Scan vs Index Scan vs Index-Only Scan
+==============================================================================
+
+server : PostgreSQL 16.14 (Debian 16.14-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+image  : postgres:16.14@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
+table  : events, 5,000,000 rows, 1,000,000 distinct user_id, 616 MB on disk
+method : each query warmed once (untimed), then timed steady-state over reps
+         via perf_counter; buffers/heap-fetches/plan from EXPLAIN(ANALYZE,BUFFERS)
+         parallelism OFF (max_parallel_workers_per_gather=0), jit OFF -- so the
+         numbers isolate the scan method, not core count or JIT warmup.
+
+-- Experiment 1: point lookup  SELECT * FROM events WHERE user_id = k --
+target user_id=500001, 5 rows returned
+  Seq Scan (no index) : plan=Seq Scan  median=134.0301 ms  exec=131.865 ms  buffers hit=12401 read=29266
+  Index Scan (b-tree) : plan=Index Scan  median=0.2234 ms  exec=0.021 ms  buffers hit=3 read=5
+  speedup (median)    : 600.0x   buffers touched: 41667 -> 8
+
+-- Experiment 2: covering query  SELECT id FROM events WHERE user_id BETWEEN a AND b --
+range matches 5005 rows
+  plain index (heap fetch) : plan=Index Scan  median=1.7575 ms  heap_fetches=None  buffers hit=5015 read=0
+  covering BEFORE VACUUM   : plan=Index Only Scan  heap_fetches=5005  buffers hit=5005 read=22   (kept under attempts/)
+  covering AFTER VACUUM    : plan=Index Only Scan  median=1.2561 ms  heap_fetches=0  buffers hit=2024 read=0
+  => VACUUM sets the visibility map; heap fetches 5005 -> 0, buffers 5015 -> 2024
+
+-- Experiment 3: selectivity crossover  SELECT sum(amount) FROM events WHERE bucket < n --
+   (sum(amount) forces heap access; index_ms is a forced pure Index Scan,
+    planner_choice is the planner's own free pick incl. bitmap/seq)
+  n    sel%     planner_choice     index_ms     seq_ms       faster
+  1    0.10     Bitmap Heap Scan   1.0938       149.1678     index
+  2    0.20     Bitmap Heap Scan   2.1373       149.6618     index
+  5    0.50     Bitmap Heap Scan   5.2689       151.5494     index
+  10   1.00     Bitmap Heap Scan   11.7943      171.4581     index
+  50   5.00     Bitmap Heap Scan   52.6874      154.2903     index
+  100  10.00    Bitmap Heap Scan   109.4655     159.1325     index
+  200  20.00    Bitmap Heap Scan   221.4372     165.9261     seq
+  500  50.00    Bitmap Heap Scan   607.1923     191.0455     seq
+  900  90.00    Seq Scan           1528.5542    265.0875     seq
+  crossover: index wins up to sel=10.00% (n=100); seq overtakes by sel=20.00% (n=200)
+  bitmap heap scan appeared in a planner choice: True
+
+These are laptop numbers for demonstrating plan mechanics, not capacity planning.

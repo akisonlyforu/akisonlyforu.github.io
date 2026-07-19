@@ -1,0 +1,10 @@
+n,predicate,rows_matched,selectivity_pct,planner_choice,planner_median_ms,forced_index_plan,index_median_ms,index_min_ms,forced_seq_plan,seq_median_ms,seq_min_ms,faster_path
+1,bucket < 1,5000,0.1,Bitmap Heap Scan,1.9084,Index Scan,1.0938,1.0567,Seq Scan,149.1678,148.4084,index
+2,bucket < 2,10000,0.2,Bitmap Heap Scan,2.5903,Index Scan,2.1373,2.0134,Seq Scan,149.6618,148.3667,index
+5,bucket < 5,25000,0.5,Bitmap Heap Scan,3.8412,Index Scan,5.2689,4.6495,Seq Scan,151.5494,148.8843,index
+10,bucket < 10,50000,1.0,Bitmap Heap Scan,5.5534,Index Scan,11.7943,10.1094,Seq Scan,171.4581,148.667,index
+50,bucket < 50,250000,5.0,Bitmap Heap Scan,17.9011,Index Scan,52.6874,50.3555,Seq Scan,154.2903,151.9383,index
+100,bucket < 100,500000,10.0,Bitmap Heap Scan,31.6923,Index Scan,109.4655,107.1183,Seq Scan,159.1325,155.8323,index
+200,bucket < 200,1000000,20.0,Bitmap Heap Scan,58.8497,Index Scan,221.4372,213.0478,Seq Scan,165.9261,163.9182,seq
+500,bucket < 500,2500000,50.0,Bitmap Heap Scan,176.8773,Index Scan,607.1923,583.753,Seq Scan,191.0455,188.5954,seq
+900,bucket < 900,4500000,90.0,Seq Scan,227.3407,Index Scan,1528.5542,1142.1769,Seq Scan,265.0875,246.7596,seq

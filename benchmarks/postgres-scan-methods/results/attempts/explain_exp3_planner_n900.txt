@@ -1,0 +1,11 @@
+Aggregate  (cost=115410.87..115410.88 rows=1 width=8) (actual time=379.402..379.403 rows=1 loops=1)
+  Buffers: shared hit=12680 read=28987
+  I/O Timings: shared read=18.789
+  ->  Seq Scan on events  (cost=0.00..104166.80 rows=4497627 width=4) (actual time=0.009..243.073 rows=4500000 loops=1)
+        Filter: (bucket < 900)
+        Rows Removed by Filter: 500000
+        Buffers: shared hit=12680 read=28987
+        I/O Timings: shared read=18.789
+Settings: work_mem = '64MB', max_parallel_workers_per_gather = '0', jit = 'off'
+Planning Time: 0.042 ms
+Execution Time: 379.415 ms
