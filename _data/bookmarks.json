@@ -8,13 +8,6 @@
       "category": "System Design"
     },
     {
-      "id": "brendan-gregg-use-method",
-      "name": "Brendan Gregg's USE Method",
-      "url": "https://www.brendangregg.com/usemethod.html",
-      "description": "Systematic performance analysis methodology examining system resources for Utilization, Saturation, and Errors to quickly identify bottlenecks.",
-      "category": "Performance"
-    },
-    {
       "id": "kafka-communication-protocol",
       "name": "Kafka Communication Protocol",
       "url": "https://snehasishroy.com/understanding-the-kafka-communication-protocol-in-detail",
@@ -22,25 +15,319 @@
       "category": "System Design"
     },
     {
-      "id": "hacker-news",
-      "name": "Hacker News",
-      "url": "https://news.ycombinator.com/",
-      "description": "Tech news and discussions from the startup and developer community.",
-      "category": "Communities"
+      "id": "aws-shuffle-sharding",
+      "name": "Workload Isolation Using Shuffle Sharding",
+      "url": "https://aws.amazon.com/builders-library/workload-isolation-using-shuffle-sharding/",
+      "description": "AWS's mathematical approach to isolating tenants and reducing correlated failure blast radius.",
+      "category": "System Design"
     },
     {
-      "id": "regex101",
-      "name": "Regex101",
-      "url": "https://regex101.com/",
-      "description": "Online regex tester and debugger with detailed explanations and examples.",
-      "category": "Developer Tools"
+      "id": "google-sre-cascading-failures",
+      "name": "Addressing Cascading Failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "description": "A rigorous guide to retry storms, overload feedback loops, and the limits that stop them.",
+      "category": "System Design"
     },
     {
-      "id": "cloudflare-radar",
-      "name": "Cloudflare Radar",
-      "url": "https://radar.cloudflare.com/",
-      "description": "Real-time insights into internet traffic patterns, attacks, and technology adoption.",
-      "category": "Developer Tools"
+      "id": "brendan-gregg-use-method",
+      "name": "Brendan Gregg's USE Method",
+      "url": "https://www.brendangregg.com/usemethod.html",
+      "description": "Systematic performance analysis methodology examining system resources for Utilization, Saturation, and Errors to quickly identify bottlenecks.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "brendan-gregg-thinking-methodically",
+      "name": "Thinking Methodically about Performance",
+      "url": "https://queue.acm.org/detail.cfm?id=2413037",
+      "description": "The longer-form performance-investigation method behind USE, with practical examples.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "brendan-gregg-cpu-utilization",
+      "name": "CPU Utilization is Wrong",
+      "url": "https://www.brendangregg.com/blog/2017-05-09/cpu-utilization-is-wrong.html",
+      "description": "Why busy CPU percentage can hide the real limiter, and how to reason about IPC instead.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "brendan-gregg-poor-disk-performance",
+      "name": "Poor Disk Performance",
+      "url": "https://www.brendangregg.com/blog/2021-05-09/poor-disk-performance.html",
+      "description": "A production disk-latency investigation that applies resource analysis from symptom to storage tier.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "drepper-memory",
+      "name": "What Every Programmer Should Know About Memory",
+      "url": "https://people.freebsd.org/~lstewart/articles/cpumemory.pdf",
+      "description": "The foundational deep dive into caches, NUMA, TLBs, and the memory hierarchy.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "linux-kernel-false-sharing",
+      "name": "False Sharing",
+      "url": "https://docs.kernel.org/kernel-hacking/false-sharing.html",
+      "description": "Kernel documentation on cache-line contention that silently destroys multicore throughput.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "cloudflare-af-xdp-debugging",
+      "name": "A Debugging Story: Corrupt Packets in AF_XDP",
+      "url": "https://blog.cloudflare.com/a-debugging-story-corrupt-packets-in-af_xdp-kernel-bug-or-user-error/",
+      "description": "A tools-first kernel debugging investigation using tracing to separate application error from a Linux race.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "danluu-cache-incidents",
+      "name": "A Decade of Major Cache Incidents at Twitter",
+      "url": "https://danluu.com/cache-incidents/",
+      "description": "Twelve cache failures distilled into recurring patterns: retries, cascading failures, and hardware surprises.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "flipkart-memory-tuning",
+      "name": "Memory Tuning a High Throughput Microservice",
+      "url": "https://blog.flipkart.tech/memory-tuning-a-high-throughput-microservice-ed57b3e60997",
+      "description": "JVM heap and garbage-collection tuning tied directly to a service throughput target.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "linkedin-java-performance",
+      "name": "Tuning Java for High-Performance Services",
+      "url": "https://www.linkedin.com/blog/engineering/infrastructure/java-heap-memory-and-garbage-collection-tuning-for-high-performance-services",
+      "description": "How JVM heap and GC choices shape latency SLOs in production services.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "github-scaling-git-gc",
+      "name": "Scaling Git's Garbage Collection",
+      "url": "https://github.blog/engineering/architecture-optimization/scaling-gits-garbage-collection/",
+      "description": "Object-store and disk-level garbage-collection mechanics at platform scale.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "discord-million-users-single-server",
+      "name": "Pushing Discord's Limits with a Million+ Online Users",
+      "url": "https://discord.com/blog/maxjourney-pushing-discords-limits-with-a-million-plus-online-users-in-a-single-server",
+      "description": "A concrete capacity and latency story for running an unusually large real-time workload.",
+      "category": "Performance & Debugging"
+    },
+    {
+      "id": "discord-trillions-messages",
+      "name": "How Discord Stores Trillions of Messages",
+      "url": "https://discord.com/blog/how-discord-stores-trillions-of-messages",
+      "description": "Hot partitions, compaction, JVM pauses, request coalescing, and a zero-downtime Cassandra-to-Scylla migration.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "figma-horizontal-postgres",
+      "name": "How Figma Horizontally Scaled Postgres",
+      "url": "https://www.figma.com/blog/how-figmas-databases-team-lived-to-tell-the-scale/",
+      "description": "How connection limits and replication constraints led Figma to a horizontally scalable Postgres architecture.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "notion-sharding-postgres",
+      "name": "Lessons Learned from Sharding Postgres at Notion",
+      "url": "https://www.notion.com/blog/sharding-postgres-at-notion",
+      "description": "A candid account of the storage and operational constraints that force a Postgres sharding migration.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "notion-great-reshard",
+      "name": "The Great Re-shard",
+      "url": "https://www.notion.com/blog/the-great-re-shard",
+      "description": "The mechanics and safeguards for adding Postgres capacity with a live, zero-downtime reshard.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "github-database-partitioning",
+      "name": "Partitioning GitHub's Relational Databases to Handle Scale",
+      "url": "https://github.blog/engineering/infrastructure/partitioning-githubs-relational-databases-scale/",
+      "description": "Partitioning trade-offs where foreign keys, joins, and application ownership meet real database limits.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "shopify-vitess-rails",
+      "name": "Horizontally Scaling the Rails Backend of Shop App with Vitess",
+      "url": "https://shopify.engineering/horizontally-scaling-the-rails-backend-of-shop-app-with-vitess",
+      "description": "A practical migration of a high-traffic relational workload onto Vitess sharding.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "slack-vitess-datastores",
+      "name": "Scaling Datastores at Slack with Vitess",
+      "url": "https://slack.engineering/scaling-datastores-at-slack-with-vitess/",
+      "description": "How a large multi-tenant SaaS moved its MySQL scaling boundary with Vitess.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "citus-debugging-autovacuum",
+      "name": "Debugging Postgres Autovacuum Problems",
+      "url": "https://www.citusdata.com/blog/2022/07/28/debugging-postgres-autovacuum-problems-13-tips/",
+      "description": "Mechanism-level diagnostics for dead tuples, bloat, vacuum progress, and runaway maintenance debt.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "postgres-planner-statistics",
+      "name": "Common Issues with Planner Statistics",
+      "url": "https://blog.pgaddict.com/posts/common-issues-with-planner-statistics",
+      "description": "A PostgreSQL committer's guide to the estimation errors that create unexpected bad plans.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "postgres-lock-manager-scalability",
+      "name": "Postgres Indexes, Partitioning and LockManager Scalability",
+      "url": "https://ardentperf.com/2024/03/03/postgres-indexes-partitioning-and-lwlocklockmanager-scalability/",
+      "description": "How heavy partitioning can defeat fast-path locking and create a lock-manager scalability cliff.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "postgres-multixact-foreign-keys",
+      "name": "Avoid Postgres Performance Cliffs with MultiXact IDs and Foreign Keys",
+      "url": "https://pganalyze.com/blog/5mins-postgres-multiXact-ids-foreign-keys-performance",
+      "description": "An obscure but important write-path bottleneck caused by shared row locks and foreign keys.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "postgres-replication-slot",
+      "name": "The Insatiable Postgres Replication Slot",
+      "url": "https://www.morling.dev/blog/insatiable-postgres-replication-slot/",
+      "description": "How an unconsumed replication slot retains WAL until disk becomes the outage mechanism.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "postgres-skip-locked",
+      "name": "Postgres 9.5: SKIP LOCKED for Row-Level Locking",
+      "url": "https://paquier.xyz/postgresql-2/postgres-9-5-feature-highlight-skip-locked-row-level/",
+      "description": "The core row-locking primitive behind safe multi-worker database queues and schedulers.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "tikv-btree-vs-lsm",
+      "name": "B-Tree vs. LSM-Tree",
+      "url": "https://tikv.org/deep-dive/key-value-engine/b-tree-vs-lsm/",
+      "description": "Storage-engine trade-offs in read, write, space, and compaction amplification.",
+      "category": "Database Internals"
+    },
+    {
+      "id": "amazon-dynamodb-lessons",
+      "name": "Lessons Learned from 10 Years of DynamoDB",
+      "url": "https://www.amazon.science/blog/lessons-learned-from-10-years-of-dynamodb",
+      "description": "A decade of storage, partitioning, and operational lessons from a managed key-value store.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "meta-cache-consistency",
+      "name": "Cache Made Consistent",
+      "url": "https://engineering.fb.com/2022/06/08/core-infra/cache-made-consistent/",
+      "description": "How Meta handles invalidation races, thundering herds, and cache/database consistency at scale.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "meta-delta-chain-replication",
+      "name": "Delta: A Strongly Consistent Storage Service Using Chain Replication",
+      "url": "https://engineering.fb.com/2022/05/04/data-infrastructure/delta/",
+      "description": "Production chain replication: its failure model, consistency guarantees, and storage-service design.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "meta-zippydb",
+      "name": "ZippyDB: Facebook's General-Purpose Key-Value Store",
+      "url": "https://engineering.fb.com/2021/08/06/core-infra/zippydb/",
+      "description": "RocksDB-based storage-engine choices wrapped in a distributed key-value architecture.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "uber-integrated-cache",
+      "name": "How Uber Serves 40 Million Reads per Second Using an Integrated Cache",
+      "url": "https://www.uber.com/en-IN/blog/how-uber-serves-over-40-million-reads-per-second-using-an-integrated-cache/",
+      "description": "How cache behavior and hit ratios inform an online-storage architecture at extreme read volume.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "uber-cassandra-operations",
+      "name": "How Uber Optimized Cassandra Operations at Scale",
+      "url": "https://www.uber.com/en-IN/blog/how-uber-optimized-cassandra-operations-at-scale/",
+      "description": "Compaction, JVM, and disk-I/O work that turns Cassandra operations into a manageable fleet concern.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "stripe-zero-downtime-migrations",
+      "name": "How Stripe Processed $1 Trillion with Zero-Downtime Data Migrations",
+      "url": "https://stripe.com/blog/how-stripes-document-databases-supported-99.999-uptime-with-zero-downtime-data-migrations",
+      "description": "A high-availability data-migration playbook built around document databases and operational safety.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "dropbox-chrono-cache",
+      "name": "Meet Chrono, Dropbox's Consistent Metadata Cache",
+      "url": "https://dropbox.tech/infrastructure/meet-chrono-our-scalable-consistent-metadata-caching-solution",
+      "description": "A consistent metadata cache designed to make cache invalidation safe rather than merely fast.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "paypal-junodb",
+      "name": "JunoDB: PayPal's Key-Value Store",
+      "url": "https://medium.com/paypal-tech/unlocking-the-power-of-junodb-paypals-key-value-store-goes-open-source-ee85f935bdc1",
+      "description": "Why PayPal built a key-value store and the replication and consistency decisions behind it.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "airbnb-chronos",
+      "name": "Chronos: A Replacement for Cron",
+      "url": "http://nerds.airbnb.com/introducing-chronos/",
+      "description": "The classic explanation of why cron breaks at company scale and what a distributed scheduler must add.",
+      "category": "Distributed Systems"
+    },
+    {
+      "id": "uber-cadence-multi-tenant",
+      "name": "Cadence Multi-Tenant Task Processing",
+      "url": "https://www.uber.com/us/en/blog/cadence-multi-tenant-task-processing/",
+      "description": "How a durable workflow engine protects fair task processing when tenants have very different loads.",
+      "category": "Distributed Systems"
+    },
+    {
+      "id": "netflix-conductor",
+      "name": "Netflix Conductor: A Microservices Orchestrator",
+      "url": "https://netflixtechblog.com/netflix-conductor-a-microservices-orchestrator-2e8d4771bf40",
+      "description": "A production workflow-orchestration design based on task queues and JSON-defined workflows.",
+      "category": "Distributed Systems"
+    },
+    {
+      "id": "temporal-server-architecture",
+      "name": "Temporal Server Architecture",
+      "url": "https://github.com/temporalio/temporal/blob/main/docs/architecture/README.md",
+      "description": "The architecture of durable execution: history, matching, persistence, and independently scaled task queues.",
+      "category": "Distributed Systems"
+    },
+    {
+      "id": "zookeeper-leader-election",
+      "name": "ZooKeeper Leader Election Recipe",
+      "url": "https://zookeeper.apache.org/doc/r3.8.5/recipes.html",
+      "description": "The canonical ephemeral-sequential-node algorithm for leader election and failure detection.",
+      "category": "Distributed Systems"
+    },
+    {
+      "id": "kubebuilder-cronjob-controller",
+      "name": "Implementing a CronJob Controller",
+      "url": "https://book.kubebuilder.io/cronjob-tutorial/controller-implementation.html",
+      "description": "A step-by-step reconciliation loop for determining due, running, and expired scheduled work.",
+      "category": "Distributed Systems"
+    },
+    {
+      "id": "netflix-timestone-priority-queue",
+      "name": "Netflix's High-Throughput, Low-Latency Priority Queueing System",
+      "url": "https://netflixtechblog.com/timestone-netflixs-high-throughput-low-latency-priority-queueing-system-with-built-in-support-1abf249ba95f",
+      "description": "A real priority-queue architecture designed for high throughput without sacrificing latency.",
+      "category": "Distributed Systems"
+    },
+    {
+      "id": "meta-foqs-disaster-ready",
+      "name": "Making a Distributed Priority Queue Disaster-Ready",
+      "url": "https://engineering.fb.com/2022/01/18/production-engineering/foqs-disaster-ready/",
+      "description": "Disaster-readiness techniques for a distributed priority queue that must survive regional failures.",
+      "category": "Distributed Systems"
     }
   ]
 }
