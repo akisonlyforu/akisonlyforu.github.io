@@ -1,0 +1,10 @@
+run,experiment,variant,n,p50_us,p95_us,p99_us,mean_us,stdev_us,round_trips,rows,peak_kib,pgss_entries,pgss_calls,plan_ms_per_call,exec_ms_per_call
+1,D_plan_cache,adhoc_string_concat,500,216.2,277.2,427.4,228.1,76.9,,,,1,550,0.0092,0.0046
+1,D_plan_cache,parameterized,500,187.4,212.0,259.5,191.8,51.8,,,,1,550,0.0004,0.0043
+1,D_plan_cache,stored_proc,500,201.4,695.0,1206.6,264.7,298.8,,,,1,550,0.0001,0.0123
+2,D_plan_cache,adhoc_string_concat,500,217.4,268.0,414.0,228.3,71.4,,,,1,550,0.0092,0.0047
+2,D_plan_cache,parameterized,500,199.6,441.2,1174.1,306.2,731.4,,,,1,550,0.0004,0.0055
+2,D_plan_cache,stored_proc,500,214.6,365.2,606.8,237.6,86.4,,,,1,550,0.0002,0.012
+3,D_plan_cache,adhoc_string_concat,500,312.8,661.1,1145.4,366.3,174.9,,,,1,550,0.0147,0.0078
+3,D_plan_cache,parameterized,500,255.7,553.1,1035.8,307.0,141.2,,,,1,550,0.0005,0.0074
+3,D_plan_cache,stored_proc,500,213.4,377.7,837.4,241.2,108.4,,,,1,550,0.0002,0.0143

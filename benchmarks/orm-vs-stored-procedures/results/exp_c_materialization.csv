@@ -1,0 +1,10 @@
+run,experiment,variant,n,p50_us,p95_us,p99_us,mean_us,stdev_us,round_trips,rows,peak_kib,pgss_entries,pgss_calls,plan_ms_per_call,exec_ms_per_call
+1,C_materialization,raw_psycopg_tuples,40,2575.1,4376.7,4934.7,2878.4,644.0,1,3000,843,,,,
+1,C_materialization,stored_proc_tuples,40,2545.5,3677.9,3970.2,2730.9,425.3,1,3000,843,,,,
+1,C_materialization,orm_hydration,40,9547.6,18200.3,19538.6,10536.8,2798.8,1,3000,4544,,,,
+2,C_materialization,raw_psycopg_tuples,40,2488.1,3748.1,7810.7,2863.3,1263.4,1,3000,842,,,,
+2,C_materialization,stored_proc_tuples,40,2540.5,3613.8,4278.8,2711.7,451.5,1,3000,837,,,,
+2,C_materialization,orm_hydration,40,9476.5,18465.6,20656.2,10743.7,3084.4,1,3000,4389,,,,
+3,C_materialization,raw_psycopg_tuples,40,2825.3,4074.8,5074.1,3017.2,605.5,1,3000,845,,,,
+3,C_materialization,stored_proc_tuples,40,2736.9,12204.8,13453.4,3849.5,2872.7,1,3000,845,,,,
+3,C_materialization,orm_hydration,40,9983.9,20329.3,21432.6,11362.8,3513.4,1,3000,4398,,,,

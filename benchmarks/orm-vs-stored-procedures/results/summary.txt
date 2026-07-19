@@ -1,0 +1,57 @@
+======================================================================
+ORM vs STORED PROCEDURES vs RAW SQL - Postgres 16.14 (Debian 16.14-1.pgdg13+1)
+digest postgres@sha256:33f923b05f64ca54ac4401c01126a6b92afe839a0aa0a52bc5aeb5cc958e5f20
+SQLAlchemy 2.0.51 | psycopg 3.3.4
+5000 customers, 49942 orders | 3 full runs
+======================================================================
+
+EXPERIMENT A - identical SQL (means over runs, microseconds)
+  variant                       p50_us        p95_us        p99_us       mean_us
+  raw_psycopg                    189.1        267.43        525.33         204.6
+  stored_proc                    191.7        349.23         776.6        218.93
+  orm_sqlalchemy                 315.4        384.63        533.57        327.33
+  -> ORM adds only a small constant over raw/SP; same SQL underneath.
+
+EXPERIMENT B - N+1 (means over runs)
+  variant                       p50_us        p99_us   round_trips
+  raw_naive_1+M                19378.7      31830.67         101.0
+  orm_naive_lazy_1+M          35095.27       57113.6         101.0
+  orm_eager_join                6011.5       14702.6           1.0
+  raw_eager_join                704.43         888.1           1.0
+  stored_proc                   746.07       1790.67           1.0
+  -> naive lazy = 1+M round trips and is the outlier; eager join and SP
+     both collapse to 1 round trip. This is misuse, not 'ORM loses'.
+
+EXPERIMENT C - materialization (means over runs)
+  variant                       p50_us        p99_us      peak_kib
+  raw_psycopg_tuples            2629.5       5939.83        843.33
+  stored_proc_tuples           2607.63       7234.13        841.67
+  orm_hydration                9669.33      20542.47       4443.67
+  -> raw tuples ~= SP tuples; ORM full hydration is the heavy path
+     (client-side object + identity map), same SQL underneath.
+
+EXPERIMENT D - plan cache / parameterization (means over runs)
+  variant                       p50_us plan_ms_per_call  pgss_entries    pgss_calls
+  adhoc_string_concat            248.8          0.01           1.0         550.0
+  parameterized                 214.23           0.0           1.0         550.0
+  stored_proc                    209.8           0.0           1.0         550.0
+  -> the SP 'plan caching' edge is really parameterization: ad-hoc pays
+     parse+plan every call; parameterized (auto-prepared) and SP do not.
+     (see pgss_entries note re: pg_stat_statements literal normalization)
+
+======================================================================
+STABILITY across runs (p50 unless noted)
+======================================================================
+  metric                     run1        run2        run3   cv%
+  A_orm_p50                 316.4       313.3       316.5     0.5
+  A_raw_p50                 182.9       188.1       196.3     2.9
+  A_sp_p50                  190.5       198.3       186.3     2.6
+  B_orm_naive_p50         35265.5     34040.1     35980.2     2.3
+  B_orm_eager_p50          5840.2      5567.3      6627.0     7.5
+  B_sp_p50                  675.6       684.9       877.7    12.5
+  C_orm_p50                9547.6      9476.5      9983.9     2.3
+  C_raw_p50                2575.1      2488.1      2825.3     5.4
+  D_adhoc_plan             0.0092      0.0092      0.0147    23.5
+  D_param_plan             0.0004      0.0004      0.0005    10.9
+  D_adhoc_entries               1           1           1     0.0
+  D_param_entries               1           1           1     0.0

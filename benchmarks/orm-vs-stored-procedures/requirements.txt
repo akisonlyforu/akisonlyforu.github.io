@@ -1,0 +1,3 @@
+# Requires Python 3.10+ (psycopg 3.3 dropped 3.9). Tested on CPython 3.13.
+SQLAlchemy==2.0.51
+psycopg[binary]==3.3.4
