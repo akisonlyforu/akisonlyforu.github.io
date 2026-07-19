@@ -42,10 +42,19 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       function initMermaid() {
+        // kramdown renders ```mermaid fences as <pre><code class="language-mermaid">,
+        // not the <pre class="mermaid"> mermaid.js itself looks for. Convert first.
+        document.querySelectorAll('code.language-mermaid').forEach(function (code) {
+          var block = document.createElement('pre');
+          block.className = 'mermaid';
+          block.textContent = code.textContent;
+          code.closest('pre, div.highlighter-rouge').replaceWith(block);
+        });
         mermaid.initialize({
-          startOnLoad: true,
+          startOnLoad: false,
           theme: (document.documentElement.getAttribute('data-theme') === 'dark') ? 'dark' : 'default'
         });
+        mermaid.run({ querySelector: '.mermaid' });
       }
       document.addEventListener('DOMContentLoaded', initMermaid);
     </script>
