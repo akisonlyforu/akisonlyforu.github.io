@@ -260,6 +260,20 @@
       "category": "Storage & Caching"
     },
     {
+      "id": "antirez-lazy-redis",
+      "name": "Lazy Redis Is Better Redis",
+      "url": "https://antirez.com/news/93",
+      "description": "The design of Redis lazy freeing: avoiding delete-induced latency spikes while balancing memory pressure, cache misses, and threading.",
+      "category": "Storage & Caching"
+    },
+    {
+      "id": "antirez-redis-persistence",
+      "name": "Redis Persistence Demystified",
+      "url": "https://oldblog.antirez.com/post/redis-persistence-demystified.html",
+      "description": "A first-principles explanation of write, fsync, snapshots, AOF, and the durability guarantees a database can actually make.",
+      "category": "Storage & Caching"
+    },
+    {
       "id": "stripe-zero-downtime-migrations",
       "name": "How Stripe Processed $1 Trillion with Zero-Downtime Data Migrations",
       "url": "https://stripe.com/blog/how-stripes-document-databases-supported-99.999-uptime-with-zero-downtime-data-migrations",
