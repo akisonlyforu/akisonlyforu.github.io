@@ -1,0 +1,20 @@
+Java memory leak: per-request thread pool vs shared singleton
+==============================================================
+
+heap=-Xmx192m -Xms192m -Xss256k  G1GC  mem=1g cpus=2
+buffer=64 KB/JobExecutor  poolCore=2 threads (prestarted, allowCoreThreadTimeOut=false)
+request pacing=0 ms/request  report every 100 requests
+heap_used_after_gc_mb = MemoryMXBean heap used, sampled immediately
+                        after a System.gc()-triggered full GC
+
+LEAKY
+--------------------------------------------------------------
+  outcome                : died  (OutOfMemoryError: Java heap space)
+  died after requests    : 2800
+  heap after GC at death : 175.7 MB  (of 192m max)
+  live pool threads      : 5400
+  JobExecutor instances  : 2700
+  time to death          : 2.1 s
+  heap climb             : 8.05 MB @ 100 req  ->  175.69 MB @ 2700 req
+  csv rows               : 27
+

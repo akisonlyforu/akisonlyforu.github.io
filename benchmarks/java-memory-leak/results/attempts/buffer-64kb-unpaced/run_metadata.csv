@@ -1,0 +1,24 @@
+key,value
+run_at_utc,2026-07-19T19:50:55Z
+platform,macOS-15.7.3-arm64-arm-64bit
+python,3.9.6
+docker,"Docker version 28.3.2, build 578ccf6"
+image,java-memory-leak:latest
+base_image_digest,eclipse-temurin@sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+jdk_version,"openjdk version ""21.0.11"" 2026-04-21 LTS"
+gc,G1GC
+heap,-Xmx192m -Xms192m
+thread_stack,-Xss256k
+container_memory,1g
+container_cpus,2
+buffer_kb_per_jobexecutor,64
+pool_core_threads,2
+pool_prestarted,true
+allow_core_thread_timeout,false
+thread_name_prefix,jobexec-pool-
+request_pacing_ms,0
+report_every_requests,100
+heap_metric,"MemoryMXBean heap used, sampled right after System.gc() full GC"
+leaky_death_requests,2800
+leaky_death_cause,OutOfMemoryError: Java heap space
+fixed_requests_served,

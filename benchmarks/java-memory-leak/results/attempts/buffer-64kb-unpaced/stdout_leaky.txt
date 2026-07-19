@@ -1,0 +1,31 @@
+[leak] mode=leaky bufferKB=64 poolCore=2 reportEvery=100 reqSleepMs=0 maxRequests=100000 forceGc=true threadPrefix=jobexec-pool-
+[leak] heap_used_after_gc_mb = MemoryMXBean heap used, sampled immediately after a System.gc()-triggered full GC
+[leak] served=100 heap_after_gc_mb=8.1 threads=200 instances=100 gc=2 t=0.1s
+[leak] served=200 heap_after_gc_mb=14.5 threads=400 instances=200 gc=3 t=0.1s
+[leak] served=300 heap_after_gc_mb=21.0 threads=600 instances=300 gc=4 t=0.2s
+[leak] served=400 heap_after_gc_mb=27.5 threads=800 instances=400 gc=5 t=0.2s
+[leak] served=500 heap_after_gc_mb=33.9 threads=1000 instances=500 gc=6 t=0.2s
+[leak] served=600 heap_after_gc_mb=40.3 threads=1200 instances=600 gc=7 t=0.3s
+[leak] served=700 heap_after_gc_mb=46.8 threads=1400 instances=700 gc=8 t=0.3s
+[leak] served=800 heap_after_gc_mb=53.2 threads=1600 instances=800 gc=9 t=0.4s
+[leak] served=900 heap_after_gc_mb=59.6 threads=1800 instances=900 gc=10 t=0.5s
+[leak] served=1000 heap_after_gc_mb=66.0 threads=2000 instances=1000 gc=11 t=0.5s
+[leak] served=1100 heap_after_gc_mb=72.4 threads=2200 instances=1100 gc=12 t=0.6s
+[leak] served=1200 heap_after_gc_mb=78.9 threads=2400 instances=1200 gc=13 t=0.6s
+[leak] served=1300 heap_after_gc_mb=85.3 threads=2600 instances=1300 gc=14 t=0.7s
+[leak] served=1400 heap_after_gc_mb=91.7 threads=2800 instances=1400 gc=15 t=0.7s
+[leak] served=1500 heap_after_gc_mb=98.2 threads=3000 instances=1500 gc=16 t=0.8s
+[leak] served=1600 heap_after_gc_mb=104.6 threads=3200 instances=1600 gc=17 t=0.8s
+[leak] served=1700 heap_after_gc_mb=111.0 threads=3400 instances=1700 gc=18 t=0.9s
+[leak] served=1800 heap_after_gc_mb=117.5 threads=3600 instances=1800 gc=19 t=1.0s
+[leak] served=1900 heap_after_gc_mb=123.9 threads=3800 instances=1900 gc=20 t=1.0s
+[leak] served=2000 heap_after_gc_mb=130.3 threads=4000 instances=2000 gc=21 t=1.1s
+[leak] served=2100 heap_after_gc_mb=136.8 threads=4200 instances=2100 gc=22 t=1.2s
+[leak] served=2200 heap_after_gc_mb=143.2 threads=4400 instances=2200 gc=23 t=1.3s
+[leak] served=2300 heap_after_gc_mb=149.6 threads=4600 instances=2300 gc=24 t=1.3s
+[leak] served=2400 heap_after_gc_mb=156.1 threads=4800 instances=2400 gc=26 t=1.4s
+[leak] served=2500 heap_after_gc_mb=162.5 threads=5000 instances=2500 gc=27 t=1.5s
+[leak] served=2600 heap_after_gc_mb=169.1 threads=5200 instances=2600 gc=31 t=1.7s
+[leak] served=2700 heap_after_gc_mb=175.7 threads=5400 instances=2700 gc=35 t=1.8s
+[leak] DIED mode=leaky requests=2800 heap_after_gc_mb=175.7 live_threads=5400 instances=2700 gc_count=52 elapsed_s=2.1 cause=OutOfMemoryError: Java heap space
+[leak] checksum=4273921

@@ -1,0 +1,55 @@
+NOTE: 64 KB buffer variant -- reproduces the same leak, not used as the primary run
+===================================================================================
+
+What this is
+------------
+The same LeakBench program with BUFFER_KB=64 (a literal 64 KB HTTP-style socket
+buffer) instead of the primary run's 512 KB, and unpaced (REQ_SLEEP_MS=0).
+
+Everything else is identical: -Xmx192m -Xms192m -Xss256k, G1GC, poolCore=2
+prestarted, allowCoreThreadTimeOut(false), --memory=1g --cpus=2.
+
+What happened
+-------------
+It reproduces the leak cleanly and dies the same way:
+
+  OutOfMemoryError: Java heap space
+  died after 2800 requests
+  heap after GC at death 175.7 MB (of 192m)
+  live pool threads      5400
+  JobExecutor instances  2700
+  time to death          2.1 s
+
+So the mechanism is NOT sensitive to the buffer size. The buffer size only
+changes how many leaked instances it takes to exhaust the heap.
+
+Why it is not the primary run
+-----------------------------
+Two reasons, both about readability rather than correctness:
+
+1. 5400 live worker threads at death is unwieldy. It is a lot of scheduler noise
+   for a laptop, and it puts the run close to territory where OS/container thread
+   limits, not the Java heap, could plausibly become the binding constraint --
+   which would muddy the "this is a heap leak" point the benchmark is making.
+   At 512 KB the run dies with a tidy 378 threads / 190 instances.
+
+2. Pacing it to a readable ~60 s timeline (as the primary run does) would take
+   2700 requests x 300 ms = ~13.5 minutes. Unpaced it dies in 2.1 s, which gives
+   a coarse time series (27 rows) rather than the primary run's 38 evenly spaced
+   samples across a minute.
+
+What did NOT happen (worth stating, since it is the intuitive guess)
+--------------------------------------------------------------------
+We expected a 64 KB buffer might exhaust NATIVE thread memory ("unable to create
+new native thread") before the Java heap filled, since each leaked JobExecutor
+also leaks 2 threads. It did not. Thread stacks commit lazily, so 5400 parked
+threads cost far less resident memory than 5400 x stack size suggests, and the
+Java heap still filled first. We never observed a native-thread OOM in any run of
+this harness, so the benchmark does not claim one.
+
+Files here are the raw output of that run: leaky.csv, gc_leaky.log,
+stdout_leaky.txt, summary.txt, run_metadata.csv.
+
+Reproduce with:
+  RESULTS_DIR="$PWD/results/attempts/buffer-64kb-unpaced" \
+    BUFFER_KB=64 REQ_SLEEP_MS=0 REPORT_EVERY=100 python3 benchmark.py leaky

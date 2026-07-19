@@ -1,0 +1,2 @@
+# benchmark.py uses only the Python standard library (csv, re, subprocess, ...).
+# No third-party packages are required. This file is intentionally dependency-free.
