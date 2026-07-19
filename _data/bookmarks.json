@@ -36,6 +36,13 @@
       "category": "Performance & Debugging"
     },
     {
+      "id": "brendan-gregg-flame-graphs",
+      "name": "Flame Graphs",
+      "url": "https://www.brendangregg.com/flamegraphs.html",
+      "description": "The definitive guide to finding hot code paths from CPU, memory, off-CPU, and differential stack profiles.",
+      "category": "Performance & Debugging"
+    },
+    {
       "id": "brendan-gregg-thinking-methodically",
       "name": "Thinking Methodically about Performance",
       "url": "https://queue.acm.org/detail.cfm?id=2413037",
