@@ -7,6 +7,8 @@ categories: interview lld design-patterns behavioral
 mermaid: true
 ---
 
+[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
+
 Every undo button you've ever clicked in a text editor is this pattern, and the detail people miss when they build their own is that whatever's holding your history isn't allowed to see your document's internals while it stores them, it just holds an opaque snapshot and hands it back later.
 
 ## The problem

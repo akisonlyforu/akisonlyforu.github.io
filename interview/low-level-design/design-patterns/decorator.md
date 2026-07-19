@@ -7,6 +7,8 @@ categories: interview lld design-patterns structural
 mermaid: true
 ---
 
+[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
+
 If you've ever added a fourth optional flag to a constructor and thought "I'm going to need a class for every combination of these," this is for you. The coffee example is the textbook case: milk, sugar, whipped cream, in any combination, and if you model that as subclasses you're writing `MilkSugarCoffee`, `MilkWhippedCoffee`, and it only gets worse as ingredients get added.
 
 ## The problem

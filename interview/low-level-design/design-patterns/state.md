@@ -7,6 +7,8 @@ categories: interview lld design-patterns behavioral
 mermaid: true
 ---
 
+[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
+
 The tell that you need State instead of a pile of booleans is when you catch yourself writing "if locked and not off, do X, but if off do nothing, unless." Phone lock/unlock/power logic is the cleanest version of this I've seen: three states, six actions, and every action means something different depending on which state you're in.
 
 ## The problem

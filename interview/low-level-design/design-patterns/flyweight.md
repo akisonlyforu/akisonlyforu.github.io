@@ -7,6 +7,8 @@ categories: interview lld design-patterns structural
 mermaid: true
 ---
 
+[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
+
 If you've ever built something that renders thousands of icons and noticed most of them are the same image just sitting at a different position, this is for you. The file explorer example is exactly that: a thousand files, but only four file types and three folder colors, so there's no reason to load the same icon image a thousand times.
 
 ## The problem

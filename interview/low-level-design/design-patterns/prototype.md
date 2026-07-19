@@ -7,6 +7,8 @@ categories: interview lld design-patterns creational
 mermaid: true
 ---
 
+[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
+
 The source code for this one is a little more interesting than the README lets on. It talks about Java's Cloneable interface and Object.clone() at length, but the actual VehiclePrototype implementation doesn't use either. It rolls its own copy constructors instead. That's worth noticing, because it sidesteps the exact problems the Cloneable notes complain about, the checked CloneNotSupportedException and the fact that Cloneable is a marker interface with no real contract behind it.
 
 ## The problem

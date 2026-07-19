@@ -7,6 +7,8 @@ categories: interview lld design-patterns creational
 mermaid: true
 ---
 
+[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
+
 I've seen the same if/else ladder for "which media player class do I instantiate" copy-pasted into three different callers in the same codebase, one of them missing the VLC branch entirely because whoever wrote it didn't know it existed. Factory Method exists so that ladder lives in exactly one place.
 
 ## The problem

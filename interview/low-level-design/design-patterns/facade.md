@@ -7,6 +7,8 @@ categories: interview lld design-patterns structural
 mermaid: true
 ---
 
+[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
+
 If you've ever had to call three services in a specific order just to book a hotel room, and gotten it wrong once because you forgot to check availability before reserving, this is for you. That's the exact shape of the hotel example: `RoomBookingService`, `HousekeepingService`, `RestaurantService`, each fine on its own, miserable to coordinate correctly from outside.
 
 ## The problem

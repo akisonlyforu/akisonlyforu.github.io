@@ -7,6 +7,8 @@ categories: interview lld design-patterns creational
 mermaid: true
 ---
 
+[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
+
 The test file for this one fakes "expensive" with a 50 millisecond Thread.sleep() in the constructor, which is a stand-in for the real thing, a database handshake, a socket setup, whatever actually costs wall-clock time to build. The pool exists so you pay that cost once per object and then hand the same object out over and over instead of re-paying it on every request.
 
 ## The problem

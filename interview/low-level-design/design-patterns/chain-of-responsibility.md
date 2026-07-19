@@ -7,6 +7,8 @@ categories: interview lld design-patterns behavioral
 mermaid: true
 ---
 
+[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
+
 I once watched a login flow fail for a customer because one check in a five-step validation pipeline swallowed a bad case and just returned false, no explanation attached. Nobody upstream could tell which link in the chain had actually killed the request. That's the shape of almost every Chain of Responsibility bug: something in the middle ate it, and the chain itself doesn't say who.
 
 ## The problem

@@ -7,6 +7,8 @@ categories: interview lld design-patterns structural
 mermaid: true
 ---
 
+[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
+
 If you've ever handed out a setter on a class and then spent an afternoon tracking down which caller mutated a field it had no business touching, this is for you. The `Circle` example makes the fix boringly simple: once a `Circle` is constructed, nothing about it should be able to change out from under you.
 
 ## The problem
