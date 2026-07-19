@@ -2,7 +2,7 @@
 layout: default
 tags: home
 title: Backend Engineering Deep Dives
-description: Practical backend engineering deep dives on distributed systems, databases, performance, and software architecture by Avinash Kumar.
+description: Practical backend engineering deep dives on distributed systems, databases, performance, and software architecture.
 ---
 
 # 👋 Hi there <br/>
