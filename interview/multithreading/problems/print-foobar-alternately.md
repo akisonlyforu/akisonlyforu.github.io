@@ -3,7 +3,7 @@ layout: post
 title: Print FooBar Alternately (LC 1115)
 date: 2026-07-19
 description: >-
-  First encounter with ping-pong signaling: each thread's last act enables the *other* thread's next turn. This is the reusable version of the door metaphor — the doors…
+  First encounter with ping-pong signaling: each thread's last act enables the *other* thread's next turn. This is the reusable version of the door metaphor, the doors…
 categories: interview multithreading problems
 ---
 
@@ -24,12 +24,12 @@ Two threads share a FooBar instance. Thread A calls `foo()` n times; thread B ca
 
 ### Clarify before solving
 
-- Repeated cycles (yes — this is the key difference from Print in Order).
-- Who goes first? (foo — so bar's gate starts closed, foo's gate starts open.)
+- Repeated cycles (yes, this is the key difference from Print in Order).
+- Who goes first? (foo, so bar's gate starts closed, foo's gate starts open.)
 
 ### Why this problem matters
 
-First encounter with **ping-pong signaling**: each thread's last act enables the *other* thread's next turn. This is the reusable version of the door metaphor — the doors re-close automatically because acquiring a permit consumes it.
+First encounter with **ping-pong signaling**: each thread's last act enables the *other* thread's next turn. This is the reusable version of the door metaphor, the doors re-close automatically because acquiring a permit consumes it.
 
 ---
 
@@ -45,7 +45,7 @@ The i-th "bar" never prints before the i-th "foo"; the (i+1)-th "foo" never prin
 
 ### Mental model
 
-Two doors again, but now the permit is a **baton**. There is exactly one baton in the system at all times. Foo starts holding it. Each thread: wait for baton → do my print → hand baton to the *other* door. Because `acquire()` consumes the permit, the door closes itself behind you — that's what makes this reusable with zero reset logic.
+Two doors again, but now the permit is a **baton**. There is exactly one baton in the system at all times. Foo starts holding it. Each thread: wait for baton → do my print → hand baton to the *other* door. Because `acquire()` consumes the permit, the door closes itself behind you, that's what makes this reusable with zero reset logic.
 
 Semaphore version: `fooGate = new Semaphore(1)`, `barGate = new Semaphore(0)`. foo loop: acquire fooGate, print, release barGate. bar loop: acquire barGate, print, release fooGate.
 
