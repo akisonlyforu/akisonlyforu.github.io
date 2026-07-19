@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Room (the invoker) needs to trigger operations on Light and Fan objects without hardcoding which device or which operation lives in which slot, and it needs undo support without every receiver reimplementing its own undo logic.
 categories: interview lld design-patterns behavioral
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/behavioral
+back_label: Behavioral Patterns
 ---
-
-[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
 
 The first time I wrote a "remote control" style class without an undo stack, I ended up bolting a redo-state hack directly onto the invoker, because button presses were wired straight to receiver method calls with nothing in between. Command exists so you never have to retrofit that.
 

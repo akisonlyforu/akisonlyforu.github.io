@@ -5,9 +5,9 @@ date: 2026-07-19
 description: You've got a request that needs to pass through a sequence of checks, and you don't want the caller writing an if/else ladder for each one, and you don't want any single checker to know about the others.
 categories: interview lld design-patterns behavioral
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/behavioral
+back_label: Behavioral Patterns
 ---
-
-[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
 
 I once watched a login flow fail for a customer because one check in a five-step validation pipeline swallowed a bad case and just returned false, no explanation attached. Nobody upstream could tell which link in the chain had actually killed the request. That's the shape of almost every Chain of Responsibility bug: something in the middle ate it, and the chain itself doesn't say who.
 

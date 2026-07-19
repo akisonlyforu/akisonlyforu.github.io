@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Some objects have a mix of required and optional fields, and neither telescoping constructors (one overload per combination of optional params) nor a plain no-args constructor plus setters (which gives up immutability and lets the object exist half-configured) is a good answer.
 categories: interview lld design-patterns creational
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/creational
+back_label: Creational Patterns
 ---
-
-[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
 
 I've written the constructor with six optional parameters, most of them ints defaulting to zero, and watched a caller pass them in the wrong order because two of them were both ints and the IDE's parameter hints weren't enough to save them. Builder is the fix for that specific kind of bug.
 

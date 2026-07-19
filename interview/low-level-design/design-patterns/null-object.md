@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Application takes an AbstractLogger, but logging is genuinely optional in some configurations, and you don't want performOperation(), or any other method, doing a null check before every single log call, that check would end up repeated everywhere the logger gets used.
 categories: interview lld design-patterns behavioral
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/behavioral
+back_label: Behavioral Patterns
 ---
-
-[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
 
 I've lost count of how many `NullPointerException`s I've traced back to an optional dependency, a logger, a notifier, something that's fine to skip, that someone forgot to null-check three call sites deep. Null Object's fix is almost insultingly simple: make "nothing" a real object instead of the absence of one.
 

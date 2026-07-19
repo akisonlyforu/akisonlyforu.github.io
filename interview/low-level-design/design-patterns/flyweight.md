@@ -5,9 +5,9 @@ date: 2026-07-19
 description: You need a large number of similar objects, and most of their state is actually identical across instances.
 categories: interview lld design-patterns structural
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/structural
+back_label: Structural Patterns
 ---
-
-[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
 
 If you've ever built something that renders thousands of icons and noticed most of them are the same image just sitting at a different position, this is for you. The file explorer example is exactly that: a thousand files, but only four file types and three folder colors, so there's no reason to load the same icon image a thousand times.
 

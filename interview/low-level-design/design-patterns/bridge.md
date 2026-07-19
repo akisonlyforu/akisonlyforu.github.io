@@ -5,9 +5,9 @@ date: 2026-07-19
 description: You've got two dimensions of variation that both need to grow independently.
 categories: interview lld design-patterns structural
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/structural
+back_label: Structural Patterns
 ---
-
-[← Back to Structural Patterns](/interview/low-level-design/design-patterns/structural)
 
 If you've ever started sketching out a class hierarchy and realized halfway through that you're about to multiply two unrelated things together, this is for you. The vehicle workshop example here makes it concrete: four vehicle types, four workshop operations, and if you inherit your way through it you end up writing `CarProduce`, `CarAssemble`, `BikeProduce`, `BikeAssemble`, and so on until you've written sixteen classes for what's really two independent lists of four things each.
 

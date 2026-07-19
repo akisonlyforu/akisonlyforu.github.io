@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Client code shouldn't need to know the full list of concrete classes that implement an interface, and it definitely shouldn't have that decision logic duplicated everywhere a new instance is needed.
 categories: interview lld design-patterns creational
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/creational
+back_label: Creational Patterns
 ---
-
-[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
 
 I've seen the same if/else ladder for "which media player class do I instantiate" copy-pasted into three different callers in the same codebase, one of them missing the VLC branch entirely because whoever wrote it didn't know it existed. Factory Method exists so that ladder lives in exactly one place.
 

@@ -16,10 +16,21 @@ layout: default
   p a:focus {
     text-decoration: underline;
   }
+
+  .post-back-arrow {
+    color: var(--link-color);
+    text-decoration: none;
+    margin-right: 0.5rem;
+    font-weight: 400;
+  }
+
+  .post-back-arrow:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <div class="post-header mb2">
-  <h1>{{ page.title }}</h1>
+  <h1>{% if page.back_url %}<a href="{{ page.back_url }}" class="post-back-arrow" aria-label="Back to {{ page.back_label | default: 'previous page' }}" title="Back to {{ page.back_label | default: 'previous page' }}">&larr;</a>{% endif %}{{ page.title }}</h1>
   <span class="post-meta">
     {{ page.date | date: site.date_format }}
     {% if page.substack_url %}

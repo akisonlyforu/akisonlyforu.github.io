@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Multiple Airplane instances need to coordinate around a shared resource, the runway, but you don't want each Airplane holding references to every other Airplane it might conflict with, that's all-to-all coupling that gets worse with every aircraft you add.
 categories: interview lld design-patterns behavioral
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/behavioral
+back_label: Behavioral Patterns
 ---
-
-[← Back to Behavioral Patterns](/interview/low-level-design/design-patterns/behavioral)
 
 Picture five components that all need to coordinate around one shared resource, a runway, say, and imagine wiring each one with a direct reference to every other one it might conflict with. That's the mess Mediator prevents, and air traffic control is the textbook example precisely because the alternative, planes coordinating with each other directly, is obviously insane once you say it out loud.
 

@@ -5,9 +5,9 @@ date: 2026-07-19
 description: Building a new Car or Bus from scratch every time means running the full constructor path again, even when what you actually want is 'the same as this one, but slightly different.' And if you're handing callers a shared canonical instance instead, you risk one caller's mutation leaking into everyone else's copy.
 categories: interview lld design-patterns creational
 mermaid: true
+back_url: /interview/low-level-design/design-patterns/creational
+back_label: Creational Patterns
 ---
-
-[← Back to Creational Patterns](/interview/low-level-design/design-patterns/creational)
 
 The source code for this one is a little more interesting than the README lets on. It talks about Java's Cloneable interface and Object.clone() at length, but the actual VehiclePrototype implementation doesn't use either. It rolls its own copy constructors instead. That's worth noticing, because it sidesteps the exact problems the Cloneable notes complain about, the checked CloneNotSupportedException and the fact that Cloneable is a marker interface with no real contract behind it.
 
