@@ -1,5 +1,21 @@
 [
     {
+        "title": "AI Engineering: Building Applications with Foundation Models",
+        "author": "Chip Huyen",
+        "rating": "",
+        "isbn": "1098166302",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
+        "title": "gRPC: Up and Running: Building Cloud Native Applications with Go and Java for Docker and Kubernetes",
+        "author": "Kasun Indrasiri, Danesh Kuruppu",
+        "rating": "",
+        "isbn": "1492058335",
+        "review_path": null,
+        "year_i_finished_reading": null
+    },
+    {
         "title": "Terraform: Up & Running: Writing Infrastructure as Code",
         "author": "Yevgeniy Brikman",
         "rating": "",
