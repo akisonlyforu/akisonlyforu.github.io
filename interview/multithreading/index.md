@@ -47,6 +47,7 @@ Families 1 to 7 are the coordination core, learn these first and in order. Famil
     - [Implement CountDownLatch or CyclicBarrier](/interview/multithreading/problems/implement-latch-or-barrier)
     - [Dining Savages](/interview/multithreading/problems/dining-savages)
     - [The Barbershop](/interview/multithreading/problems/barbershop)
+    - [In-Memory SQS-Like Queue](/interview/multithreading/problems/sqs-like-in-memory-queue)
 - [Group Formation & Barriers](/interview/multithreading/patterns/group-formation). Admission and boundary, kept separate
   - **Problems**
     - [Reusable Barrier](/interview/multithreading/problems/reusable-barrier)
@@ -67,6 +68,8 @@ Families 1 to 7 are the coordination core, learn these first and in order. Famil
     - [Parallel API Aggregation](/interview/multithreading/problems/parallel-api-aggregation)
     - [Fork-Join Parallel Computation](/interview/multithreading/problems/fork-join-parallel-computation)
     - [Implement a Future/Promise](/interview/multithreading/problems/implement-a-future)
+    - [Multithreaded Merge Sort](/interview/multithreading/problems/multithreaded-merge-sort)
+    - [Topic-Based Pub/Sub Broker (Kafka-lite)](/interview/multithreading/problems/pubsub-message-broker)
 - [Time-Based State](/interview/multithreading/patterns/time-based). State as a function of the clock
   - **Problems**
     - [Token Bucket Rate Limiter](/interview/multithreading/problems/rate-limiter-token-bucket)
@@ -74,6 +77,7 @@ Families 1 to 7 are the coordination core, learn these first and in order. Famil
     - [Read-Heavy Cache with Expiry](/interview/multithreading/problems/read-heavy-cache-with-expiry)
     - [Retry with Backoff and Jitter](/interview/multithreading/problems/retry-with-backoff-and-jitter)
     - [Batching Aggregator](/interview/multithreading/problems/batching-aggregator)
+    - [Single-Flight Cache Refresh (Thundering Herd)](/interview/multithreading/problems/single-flight-cache-refresh)
 
 ### The senior material
 
@@ -85,6 +89,9 @@ Families 1 to 7 are the coordination core, learn these first and in order. Famil
     - [Lock-Free & Bounded Queues](/interview/multithreading/problems/lock-free-or-bounded-queue)
     - [Striped Counter / LongAdder](/interview/multithreading/problems/striped-counter-longadder)
     - [Copy-on-Write Snapshot Registry](/interview/multithreading/problems/copy-on-write-snapshot-registry)
+    - [Concurrent Stock Exchange (Matching Engine)](/interview/multithreading/problems/concurrent-stock-exchange)
+    - [Thread-Safe Leaderboard](/interview/multithreading/problems/thread-safe-leaderboard)
+    - [Thread-Safe RandomizedSet](/interview/multithreading/problems/thread-safe-randomized-set)
 - [Debugging & Code Review](/interview/multithreading/patterns/debugging-and-code-review). Run the method backwards: symptom → cause → proof
   - **Problems**
     - [The Lost Update Hunt](/interview/multithreading/problems/lost-update-hunt)
@@ -102,6 +109,7 @@ Families 1 to 7 are the coordination core, learn these first and in order. Famil
     - [Exactly-Once Processing](/interview/multithreading/problems/exactly-once-processing)
     - [Flash-Sale Inventory](/interview/multithreading/problems/flash-sale-inventory)
     - [Double-Booking Prevention](/interview/multithreading/problems/double-booking-prevention)
+    - [Distributed Rate Limiter](/interview/multithreading/problems/distributed-rate-limiter)
 
 ## How to use this
 
