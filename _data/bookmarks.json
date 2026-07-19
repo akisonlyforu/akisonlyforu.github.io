@@ -253,6 +253,13 @@
       "category": "Storage & Caching"
     },
     {
+      "id": "flipkart-rocksdb-server-bootstrap",
+      "name": "Server Bootstrap Optimization Using RocksDB",
+      "url": "https://blog.flipkart.tech/server-bootstrap-optimization-using-rocksdb-3378b5af55dc",
+      "description": "A search-service bootstrap redesign that reduces Redis pressure with local RocksDB, LSM tuning, offset recovery, and native-memory debugging.",
+      "category": "Storage & Caching"
+    },
+    {
       "id": "stripe-zero-downtime-migrations",
       "name": "How Stripe Processed $1 Trillion with Zero-Downtime Data Migrations",
       "url": "https://stripe.com/blog/how-stripes-document-databases-supported-99.999-uptime-with-zero-downtime-data-migrations",
