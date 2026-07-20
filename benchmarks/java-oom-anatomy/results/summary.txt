@@ -1,5 +1,5 @@
 ==============================================================================
-java-oom-anatomy: four OutOfMemoryErrors, one name
+java-oom-anatomy: five OutOfMemoryErrors, one name
 ==============================================================================
 laptop numbers demonstrating the MECHANISM, not capacity planning.
 the tell for a leak is what GC RECLAIMS (post-GC heap), not peak usage.
@@ -10,9 +10,9 @@ A. leak -> Java heap space  (the anchor: retained allocation)
   GC events parsed          : 35  (of which Full: 32)
   post-GC heap start->peak  : 11MB -> 254MB (cap grew to 256MB)
   ^ the tell: GC cannot pull the live set back down; it climbs to the ceiling
-  Full-GC pause first->widest: 2.816ms -> 9.946ms
-  a near-death Full GC       : 254MB->247MB(cap 256MB) reclaimed 7MB in 9.9ms
-  histogram top class       : [B (java.base@21.0.11)  17,093 instances  251,730,552 bytes
+  Full-GC pause first->widest: 4.451ms -> 12.686ms
+  a near-death Full GC       : 254MB->247MB(cap 256MB) reclaimed 7MB in 12.7ms
+  histogram top class       : [B (java.base@21.0.11)  17,114 instances  252,419,016 bytes
   ^ that class is 97.0% of the top-15 bytes
   OOM message               : java.lang.OutOfMemoryError: Java heap space
   time to OOM               : 33.0s
@@ -23,15 +23,15 @@ B. healthy -> NO OOM  (same rate + Xmx, released each iteration)
   GC events parsed          : 4
   post-GC heap min..max     : 10MB .. 10MB (cap 126MB)  <- FLAT, no climb
   exit code                 : 0 (0 = ran to completion)
-  healthy: DONE churned 8000 blocks (250 MB total) in 35.1s, no OOM
+  healthy: DONE churned 8000 blocks (250 MB total) in 34.8s, no OOM
   => identical allocation to A; the ONLY difference is retention.
 
 ------------------------------------------------------------------------------
 C. gcoverhead -> GC overhead limit exceeded  (Parallel GC, near-full)
 ------------------------------------------------------------------------------
   windows                   : 6
-  final window pct_time_in_gc     : 94.29%
-  final window pct_heap_reclaimed : 1.299%
+  final window pct_time_in_gc     : 93.99%
+  final window pct_heap_reclaimed : 1.484%
   OOM message               : java.lang.OutOfMemoryError: GC overhead limit exceeded
   time to OOM               : 1.1s
 
@@ -46,10 +46,22 @@ D. metaspace -> Metaspace  (the OOM that isn't heap)
   time to OOM               : 21.8s
 
 ------------------------------------------------------------------------------
+E. directbuffer -> Direct buffer memory  (off-heap, invisible to a heap dump)
+------------------------------------------------------------------------------
+  samples                   : 127
+  direct used start->wall   : 0MB -> 63MB   (cap 64m)
+  buffers retained          : 2 -> 128
+  heap_used stayed within   : 11MB .. 12MB (of 256m heap)  <- FLAT while native memory filled
+  OOM message               : java.lang.OutOfMemoryError: Cannot reserve 524288 bytes of direct buffer memory (allocated: 66584626, limit: 67108864)
+  time to OOM               : 3.1s
+
+------------------------------------------------------------------------------
 OOM messages (exact strings captured):
   leak       : java.lang.OutOfMemoryError: Java heap space
   gcoverhead : java.lang.OutOfMemoryError: GC overhead limit exceeded
   metaspace  : java.lang.OutOfMemoryError: Metaspace
+  directbuffer: java.lang.OutOfMemoryError: Cannot reserve 524288 bytes of direct buffer memory (allocated: 66584626, limit: 67108864)
 ------------------------------------------------------------------------------
 artifacts: gc_leak.csv, gc_healthy.csv, gc_overhead.csv, metaspace.csv,
-           histogram_leak.csv, oom_events.csv, run_metadata.csv, logs/*
+           directbuffer.csv, histogram_leak.csv, oom_events.csv,
+           run_metadata.csv, logs/*

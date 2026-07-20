@@ -2,18 +2,20 @@
 failures wearing one name, and that the diagnostic tell for a leak is what GC
 RECLAIMS (the post-GC live set), not peak usage.
 
-Four experiments, each run for real inside a digest-pinned eclipse-temurin:21-jdk
+Five experiments, each run for real inside a digest-pinned eclipse-temurin:21-jdk
 container, each producing captured output:
 
   A. leak       -> OutOfMemoryError: Java heap space   (retained allocation; the anchor)
   B. healthy    -> no OOM                              (identical rate, released each iter)
   C. gcoverhead -> OutOfMemoryError: GC overhead limit exceeded (Parallel GC, near-full)
   D. metaspace  -> OutOfMemoryError: Metaspace         (the one that isn't heap)
+  E. directbuffer -> OutOfMemoryError: Direct buffer memory (off-heap NIO, no heap trace)
 
 A and B share Xmx and allocation shape, so post-GC heap is the ONLY thing that
 differs. For A we also poll a live class histogram (jcmd) as the heap climbs, so the
-leaking class is caught red-handed dominating the heap. For D we sample heap AND
-metaspace over time to show heap staying flat while metadata walks into the wall.
+leaking class is caught red-handed dominating the heap. For D and E we sample heap
+alongside the region that is actually filling, to show heap staying flat while
+metadata (D) or native buffer memory (E) walks into its own wall.
 
 Everything OOMs on batch JVMs -- no host profiler, no exposed ports -- so Docker is
 clean and fully reproducible. Results land on the host under RESULTS_DIR (mounted).
@@ -45,6 +47,7 @@ BASE_DIGEST = "sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb4092
 XMX_HEAP = os.environ.get("XMX_HEAP", "256m")     # leak + healthy
 XMX_GCO = os.environ.get("XMX_GCO", "80m")        # gc-overhead
 MAX_META = os.environ.get("MAX_META", "64m")      # metaspace
+MAX_DIRECT = os.environ.get("MAX_DIRECT", "64m")  # direct buffer memory
 
 # Each experiment: JVM flags, env passed to the container, collector + limit metadata.
 EXPERIMENTS = [
@@ -84,6 +87,15 @@ EXPERIMENTS = [
         "env": {"META_SAMPLE_EVERY": "200", "META_SLEEP_MS": "1"},
         "collector": "G1 (JDK 21 default)",
         "limit": "-XX:MaxMetaspaceSize=" + MAX_META,
+        "poll_histogram": False,
+        "oom": True,
+    },
+    {
+        "name": "directbuffer",
+        "flags": ["-Xmx" + XMX_HEAP, "-XX:MaxDirectMemorySize=" + MAX_DIRECT],
+        "env": {"DIRECT_BLOCK_KB": "512", "DIRECT_SLEEP_MS": "10"},
+        "collector": "G1 (JDK 21 default)",
+        "limit": "-XX:MaxDirectMemorySize=" + MAX_DIRECT,
         "poll_histogram": False,
         "oom": True,
     },
@@ -359,6 +371,7 @@ def main():
             "healthy": "healthy_stderr.log",
             "gcoverhead": "gc_overhead_stderr.log",
             "metaspace": "metaspace_stderr.log",
+            "directbuffer": "directbuffer_stderr.log",
         }[name]
         with open(os.path.join(LOGS, stderr_path), "w") as f:
             f.write(err)
@@ -431,6 +444,10 @@ def write_run_metadata(jver):
         w.writerow(["gcoverhead_collector", "Parallel (-XX:+UseParallelGC)"])
         w.writerow(["metaspace_xmx", XMX_HEAP])
         w.writerow(["metaspace_max", MAX_META])
+        w.writerow(["directbuffer_xmx", XMX_HEAP])
+        w.writerow(["directbuffer_max", MAX_DIRECT])
+        w.writerow(["directbuffer_collector", "G1 (JDK 21 default)"])
+        w.writerow(["directbuffer_block_kb", "512"])
         w.writerow(["leak_collector", "G1 (JDK 21 default)"])
         w.writerow(["metaspace_collector", "G1 (JDK 21 default)"])
         w.writerow(["alloc_block_kb", "32"])
@@ -446,7 +463,7 @@ def write_summary(results, oom_events):
     bar = "=" * 78
     dash = "-" * 78
     L.append(bar)
-    L.append("java-oom-anatomy: four OutOfMemoryErrors, one name")
+    L.append("java-oom-anatomy: five OutOfMemoryErrors, one name")
     L.append(bar)
     L.append("laptop numbers demonstrating the MECHANISM, not capacity planning.")
     L.append("the tell for a leak is what GC RECLAIMS (post-GC heap), not peak usage.")
@@ -544,13 +561,36 @@ def write_summary(results, oom_events):
     L.append(f"  time to OOM               : {results['metaspace']['elapsed']:.1f}s")
     L.append("")
 
+    # E: direct buffer memory
+    L.append(dash)
+    L.append("E. directbuffer -> Direct buffer memory  (off-heap, invisible to a heap dump)")
+    L.append(dash)
+    db_path = os.path.join(RESULTS, "directbuffer.csv")
+    if os.path.exists(db_path):
+        with open(db_path) as f:
+            db = list(csv.DictReader(f))
+        if db:
+            first, last = db[0], db[-1]
+            heaps = [int(r["heap_used_mb"]) for r in db]
+            L.append(f"  samples                   : {len(db)}")
+            L.append(f"  direct used start->wall   : {first['direct_used_mb']}MB -> "
+                     f"{last['direct_used_mb']}MB   (cap {MAX_DIRECT})")
+            L.append(f"  buffers retained          : {first['direct_count']} -> "
+                     f"{last['direct_count']}")
+            L.append(f"  heap_used stayed within   : {min(heaps)}MB .. {max(heaps)}MB "
+                     f"(of {XMX_HEAP} heap)  <- FLAT while native memory filled")
+    L.append(f"  OOM message               : {results['directbuffer'].get('oom_msg')}")
+    L.append(f"  time to OOM               : {results['directbuffer']['elapsed']:.1f}s")
+    L.append("")
+
     L.append(dash)
     L.append("OOM messages (exact strings captured):")
     for e in oom_events:
         L.append(f"  {e['scenario']:11s}: {e['oom_message']}")
     L.append(dash)
     L.append("artifacts: gc_leak.csv, gc_healthy.csv, gc_overhead.csv, metaspace.csv,")
-    L.append("           histogram_leak.csv, oom_events.csv, run_metadata.csv, logs/*")
+    L.append("           directbuffer.csv, histogram_leak.csv, oom_events.csv,")
+    L.append("           run_metadata.csv, logs/*")
 
     with open(path, "w") as f:
         f.write("\n".join(L) + "\n")

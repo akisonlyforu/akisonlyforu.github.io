@@ -1,4 +1,5 @@
 scenario,oom_message,region,limit,gc_collector,time_to_oom_s,top_stack_frame
-leak,java.lang.OutOfMemoryError: Java heap space,heap,-Xmx256m,G1 (JDK 21 default),33.0,Main.leak(Main.java:99)
-gcoverhead,java.lang.OutOfMemoryError: GC overhead limit exceeded,heap (GC-overhead tripwire),-Xmx80m,Parallel (-XX:+UseParallelGC),1.1,Main.gcOverhead(Main.java:172)
+leak,java.lang.OutOfMemoryError: Java heap space,heap,-Xmx256m,G1 (JDK 21 default),33.0,Main.leak(Main.java:147)
+gcoverhead,java.lang.OutOfMemoryError: GC overhead limit exceeded,heap (GC-overhead tripwire),-Xmx80m,Parallel (-XX:+UseParallelGC),1.1,Main.gcOverhead(Main.java:220)
 metaspace,java.lang.OutOfMemoryError: Metaspace,Metaspace,-XX:MaxMetaspaceSize=64m,G1 (JDK 21 default),21.8,java.base/java.lang.ClassLoader.defineClass0(Native Method)
+directbuffer,"java.lang.OutOfMemoryError: Cannot reserve 524288 bytes of direct buffer memory (allocated: 66584626, limit: 67108864)",off-heap (direct),-XX:MaxDirectMemorySize=64m,G1 (JDK 21 default),3.1,java.base/java.nio.Bits.reserveMemory(Bits.java:178)

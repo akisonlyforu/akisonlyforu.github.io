@@ -1,5 +1,5 @@
 gc_index,kind,heap_before_mb,heap_after_mb,heap_capacity_mb,pause_ms,uptime_s
-0,Young,33,10,126,4.046,2.913
-1,Young,69,10,126,4.013,10.859
-2,Young,83,10,126,3.804,20.679
-3,Young,83,10,126,3.372,30.665
+0,Young,33,10,126,4.143,2.857
+1,Young,69,10,126,3.759,10.855
+2,Young,83,10,126,3.517,20.617
+3,Young,83,10,126,3.421,30.435

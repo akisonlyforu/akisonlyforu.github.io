@@ -1,5 +1,5 @@
 java.lang.OutOfMemoryError: Java heap space
-	at Main.leak(Main.java:99)
+	at Main.leak(Main.java:147)
 java.lang.OutOfMemoryError: Java heap space
-	at Main.leak(Main.java:99)
-	at Main.main(Main.java:58)
+	at Main.leak(Main.java:147)
+	at Main.main(Main.java:105)

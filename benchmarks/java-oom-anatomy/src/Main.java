@@ -1,7 +1,9 @@
+import java.lang.management.BufferPoolMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
  *   healthy    -> no OOM                                       (same rate, released)
  *   gcoverhead -> OutOfMemoryError: GC overhead limit exceeded (Parallel GC, near-full)
  *   metaspace  -> OutOfMemoryError: Metaspace                  (class-metadata leak)
+ *   directbuffer -> OutOfMemoryError: Direct buffer memory     (off-heap NIO buffers)
  *
  * Usage: java <jvm-flags> Main <mode> <resultsDir>
  * Tunables via env: BLOCK_KB, SLEEP_MS, HEALTHY_ITER, GCO_FILL_PCT, GCO_NODE_BYTES,
@@ -44,9 +47,53 @@ public class Main {
         return p == null ? -1 : p.getUsage().getUsed() / (1024 * 1024);
     }
 
+    static BufferPoolMXBean bufferPool(String name) {
+        for (BufferPoolMXBean b : ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class)) {
+            if (name.equals(b.getName())) return b;
+        }
+        return null;
+    }
+
+    // ---- E: direct buffer memory ----------------------------------------------
+    // Off-heap NIO buffers. The Java wrapper object is a few dozen bytes; the actual
+    // bytes live in native memory that is only released when the wrapper becomes
+    // unreachable and its Cleaner runs. Retain the wrappers and that native memory
+    // can never come back -- and none of it appears in a heap dump, because none of
+    // it is on the heap. Capped by -XX:MaxDirectMemorySize, not by -Xmx.
+    static final List<ByteBuffer> BUFFERS = new ArrayList<>();
+
+    static void directBuffer(Path resultsDir) throws Exception {
+        int blockKb = envInt("DIRECT_BLOCK_KB", 512);
+        int sleepMs = envInt("DIRECT_SLEEP_MS", 10);
+        int block = blockKb * 1024;
+        BufferPoolMXBean direct = bufferPool("direct");
+        long t0 = System.nanoTime();
+        Path csv = resultsDir.resolve("directbuffer.csv");
+        try (PrintWriter w = new PrintWriter(Files.newBufferedWriter(csv))) {
+            w.println("sample_s,direct_used_mb,direct_count,heap_used_mb");
+            w.flush();
+            long n = 0;
+            while (true) {
+                ByteBuffer b = ByteBuffer.allocateDirect(block);
+                b.put(0, (byte) 1);
+                BUFFERS.add(b);              // <-- retain the wrapper: Cleaner never runs
+                n++;
+                double s = (System.nanoTime() - t0) / 1e9;
+                long dMb = direct == null ? -1 : direct.getMemoryUsed() / (1024 * 1024);
+                long dCount = direct == null ? -1 : direct.getCount();
+                long heapMb = heapUsedMb();
+                w.printf("%.2f,%d,%d,%d%n", s, dMb, dCount, heapMb);
+                w.flush();
+                System.out.printf("directbuffer: buffers=%d direct=%d MB heapUsed=%d MB t=%.1fs%n",
+                        n, dMb, heapMb, s);
+                if (sleepMs > 0) Thread.sleep(sleepMs);
+            }
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         if (args.length < 2) {
-            System.err.println("usage: Main <leak|healthy|gcoverhead|metaspace> <resultsDir>");
+            System.err.println("usage: Main <leak|healthy|gcoverhead|metaspace|directbuffer> <resultsDir>");
             System.exit(2);
         }
         String mode = args[0];
@@ -59,6 +106,7 @@ public class Main {
                 case "healthy":    healthy(); break;
                 case "gcoverhead": gcOverhead(); break;
                 case "metaspace":  metaspace(resultsDir); break;
+                case "directbuffer": directBuffer(resultsDir); break;
                 default:
                     System.err.println("unknown mode: " + mode);
                     System.exit(2);

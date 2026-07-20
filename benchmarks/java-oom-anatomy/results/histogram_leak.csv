@@ -1,9 +1,9 @@
 rank,class_name,instances,bytes
-1,[B (java.base@21.0.11),17093,251730552
-2,[Ljdk.internal.vm.FillerElement; (java.base@21.0.11),1265,6843832
+1,[B (java.base@21.0.11),17114,252419016
+2,[Ljdk.internal.vm.FillerElement; (java.base@21.0.11),1276,7005192
 3,java.lang.String (java.base@21.0.11),9580,229920
 4,java.lang.Class (java.base@21.0.11),1626,200368
-5,[Ljava.lang.Object; (java.base@21.0.11),1170,185616
+5,[Ljava.lang.Object; (java.base@21.0.11),1170,185648
 6,[C (java.base@21.0.11),217,56856
 7,java.util.concurrent.ConcurrentHashMap$Node (java.base@21.0.11),1419,45408
 8,[I (java.base@21.0.11),1082,44784

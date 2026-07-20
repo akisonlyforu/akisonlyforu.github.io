@@ -25,4 +25,4 @@ Exception in thread "main" java.lang.OutOfMemoryError: Metaspace
 	at java.base/java.lang.invoke.CallSite.makeSite(CallSite.java:310)
 	at java.base/java.lang.invoke.MethodHandleNatives.linkCallSiteImpl(MethodHandleNatives.java:249)
 	at java.base/java.lang.invoke.MethodHandleNatives.linkCallSite(MethodHandleNatives.java:239)
-	at Main.main(Main.java:78)
+	at Main.main(Main.java:126)

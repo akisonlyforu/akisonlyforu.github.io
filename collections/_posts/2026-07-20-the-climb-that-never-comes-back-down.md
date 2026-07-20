@@ -2,7 +2,7 @@
 layout:     post
 title:      The Climb That Never Comes Back Down
 date:       2026-07-20
-description:    A heap leak and a healthy busy service can look identical on a memory graph. The only number that separates them is what garbage collection gives back. So I ran four JVMs into the ground under a capped heap and watched the post-GC live set climb to the ceiling, the GC-overhead tripwire fire, and a metaspace wall that no amount of heap tuning would have fixed.
+description:    A heap leak and a healthy busy service can look identical on a memory graph. The only number that separates them is what garbage collection gives back. So I ran four JVMs into the ground under capped limits and watched the post-GC live set climb to the ceiling, the GC-overhead tripwire fire, and two more walls, metaspace and off-heap direct buffers, that no amount of heap tuning would have fixed.
 categories: java jvm memory gc
 ---
 
@@ -10,7 +10,7 @@ categories: java jvm memory gc
 
 If you've ever watched a service stay green on every health check, answer every request, and then fall over at 4am with `java.lang.OutOfMemoryError` in the last line of the log, you already know the frustrating part: the memory graph looked fine right up until it didn't. Used heap climbs, drops, climbs, drops, the sawtooth every JVM draws. A leak draws that same sawtooth. So does a perfectly healthy service under load. The graph you're staring at cannot tell you which one you have, and that's the problem.
 
-I wanted to see the difference with my own eyes, so I built four small programs that each run a JVM out of memory a different way, capped the heap small enough that they die in under a minute, and read the GC logs on the way down. One of them isn't even a heap problem. `OutOfMemoryError` is one error class wearing at least three different failures, and the first job when your pager goes off is figuring out which one you're actually holding.
+I wanted to see the difference with my own eyes, so I built five small programs, four that run a JVM out of memory a different way and one that deliberately survives, capped everything small enough that they die in under a minute, and read the logs on the way down. Two of them aren't heap problems at all. `OutOfMemoryError` is one error class wearing at least four different failures, and the first job when your pager goes off is figuring out which one you're actually holding.
 
 ## The problem
 
@@ -111,40 +111,40 @@ I plotted the post-GC heap (the live set after each collection) against wall-clo
     <text x="377.7" y="246" text-anchor="middle" font-size="10" fill="var(--cb-muted)">20s</text>
     <text x="544.6" y="246" text-anchor="middle" font-size="10" fill="var(--cb-muted)">30s</text>
     <!-- healthy -->
-    <polyline fill="none" stroke="var(--cb-green)" stroke-width="2" points="92.6,223.5 225.2,223.5 389.0,223.5 555.6,223.5"/>
+    <polyline fill="none" stroke="var(--cb-green)" stroke-width="2" points="91.7,223.5 225.1,223.5 388.0,223.5 551.8,223.5"/>
     <text x="300" y="219" font-size="10" fill="var(--cb-green)">healthy: flat at 10 MB, ran to completion</text>
     <!-- leak -->
-    <polyline fill="none" stroke="var(--cb-orange)" stroke-width="2" points="47.9,222.7 67.3,215.1 86.7,207.5 106.4,200.7 126.3,193.1 146.0,185.5 165.7,177.8 185.4,170.2 205.2,162.6 224.5,155.0 244.3,148.2 264.0,140.6 283.4,133.8 303.1,126.2 322.5,118.6 342.2,111.8 361.7,104.2 381.2,96.6 400.8,89.0 420.5,81.4 439.7,74.6 459.5,67.0 479.3,59.4 499.0,51.8 518.4,44.2 537.9,36.5 557.9,29.8 577.6,22.2 588.8,17.9"/>
-    <circle cx="588.8" cy="17.9" r="3" fill="var(--cb-orange)"/>
-    <text x="583" y="30" text-anchor="end" font-size="10" fill="var(--cb-orange)">OOM</text>
+    <polyline fill="none" stroke="var(--cb-orange)" stroke-width="2" points="47.9,222.7 67.8,215.1 87.4,207.5 107.3,199.8 127.0,192.2 146.7,184.6 166.4,177.8 186.1,170.2 205.8,162.6 224.7,155.0 244.3,147.4 264.0,139.8 283.8,132.2 303.5,124.5 323.2,117.8 342.6,110.2 362.4,102.5 382.3,94.9 401.9,88.2 421.5,80.5 441.3,72.9 461.0,65.3 480.6,58.5 499.3,50.9 519.1,43.3 538.8,35.7 558.0,28.9 577.7,21.3 587.3,17.9 589.7,17.1"/>
+    <circle cx="589.7" cy="17.1" r="3" fill="var(--cb-orange)"/>
+    <text x="584" y="30" text-anchor="end" font-size="10" fill="var(--cb-orange)">OOM</text>
   </svg>
   <figcaption>
     Same 32 KB blocks, same rate, same <code>-Xmx256m</code>. The healthy run's live set never leaves 10 MB across the whole run, four young collections, no growth. The leak's live set climbs one Full GC at a time, 11 MB &rarr; 254 MB, until it pins against the ceiling at 33 seconds and throws. Retention is the only difference between the two lines. Measured on Temurin 21.0.11, results in benchmarks/java-oom-anatomy/results/.
   </figcaption>
 </figure>
 
-Look at what the leak's collector is doing. Early on it runs a Full GC, `13M->11M`, and reclaims 2 MB. A third of the way in it runs `108M->108M` and reclaims nothing at all, because nothing is garbage, it's all reachable from `ROOTS`. Near the end: `255M->248M`, 7 MB back out of a full heap. The collector is working the whole time and the live set never comes down, and *that*, not the height of the sawtooth, is a leak. A healthy service's post-GC floor is flat. A leaking one's floor climbs like a staircase, one collection at a time.
+Look at what the leak's collector is doing. Early on it runs a Full GC, `13M->11M`, and reclaims 2 MB. A third of the way in it runs `109M->109M` and reclaims nothing at all, because nothing is garbage, it's all reachable from `ROOTS`. Near the end: `254M->247M`, 7 MB back out of a full heap, and it spent 12.7 ms of stop-the-world time to get it. The collector is working the whole time and the live set never comes down, and *that*, not the height of the sawtooth, is a leak. A healthy service's post-GC floor is flat. A leaking one's floor climbs like a staircase, one collection at a time.
 
 When it finally gives up, the stack is honest about what it was doing:
 
 ```
 java.lang.OutOfMemoryError: Java heap space
-	at Main.leak(Main.java:99)
-	at Main.main(Main.java:58)
+	at Main.leak(Main.java:147)
+	at Main.main(Main.java:105)
 ```
 
-Line 99 is `ROOTS.add(b)`. A heap dump would say the same thing louder. I sampled a live class histogram with `jcmd <pid> GC.class_histogram` a moment before death:
+Line 147 is `ROOTS.add(b)`. A heap dump would say the same thing louder. I sampled a live class histogram with `jcmd <pid> GC.class_histogram` a moment before death:
 
 <figure class="cache-bench">
   <h3>What was on the heap when it died (top classes by retained bytes)</h3>
   <div class="cb-panel-title">leak &mdash; live histogram just before OutOfMemoryError</div>
-  <div class="cb-bar-row"><span><code>byte[]</code> (<code>[B</code>)</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">240.1 MB</span></div>
-  <div class="cb-bar-row"><span>G1 fillers</span><span class="cb-track"><span class="cb-fill" style="--value:2.7%;--bar:var(--cb-blue)"></span></span><span class="cb-value">6.5 MB</span></div>
-  <div class="cb-bar-row"><span><code>String</code></span><span class="cb-track"><span class="cb-fill" style="--value:0.09%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.22 MB</span></div>
-  <div class="cb-bar-row"><span><code>Class</code></span><span class="cb-track"><span class="cb-fill" style="--value:0.08%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.20 MB</span></div>
-  <div class="cb-bar-row"><span><code>Object[]</code></span><span class="cb-track"><span class="cb-fill" style="--value:0.07%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.19 MB</span></div>
+  <div class="cb-bar-row"><span><code>byte[]</code> (<code>[B</code>)</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">240.7 MB</span></div>
+  <div class="cb-bar-row"><span>G1 fillers</span><span class="cb-track"><span class="cb-fill" style="--value:2.78%;--bar:var(--cb-blue)"></span></span><span class="cb-value">6.68 MB</span></div>
+  <div class="cb-bar-row"><span><code>String</code></span><span class="cb-track"><span class="cb-fill" style="--value:0.091%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.22 MB</span></div>
+  <div class="cb-bar-row"><span><code>Class</code></span><span class="cb-track"><span class="cb-fill" style="--value:0.079%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.19 MB</span></div>
+  <div class="cb-bar-row"><span><code>Object[]</code></span><span class="cb-track"><span class="cb-fill" style="--value:0.074%;--bar:var(--cb-blue)"></span></span><span class="cb-value">0.18 MB</span></div>
   <figcaption>
-    <code>[B</code> is the JVM's shorthand for <code>byte[]</code>, and it's 251,730,552 bytes across 17,093 instances, 97% of the top-15 bytes on the heap. That's the retained blocks, the leak named in one command. In a real leak this row is your custom class, or a <code>char[]</code>, or an <code>Object[]</code> backing some cache that only ever grows. You read that top row first, everything under it is noise. Measured on Temurin 21.0.11, results in benchmarks/java-oom-anatomy/results/.
+    <code>[B</code> is the JVM's shorthand for <code>byte[]</code>, and it's 252,419,016 bytes across 17,114 instances, 97% of the top-15 bytes on the heap. That's the retained blocks, the leak named in one command. In a real leak this row is your custom class, or a <code>char[]</code>, or an <code>Object[]</code> backing some cache that only ever grows. You read that top row first, everything under it is noise. Measured on Temurin 21.0.11, results in benchmarks/java-oom-anatomy/results/.
   </figcaption>
 </figure>
 
@@ -165,12 +165,12 @@ This is the JVM's own tripwire firing. HotSpot watches a rolling window, and if 
   <div class="cb-panels">
     <div>
       <div class="cb-panel-title">Wall time spent in GC</div>
-      <div class="cb-bar-row"><span>window 1</span><span class="cb-track"><span class="cb-fill" style="--value:57.5%;--bar:var(--cb-orange)"></span></span><span class="cb-value">57.5%</span></div>
-      <div class="cb-bar-row"><span>window 2</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">100%</span></div>
-      <div class="cb-bar-row"><span>window 3</span><span class="cb-track"><span class="cb-fill" style="--value:97.6%;--bar:var(--cb-orange)"></span></span><span class="cb-value">97.6%</span></div>
-      <div class="cb-bar-row"><span>window 4</span><span class="cb-track"><span class="cb-fill" style="--value:92.8%;--bar:var(--cb-orange)"></span></span><span class="cb-value">92.8%</span></div>
-      <div class="cb-bar-row"><span>window 5</span><span class="cb-track"><span class="cb-fill" style="--value:88.9%;--bar:var(--cb-orange)"></span></span><span class="cb-value">88.9%</span></div>
-      <div class="cb-bar-row"><span>window 6</span><span class="cb-track"><span class="cb-fill" style="--value:94.3%;--bar:var(--cb-orange)"></span></span><span class="cb-value">94.3%</span></div>
+      <div class="cb-bar-row"><span>window 1</span><span class="cb-track"><span class="cb-fill" style="--value:62.24%;--bar:var(--cb-orange)"></span></span><span class="cb-value">62.2%</span></div>
+      <div class="cb-bar-row"><span>window 2</span><span class="cb-track"><span class="cb-fill" style="--value:98.02%;--bar:var(--cb-orange)"></span></span><span class="cb-value">98.0%</span></div>
+      <div class="cb-bar-row"><span>window 3</span><span class="cb-track"><span class="cb-fill" style="--value:91.35%;--bar:var(--cb-orange)"></span></span><span class="cb-value">91.4%</span></div>
+      <div class="cb-bar-row"><span>window 4</span><span class="cb-track"><span class="cb-fill" style="--value:96.77%;--bar:var(--cb-orange)"></span></span><span class="cb-value">96.8%</span></div>
+      <div class="cb-bar-row"><span>window 5</span><span class="cb-track"><span class="cb-fill" style="--value:88.75%;--bar:var(--cb-orange)"></span></span><span class="cb-value">88.8%</span></div>
+      <div class="cb-bar-row"><span>window 6</span><span class="cb-track"><span class="cb-fill" style="--value:93.99%;--bar:var(--cb-orange)"></span></span><span class="cb-value">94.0%</span></div>
     </div>
     <div>
       <div class="cb-panel-title">Heap reclaimed that window</div>
@@ -179,11 +179,11 @@ This is the JVM's own tripwire firing. HotSpot watches a rolling window, and if 
       <div class="cb-bar-row"><span>window 3</span><span class="cb-track"><span class="cb-fill" style="--value:0%;--bar:var(--cb-green)"></span></span><span class="cb-value">0.00%</span></div>
       <div class="cb-bar-row"><span>window 4</span><span class="cb-track"><span class="cb-fill" style="--value:0%;--bar:var(--cb-green)"></span></span><span class="cb-value">0.00%</span></div>
       <div class="cb-bar-row"><span>window 5</span><span class="cb-track"><span class="cb-fill" style="--value:0%;--bar:var(--cb-green)"></span></span><span class="cb-value">0.00%</span></div>
-      <div class="cb-bar-row"><span>window 6</span><span class="cb-track"><span class="cb-fill" style="--value:1.299%;--bar:var(--cb-green)"></span></span><span class="cb-value">1.30%</span></div>
+      <div class="cb-bar-row"><span>window 6</span><span class="cb-track"><span class="cb-fill" style="--value:1.484%;--bar:var(--cb-green)"></span></span><span class="cb-value">1.48%</span></div>
     </div>
   </div>
   <figcaption>
-    Each window is roughly 43 ms of the final second. The collector is running essentially non-stop, 94.3% of the last window's wall time, and giving back 1.3% of the heap for it. The right-hand panel is on the same 0-to-100% scale as the left on purpose: those aren't small bars, they're basically empty. That ratio is the definition of the error. Measured on Temurin 21.0.11 under <code>-XX:+UseParallelGC</code>, results in benchmarks/java-oom-anatomy/results/.
+    Each window is roughly 38 ms of the final second. The collector is running essentially non-stop, 94.0% of the last window's wall time, and giving back 1.5% of the heap for it. The right-hand panel is on the same 0-to-100% scale as the left on purpose: those aren't small bars, they're basically empty. That ratio is the definition of the error. Measured on Temurin 21.0.11 under <code>-XX:+UseParallelGC</code>, results in benchmarks/java-oom-anatomy/results/.
   </figcaption>
 </figure>
 
@@ -197,7 +197,7 @@ Now the one that catches people, because every reflex you built above is wrong f
 java.lang.OutOfMemoryError: Metaspace
 	at java.base/java.lang.ClassLoader.defineClass0(Native Method)
 	...
-	at Main.main(Main.java:78)
+	at Main.main(Main.java:126)
 ```
 
 Metaspace is where the JVM keeps class metadata, the runtime shape of every class it has loaded. It lives in native memory, outside the heap, and it has its own ceiling (`-XX:MaxMetaspaceSize`). You fill it not by allocating objects but by loading *classes*, and the classic way to leak it is to keep making new ones: a fresh classloader per request, dynamic proxies, a scripting engine, a redeploy that never lets the old classloader die. I reproduced it by spinning up thousands of throwaway classloaders, each defining one more class, and watched the heap sit still while the metadata wall came up to meet it:
@@ -211,18 +211,49 @@ Metaspace is where the JVM keeps class metadata, the runtime shape of every clas
   </figcaption>
 </figure>
 
-There are more of these, `Direct buffer memory` for off-heap NIO buffers, `unable to create new native thread` when the OS won't give you another thread, `Requested array size exceeds VM limit`. None of them are fixed by tuning the heap, because none of them are the heap. Read the first word after the colon before you reach for a heap flag.
+## The one a heap dump can't see
+
+Metaspace at least shows up in the JVM's own memory pools, so a monitoring dashboard has a chance of catching it. The next one doesn't show up anywhere you'd normally look. Direct byte buffers, the ones NIO uses under every socket and file channel and most serious network libraries, keep a small wrapper object on the heap and the actual bytes in native memory the OS handed out. Those bytes only come back when the wrapper becomes unreachable and its `Cleaner` runs. Hold on to the wrapper and the native memory is pinned for good:
+
+```java
+static final List<ByteBuffer> BUFFERS = new ArrayList<>();
+...
+ByteBuffer b = ByteBuffer.allocateDirect(512 * 1024);
+BUFFERS.add(b);   // <-- retain the wrapper: the Cleaner never runs
+```
+
+128 buffers of 512 KB each under `-XX:MaxDirectMemorySize=64m`, dead in 3.1 seconds. The message is worth reading closely, because it is not the short `Direct buffer memory` string that most older write-ups quote. Modern JDKs hand you the arithmetic instead:
+
+```
+java.lang.OutOfMemoryError: Cannot reserve 524288 bytes of direct buffer memory (allocated: 66584626, limit: 67108864)
+	at java.base/java.nio.Bits.reserveMemory(Bits.java:178)
+	at java.base/java.nio.DirectByteBuffer.<init>(DirectByteBuffer.java:111)
+	at java.base/java.nio.ByteBuffer.allocateDirect(ByteBuffer.java:360)
+	at Main.directBuffer(Main.java:77)
+```
+
+<figure class="cache-bench">
+  <h3>Direct buffer memory: the heap was 95% empty when it died</h3>
+  <div class="cb-bar-row"><span>Heap used</span><span class="cb-track"><span class="cb-fill" style="--value:4.7%;--bar:var(--cb-green)"></span></span><span class="cb-value">12 / 256 MB</span></div>
+  <div class="cb-bar-row"><span>Direct memory</span><span class="cb-track"><span class="cb-fill" style="--value:98.4%;--bar:var(--cb-orange)"></span></span><span class="cb-value">63 / 64 MB</span></div>
+  <figcaption>
+    Across all 127 samples the heap never left the 11-to-12 MB band while direct memory climbed 0 &rarr; 63 MB into its cap. Now the nasty part: take a heap dump of this process and you'll find roughly 128 small <code>DirectByteBuffer</code> objects adding up to a few kilobytes. The 63 MB that actually killed it is not in the dump, because it was never on the heap. Measured on Temurin 21.0.11, results in benchmarks/java-oom-anatomy/results/.
+  </figcaption>
+</figure>
+
+Two more you'll eventually meet: `unable to create new native thread`, when the OS won't hand you another thread, and `Requested array size exceeds VM limit`, when something computed a nonsense array length. None of these are fixed by tuning the heap, because none of them are the heap. Read the first word after the colon before you reach for a heap flag.
 
 ## Reading the evidence
 
-Put the four together and the first question on the pager is never "how do I get more memory," it's "which OutOfMemoryError is this":
+Put them together and the first question on the pager is never "how do I get more memory," it's "which OutOfMemoryError is this":
 
 | Message | Where it ran out | What actually fixes it |
 |---|---|---|
 | `Java heap space` | The heap | Find the growing live set, usually a collection that only ever adds. A heap dump names it. |
 | `GC overhead limit exceeded` | The heap (caught earlier) | Same as above. It's a leak or an undersized heap, seen mid-thrash, not a separate bug. |
 | `Metaspace` | Class metadata, off-heap | Find the classloader that won't die. A bigger `-Xmx` is wasted. |
-| `Direct buffer / native thread / array size` | Native memory, OS limits, or a bad size | Not a heap problem at all. Read the words before reaching for a flag. |
+| `Cannot reserve N bytes of direct buffer memory` | Native memory, off-heap | Find what's retaining the `ByteBuffer` wrappers, or raise `-XX:MaxDirectMemorySize`. A heap dump won't show you the bytes. |
+| `unable to create new native thread` / `Requested array size exceeds VM limit` | OS limits, or a bad computed size | A thread leak, or a length someone calculated wrong. Neither is a heap problem. |
 
 And the tell that separates a real leak from a service that's just busy is the same in every heap case: watch the post-GC live set, the floor after each collection, not the peak. A flat floor under load is a healthy JVM doing its job. A floor that climbs collection after collection while the collector reclaims less each time is a leak, and it will reach the ceiling on its own schedule whether or not you're watching.
 
@@ -230,4 +261,4 @@ And the tell that separates a real leak from a service that's just busy is the s
 
 Turn on the GC log before you need it. `-Xlog:gc*:file=gc.log:time,level,tags` costs almost nothing and it's the difference between reading the death spiral and guessing at it after the fact. Add `-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=...` so the JVM hands you the evidence on its way out, then open the dump in something that shows a dominator tree and read the top row. And when the graph looks fine but the service keeps dying, stop looking at peak memory and look at what garbage collection gives back, because a leak and a healthy load look identical until you do.
 
-The harness that produced all of this, four JVMs run into the ground with the GC logs and histograms and stack traces captured, is [on GitHub](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/java-oom-anatomy). These are laptop numbers with tiny heaps chosen to fail fast, not capacity or tuning advice, the shape is what carries over, not the seconds on the clock.
+The harness that produced all of this, four JVMs run into the ground and one held up next to them as a control, with the GC logs and histograms and stack traces captured, is [on GitHub](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/java-oom-anatomy). These are laptop numbers with tiny heaps chosen to fail fast, not capacity or tuning advice, the shape is what carries over, not the seconds on the clock.

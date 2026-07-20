@@ -1,5 +1,6 @@
 # java-oom-anatomy: four ways a JVM runs out of memory, one error name
 
+
 A reproduction lab for a blog post about `java.lang.OutOfMemoryError`. The point
 isn't "the JVM ran out of memory" — it's that the *same* error class is thrown for
 several *different* failures, that a leak is diagnosed by **what GC reclaims** (the
@@ -8,7 +9,7 @@ a heap problem. Every number here is captured from a real JVM dying in a
 digest-pinned container — no synthetic curves, no hand-waving about what a GC log
 "would" show.
 
-Four scenarios, each a real OOM (or, for the contrast, a real *survival*):
+Five scenarios, each a real OOM (or, for the contrast, a real *survival*):
 
 - **A — leak → `Java heap space`** (`Main.leak`): allocate 32 KB blocks and *retain*
   every one in a `static List` under `-Xmx256m`. The post-GC live set climbs toward
@@ -25,6 +26,11 @@ Four scenarios, each a real OOM (or, for the contrast, a real *survival*):
   runtime classes — a fresh classloader per iteration `defineClass`-ing the same
   `Leak` bytecode, each producing a distinct klass — under `-XX:MaxMetaspaceSize=64m`.
   Heap stays flat while metaspace fills to the wall. An OOM that heap tuning can't fix.
+- **E — direct buffer → `Cannot reserve ... direct buffer memory`** (`Main.directBuffer`):
+  retain 512 KB `ByteBuffer.allocateDirect` wrappers under `-XX:MaxDirectMemorySize=64m`.
+  The bytes live in native memory freed only when the wrapper's `Cleaner` runs, so
+  retaining the wrappers pins memory that never appears in a heap dump. Note JDK 21
+  no longer emits the short `Direct buffer memory` string; it reports the arithmetic.
 
 ## Run it
 
@@ -46,6 +52,7 @@ a `summary.txt` into `results/`. Env knobs (all optional):
 | `XMX_HEAP` | `256m` | heap cap for the leak + healthy runs |
 | `XMX_GCO` | `80m` | heap cap for the GC-overhead run |
 | `MAX_META` | `64m` | metaspace cap for the metaspace run |
+| `MAX_DIRECT` | `64m` | direct-buffer cap for the direct-buffer run |
 
 ## Results (this machine)
 
@@ -55,10 +62,11 @@ macOS arm64.
 
 | scenario | OOM message | key numbers |
 |----------|-------------|-------------|
-| A leak | `java.lang.OutOfMemoryError: Java heap space` | post-GC heap 11 MB → 254 MB (cap 256 MB); Full-GC pause 2.5 ms → ~10 ms; `[B` = 97% of top-15 bytes; ~33 s |
-| B healthy | *(none — exit 0)* | 250 MB churned; post-GC heap flat at ~10 MB; no OOM |
-| C GC overhead | `java.lang.OutOfMemoryError: GC overhead limit exceeded` | final window 94.3% time-in-GC, 1.3% reclaimed; ~1 s |
+| A leak | `java.lang.OutOfMemoryError: Java heap space` | post-GC heap 11 MB → 254 MB (cap 256 MB); Full-GC pause 4.5 ms → 12.7 ms; `[B` = 97% of top-15 bytes; ~33 s |
+| B healthy | *(none — exit 0)* | 250 MB churned; post-GC heap flat at 10 MB; no OOM |
+| C GC overhead | `java.lang.OutOfMemoryError: GC overhead limit exceeded` | final window 94.0% time-in-GC, 1.5% reclaimed; ~1 s |
 | D metaspace | `java.lang.OutOfMemoryError: Metaspace` | metadata 1 MB → 26 MB to the 64m wall over ~10,600 classes; heap flat ≤24 MB; ~22 s |
+| E direct buffer | `java.lang.OutOfMemoryError: Cannot reserve 524288 bytes of direct buffer memory (allocated: 66584626, limit: 67108864)` | direct memory 0 → 63 MB into the 64m cap over 128 retained buffers; heap flat at 11-12 MB of 256 MB; ~3 s |
 
 Exact GC logs, `jcmd` samples, and the verbatim OOM stack traces are under
 `results/logs/`.
