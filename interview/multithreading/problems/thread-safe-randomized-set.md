@@ -96,3 +96,5 @@ So: single-cell CAS works for the stack, and does **not** work here, and the rea
 ### Transfers to
 
 `thread-safe-lru-cache` (the same map-plus-second-structure dual-invariant, where the second structure, a linked list, is likewise the un-shardable serialization point); `lock-free-stack-treiber` (the deliberate contrast, single-cell CAS is genuinely right there and genuinely wrong here); `make-a-class-thread-safe` (this *is* that exercise, one lock guarding a compound invariant, applied to two collaborating fields); and `lock-striping-and-concurrent-hashmap` (the technique this problem shows you cannot use, because the array index is not a stable shard key).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/thread-safe-randomized-set).

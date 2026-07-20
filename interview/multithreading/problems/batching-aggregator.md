@@ -167,3 +167,5 @@ A `Runtime` shutdown hook is where this usually gets wired up, with a bounded wa
 ### Transfers to
 
 Write-behind caches, metric and log shippers, bulk indexers and bulk writers, request coalescing (batching N single-item lookups into one multi-get, the same triggers, with the added twist of returning a per-item future to each caller), Nagle's algorithm (the same size-or-time trade in TCP), and debounce/throttle logic in any UI. The size-or-time trigger pair is a general shape: whenever you are trading throughput against latency, you are choosing between "wait for more" and "send what you have", and this is the mechanism for having both.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/time-based/batching-aggregator).

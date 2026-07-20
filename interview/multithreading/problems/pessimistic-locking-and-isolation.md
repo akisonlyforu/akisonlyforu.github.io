@@ -122,3 +122,5 @@ The generalization worth stating: **row-level mechanisms protect row-level invar
 ### Transfers to
 
 Optimistic concurrency control (the other half of the same decision); flash-sale inventory and double-booking (both eventually need a short transaction around the decision); the reserve-then-confirm shape everywhere it appears; job-queue tables using skip-locked claiming; and, directly backwards, family 2's guarded state and the deadlock/lock-ordering material, which this problem is a re-run of at a different layer.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/pessimistic-locking-and-isolation).

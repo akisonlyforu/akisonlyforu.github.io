@@ -111,3 +111,5 @@ Be precise about what this buys: it prevents indefinite starvation, it does **no
 ### Transfers to
 
 Search-insert-delete (the same machinery with an asymmetric matrix), the parallel-crossing variant of the traffic-light problem (two roads are two categories), any "these two workload types must not run at the same time" scheduling constraint, and maintenance-window designs where a background job must exclude live traffic.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/asymmetric-access/unisex-bathroom).

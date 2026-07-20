@@ -105,3 +105,5 @@ Virtual threads + `StructuredTaskScope`: write plain BLOCKING code (three forks,
 ### Transfers to
 
 Any "call N things, combine" (API gateways, batch enrichment, replica hedging via anyOf), retry/hedged-request patterns, and the executor-lifecycle discussion of the web crawler. Completes Type F: crawler = self-generating work, thread pool = the machinery, this = fixed fan-out with composition.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/task-lifecycle/parallel-api-aggregation).

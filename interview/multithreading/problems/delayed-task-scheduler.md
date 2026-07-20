@@ -85,3 +85,5 @@ Why the re-check loop is load-bearing (this is the interview): a worker waking f
 ### Transfers to
 
 Timer wheels, cron systems, retry-with-backoff queues, cache TTL eviction threads, heartbeat monitors, all are this loop. Completes the arc: guarded state → + queue → + time. Nothing in the interview canon is structurally beyond this.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/time-based/delayed-task-scheduler).

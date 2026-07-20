@@ -121,3 +121,5 @@ Under this design deleters starve first: continuous searcher traffic keeps `noSe
 ### Transfers to
 
 Any multi-category compatibility problem: maintenance windows versus live traffic, schema migrations versus reads and writes, index rebuilds, backup versus restore versus serve in a storage system, and the general shape of lock modes in real databases (shared, update, exclusive), which is exactly this matrix under different names.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/asymmetric-access/search-insert-delete).

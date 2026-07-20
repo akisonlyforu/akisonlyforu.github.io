@@ -155,3 +155,5 @@ Small, but it's a real question and it has a real answer. In a plain map, a `get
 ### Transfers to
 
 Every other problem in this family (the striping move is the same in `striped-counter-longadder`, in segmented LRU, and in per-key single-flight); the read-heavy cache with expiry (07), whose entire read path rests on the "reads take no lock, `computeIfAbsent` gives per-key exclusion" facts derived here; make-a-class-thread-safe (02), of which this is the scaled-up sequel; and any database-sharding or partitioned-service design conversation, where "the aggregate query is the part that doesn't shard" is the same observation at a different altitude.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/lock-striping-and-concurrent-hashmap).

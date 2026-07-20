@@ -92,3 +92,5 @@ Do both ways. Way 2 teaches you the condition-loop template you'll reuse everywh
 ### Transfers to
 
 FooBar (LC 1115) = this pattern ping-ponging in a loop. Odd-even printer = same. Any "callback after init" or "step B after step A" question.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/ordering/print-in-order).

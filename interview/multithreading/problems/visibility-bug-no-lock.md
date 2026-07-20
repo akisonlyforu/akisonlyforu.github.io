@@ -175,3 +175,5 @@ Belt and braces (volatile field *and* deep immutability) is the right production
 ### Transfers to
 
 `thread-safe-singleton` (double-checked locking without `volatile` is the same publication bug in its most famous costume), every "config hot-reload", "feature flag", "cached immutable snapshot" and "stop the worker" pattern in production code, and the `task-lifecycle` family's shutdown discussion, where catalog #16 (a flag can't wake a parked thread) picks up exactly where this problem's fix C leaves off.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/debugging-and-code-review/visibility-bug-no-lock).

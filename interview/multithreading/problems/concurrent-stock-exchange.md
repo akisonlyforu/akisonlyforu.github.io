@@ -90,3 +90,5 @@ State per symbol: a max-structure for bids (`PriorityQueue`/tree keyed by price 
 ### Transfers to
 
 [lock-striping-and-concurrent-hashmap](/interview/multithreading/problems/lock-striping-and-concurrent-hashmap/) (the symbol is the shard key, exactly like the hash bin); [event-bus-with-per-key-ordering](/interview/multithreading/problems/event-bus-with-per-key-ordering/) (single-writer-per-key is the same serialize-by-ownership move, minus the mutual exclusion); guarded-state (one lock, one invariant, the whole match is the critical section); [lock-free-or-bounded-queue](/interview/multithreading/problems/lock-free-or-bounded-queue/) (the disruptor intake ring is that problem's SPSC/MPSC buffer put to work); double-booking-prevention and flash-sale-inventory (a fill is an atomic decrement-if-available across coupled state, the same "check-and-commit at one point" discipline, applied to inventory instead of an order book).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/concurrent-stock-exchange).

@@ -99,3 +99,5 @@ Speedup ≤ 1 / (serial fraction + parallel fraction / cores). The sequential th
 ### Transfers to
 
 Parallel streams judgment calls, map-reduce thinking, "why is my parallel code slower" debugging, and the Amdahl conversation attached to any scaling question.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/task-lifecycle/fork-join-parallel-computation).

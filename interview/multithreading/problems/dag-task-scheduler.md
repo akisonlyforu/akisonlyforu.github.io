@@ -132,3 +132,5 @@ Either way, **exceptions never escape a worker unrecorded**. The task body is wr
 ### Transfers to
 
 Build systems (Gradle/Bazel task graphs), data pipelines and workflow engines, service-startup ordering, incremental compilation, and any "run these steps in dependency order, as fast as the graph allows" LLD. The in-degree-decrement-as-claim mechanic is the general tool for *event-driven topological execution*; the pending counter remains the general termination tool whenever work enters the executor from inside the executor.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/task-lifecycle/dag-task-scheduler).

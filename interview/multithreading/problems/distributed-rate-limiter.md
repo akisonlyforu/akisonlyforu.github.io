@@ -98,3 +98,5 @@ Contrast the two flavors of atomicity out loud: local correctness came from a JV
 ### Transfers to
 
 [Token bucket](/interview/multithreading/problems/rate-limiter-token-bucket/) (the single-node core this relocates); [distributed lock and lease](/interview/multithreading/problems/distributed-lock-and-lease/) (same atomic-op-on-a-shared-store discipline, and the Lua-script-as-lock idea); idempotency keys (atomic check-and-set on a shared store); optimistic concurrency control (the network check-then-act, guarded by a conditional write); flash-sale inventory (a shared decrementing counter under contention, sharded when hot). The unifying line: relocate the linearization point to a store that offers one atomic operation, and let that operation be the lock.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/distributed-rate-limiter).

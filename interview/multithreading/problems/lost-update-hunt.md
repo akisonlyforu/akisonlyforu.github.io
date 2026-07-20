@@ -146,3 +146,5 @@ Then the regression test: the level-2 deterministic reproduction (injected delay
 ### Transfers to
 
 Every ledger, balance, quota, inventory-count, seat-reservation and rate-limit bug you will ever be paged for. The identical shape appears in `check-then-act-on-concurrent-map` (one level up, in composition), in the guarded-state family's `make-a-class-thread-safe` (the same fix from the build side), and in `visibility-bug-no-lock` (the sibling defect where the problem is freshness rather than atomicity, solve both and you own the distinction).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/debugging-and-code-review/lost-update-hunt).

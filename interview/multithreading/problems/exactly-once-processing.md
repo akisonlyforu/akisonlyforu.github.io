@@ -160,3 +160,5 @@ Also distinguish failure kinds: a transient failure (downstream is down) deserve
 ### Transfers to
 
 Idempotency keys (the same dedup, on requests rather than messages); webhook delivery and receipt on both sides; CDC and replication pipelines; saga/compensation designs, which are this problem plus rollback; distributed lock and lease (the rebalance window is the pause problem); and family 6's task lifecycle, whose completion-and-accounting discipline this is a durable version of.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/exactly-once-processing).

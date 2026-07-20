@@ -81,3 +81,5 @@ State: `waiting` counter + mutex; `customersReady = Semaphore(0)`; `barberReady 
 ### Transfers to
 
 Bounded server with load shedding, connection pools with fail-fast checkout, and "caller waits for completion" = Future/handshake patterns (bridges to Type F).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/barbershop).

@@ -64,3 +64,5 @@ Identical to Uber Ride's five. If you hit a DIFFERENT bug here than there, that 
 ### Transfers to
 
 This IS the transfer. After this problem, Type D is closed: every group-formation question is the recipe + a composition rule.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/group-formation/river-crossing).

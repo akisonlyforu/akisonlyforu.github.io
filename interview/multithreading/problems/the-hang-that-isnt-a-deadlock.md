@@ -157,3 +157,5 @@ Also: delete the watchdog once fixed, or keep it as declared defense-in-depth wi
 ### Transfers to
 
 `bounded-blocking-queue` (the same object built correctly, from the other side), every hand-rolled latch/barrier/semaphore, `dining-savages` and `barbershop` (mixed waiters on one monitor is the family trait), and, via the WAITING-with-no-cycle signature, pool-exhaustion starvation, where all workers wait on futures of tasks that need a free worker. That last one produces an identical dump and is the other answer you must have loaded when you see all-WAITING-no-deadlock.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/debugging-and-code-review/the-hang-that-isnt-a-deadlock).

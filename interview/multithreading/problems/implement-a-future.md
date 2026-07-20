@@ -93,3 +93,5 @@ State under one lock: `status` (enum), `value`, `error`, `callbacks` (list).
 ### Transfers to
 
 Every CompletableFuture API question (you've built the internals), the cached-future idiom (the cache stores exactly this object, the waiting point before the value), and "how does async signaling work under the hood" follow-ups.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/task-lifecycle/implement-a-future).

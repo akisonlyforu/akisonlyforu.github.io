@@ -73,3 +73,5 @@ Counter version: monitor guards all state (no race, guaranteed visibility); pred
 ### Transfers to
 
 Completes the ordering family. Every Type A problem you'll ever see is now: identify the baton, identify who routes it, pick semaphores (targeted) vs shared state (simple), handle termination.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/ordering/n-threads-round-robin).

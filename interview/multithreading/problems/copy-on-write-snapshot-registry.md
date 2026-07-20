@@ -141,3 +141,5 @@ The cliff is a product of *size × write rate*. A 50-element listener list rewri
 ### Transfers to
 
 The CAS-on-immutable-snapshot idiom used for multi-field atomic state throughout this family and the time-based family (a (value, timestamp) pair swapped as one object); service discovery and dynamic routing tables; feature-flag and config hot-reload; observer/listener registries anywhere; `thread-safe-lru-cache` by contrast, the instructive comparison being that a cache's read path *mutates*, which is precisely why it cannot use this technique; and, at system scale, the read-optimized-replica and immutable-deployment-artifact patterns, which make the same bargain about versions rather than objects.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/copy-on-write-snapshot-registry).

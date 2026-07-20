@@ -138,3 +138,5 @@ Every instance of this pattern makes the same exchange: cheap writes, expensive-
 ### Transfers to
 
 `lock-striping-and-concurrent-hashmap` (whose element count is internally striped for exactly this reason, and whose `size()` is an estimate for exactly this reason); `thread-safe-lru-cache` (lossy per-thread recency buffers are this pattern with access records instead of increments); `lock-free-or-bounded-queue` (the same cache-line analysis, applied to head and tail cursors); metrics and observability library design generally; and any conversation about sharded or partitioned storage, where "the cross-shard aggregate is the expensive part" is the same sentence at a different scale.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/striped-counter-longadder).

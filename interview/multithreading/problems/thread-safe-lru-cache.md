@@ -150,3 +150,5 @@ The failure is never "you used one lock." It is "you used one lock and did not k
 ### Transfers to
 
 Read-heavy cache with expiry (07), the *complementary* half of the same production object: that problem solves loading and staleness (per-entry expiry, the cached-future single-flight idiom, dogpile prevention) and explicitly scopes eviction out; this one solves eviction and scopes loading out. Together they are Caffeine. Also transfers to: connection pools with idle eviction, page/buffer caches, session stores with capacity limits, any admission-control structure where "the ordering is the bottleneck" is the answer, and, conceptually, to `striped-counter-longadder`, which relaxes the *same* kind of global clause (an exact total) in the same way (per-thread accumulation, reconciled later).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/thread-safe-lru-cache).

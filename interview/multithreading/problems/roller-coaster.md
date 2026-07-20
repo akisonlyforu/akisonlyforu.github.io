@@ -79,3 +79,5 @@ A passenger from cycle k who finished unboarding and loops back to ride again bl
 ### Transfers to
 
 Batch processors, micro-batching pipelines, "gather N results then aggregate" fan-in, and the coordinator-thread shape generally (contrast with Uber's coordinator-hat: know when each fits, dedicated servicing loop vs symmetric peers).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/group-formation/roller-coaster).

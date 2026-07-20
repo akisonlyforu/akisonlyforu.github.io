@@ -73,3 +73,5 @@ All reads/writes of `current` happen inside one monitor → no race, and monitor
 ### Transfers to
 
 N-thread round-robin printing (direct generalization), FizzBuzz, any "take turns based on shared state" question.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/ordering/odd-even-printer).

@@ -135,3 +135,5 @@ If you add periodic idle-connection health checks, the sweeper must play by the 
 ### Transfers to
 
 Any object pool (threads, buffers, sessions, HTTP connections, PTY handles), semaphore-based admission control, license/seat management, and the checkout-with-timeout shape generally. The borrow/return-in-`finally` discipline and the permit-versus-object distinction transfer to every "acquire a scarce thing, use it, give it back" API you will ever write, and the leak story is the same story as an unreleased lock or an unbalanced `LongAdder`, one level up.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/connection-pool).

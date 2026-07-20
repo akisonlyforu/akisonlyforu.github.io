@@ -70,3 +70,5 @@ All reads and writes of `greenRoad`, plus the crossing, are inside one mutex →
 ### Transfers to
 
 Any "flip shared mode safely" problem; a warm-up for readers-writers (05) where the parallel version of this exact idea is developed fully.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/guarded-state/traffic-light-intersection).

@@ -75,3 +75,5 @@ Making every method `synchronized` does NOT make `if (!stack.isEmpty()) stack.po
 ### Transfers to
 
 Read-heavy cache (07), thread-safe LRU, "is this code thread-safe?" code-review questions, conceptual #13.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/guarded-state/make-a-class-thread-safe).

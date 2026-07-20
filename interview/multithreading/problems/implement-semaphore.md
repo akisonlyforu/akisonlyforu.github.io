@@ -71,3 +71,5 @@ A jar of tokens behind glass. acquire: lock the case; while jar empty, wait; tak
 ### Transfers to
 
 Demystifies every j.u.c primitive: CountDownLatch is a guarded counter counting DOWN with waiters released at zero; CyclicBarrier adds a generation reset. Same template, different predicate, which is exactly the point.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/implement-semaphore).

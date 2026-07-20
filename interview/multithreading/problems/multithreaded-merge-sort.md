@@ -91,3 +91,5 @@ A thread per split spawns O(*n*) OS threads: each costs ~1MB of stack, the sched
 ### Transfers to
 
 This IS [fork-join parallel computation](/interview/multithreading/problems/fork-join-parallel-computation/) (parallel sum/reduce is the cheap-combine sibling; merge sort is the expensive-combine one). The join-as-dependency generalizes to the [DAG task scheduler](/interview/multithreading/patterns/task-lifecycle/) (join = a dependency edge), to [parallel API aggregation](/interview/multithreading/problems/parallel-api-aggregation/) (fan-out then join = fan-in), and to [implementing a future](/interview/multithreading/problems/implement-a-future/) (join is `future.get()`). Learn the ordering once and you have all four.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/task-lifecycle/multithreaded-merge-sort).

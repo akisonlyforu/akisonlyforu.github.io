@@ -83,3 +83,5 @@ Guarded counters (hInside, oInside) with condition "room in the molecule for my 
 ### Transfers to
 
 Uber Ride (multiple valid compositions, the one genuinely new idea), river crossing (boat of 4 with composition rules), roller coaster (capacity batches). H2O is the template; the siblings vary the admission rule.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/group-formation/building-h2o).

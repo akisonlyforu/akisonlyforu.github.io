@@ -77,3 +77,5 @@ Invariant: threads captured under generation g are all released by the g→g+1 f
 ### Transfers to
 
 Reusable barrier = the mechanism inside H2O, Uber Ride, roller coaster. Generation reasoning also underlies phaser/epoch designs, recognizing "which round does this waiter belong to?" is a genuinely senior skill.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/implement-latch-or-barrier).

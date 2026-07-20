@@ -77,3 +77,5 @@ Deadlock-freedom ≠ starvation-freedom: under fix 1 an unlucky philosopher can 
 ### Transfers to
 
 Every multi-lock deadlock question, bank transfer problem (lock both accounts, order by account id!), conceptual #6, and your "deadlock war story" prep.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/guarded-state/dining-philosophers).

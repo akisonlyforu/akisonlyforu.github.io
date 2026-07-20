@@ -86,3 +86,5 @@ pending > 0 while any task is submitted-but-unfinished (invariant by the increme
 ### Transfers to
 
 Any parallel traversal (file tree walker, dependency resolver), fan-out/fan-in service calls, "process a work graph" LLD. The pending-counter discipline is the general termination tool for self-generating work.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/task-lifecycle/web-crawler-multithreaded).

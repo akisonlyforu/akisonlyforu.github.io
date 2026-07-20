@@ -147,3 +147,5 @@ Because a uniqueness constraint is **strictly stronger** and cheaper. A lease ca
 ### Transfers to
 
 Seat and ticket booking; hotel and room reservations; ride/driver matching and any assignment problem; username and handle registration (uniqueness with no TTL at all, the simplest instance); idempotency keys (the same constraint, on a client-supplied key instead of a natural one); flash-sale inventory (the fungible sibling); and backwards into family 2's guarded state, of which this is the exact distributed image.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/double-booking-prevention).

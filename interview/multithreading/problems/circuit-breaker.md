@@ -148,3 +148,5 @@ Probe outcomes decide the round: enough successes → CLOSED with a **freshly re
 ### Transfers to
 
 Any health-based admission decision: outlier ejection and load-balancer host health, adaptive concurrency limits, feature-flag kill switches, throttling on error budgets. The mechanics transfer further than the pattern does, CAS on an immutable snapshot is the general answer to "small shared state, hot read path"; lazily-rotated buckets are the general answer to "rolling metric without a sweeper thread"; and the generation token is the general answer to "a late signal from a previous round must not decide the current one."
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/guarded-state/circuit-breaker).

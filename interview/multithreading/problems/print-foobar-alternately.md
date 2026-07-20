@@ -70,3 +70,5 @@ Total permits across both semaphores is always exactly 1 (each release is preced
 ### Transfers to
 
 Zero-Even-Odd (LC 1116) = 3-way baton with a routing decision. FizzBuzz (LC 1195) = 4-way baton where the *state* (current number) decides who gets it. Odd-even printer = this exact problem with numbers.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/ordering/print-foobar-alternately).

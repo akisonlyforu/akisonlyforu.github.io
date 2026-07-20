@@ -103,3 +103,5 @@ Same TTL substrate, same lazy `now < expiresAt` freshness check, same CHM storag
 ### Transfers to
 
 [read-heavy cache with expiry](/interview/multithreading/problems/read-heavy-cache-with-expiry/) (the TTL/expiry substrate this sits on), [implement-a-future](/interview/multithreading/problems/implement-a-future/) (the shared future the crowd awaits), [check-then-act-on-concurrent-map](/interview/multithreading/problems/check-then-act-on-concurrent-map/) (the atomic install that IS the fix), [distributed-lock-and-lease](/interview/multithreading/problems/distributed-lock-and-lease/) (single-flight lifted to the shared L2 tier), [retry-with-backoff-and-jitter](/interview/multithreading/problems/retry-with-backoff-and-jitter/) (so the one loader's failure retry doesn't itself become a herd). The cached-future idiom is the same Memoizer from JCiP. Any "expensive compute, many identical waiters" shape is this problem wearing different clothes.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/time-based/single-flight-cache-refresh).

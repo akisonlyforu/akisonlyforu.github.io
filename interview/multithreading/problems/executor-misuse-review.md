@@ -208,3 +208,5 @@ Nine questions, and they are the same nine every time. That reusability is the d
 ### Transfers to
 
 `thread-pool-from-scratch` (the same lifecycle questions from the build side, every defect here is a rule that problem teaches), `web-crawler-multithreaded` (D1 and D4 are its pitfalls 3 and 5, and the crawler's pending-counter is the D4 fix generalized), `parallel-api-aggregation` (fan-in must happen on the caller's thread, which is D4 stated as a design rule), and every production readiness review you will ever sit in. The nine-question checklist is the single most directly reusable artifact in this folder.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/debugging-and-code-review/executor-misuse-review).

@@ -86,3 +86,5 @@ Library reference desk. Each book has a freshness stamp (entry carries its OWN e
 ### Transfers to
 
 Session stores, memoizers (this IS the classic Memoizer from JCiP), connection caches, DNS caches; the cached-future idiom transfers to any "expensive compute, many waiters" shape, and it's your best worked example for conceptual #13.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/time-based/read-heavy-cache-with-expiry).

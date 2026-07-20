@@ -89,3 +89,5 @@ One lock, one internal `ArrayDeque`. enqueue: lock; while (full) wait; add; **no
 ### Transfers to
 
 Thread pool (worker queue IS this), rate limiter (permits), dining savages (pot = queue of servings), delayed scheduler (queue + time condition), barbershop (bounded waiting room). This problem is the trunk of the whole Type C tree.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/bounded-blocking-queue).

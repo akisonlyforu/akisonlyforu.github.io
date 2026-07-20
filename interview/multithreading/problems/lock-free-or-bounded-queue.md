@@ -157,3 +157,5 @@ Two related machine-level notes worth one sentence each: consumers should **batc
 ### Transfers to
 
 The bounded-resource family in its entirety, this is that pattern's data structure, and the full/empty policy axis is imported wholesale; `lock-free-stack-treiber` (same CAS discipline, one end instead of two); `striped-counter-longadder` (the same false-sharing analysis, applied to counters instead of cursors); thread-pool internals (a pool is a bounded queue plus worker loops, so every question here is a question about your executor); and any log/telemetry/event-sourcing pipeline design, where "bounded with an explicit drop policy" versus "unbounded and hope" is the same decision at system scale.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/lock-free-or-bounded-queue).

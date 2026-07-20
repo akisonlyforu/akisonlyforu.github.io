@@ -117,3 +117,5 @@ The second critical decision: **the insert is the check.** Do not read the table
 ### Transfers to
 
 Every write API at a payments or booking company; the dedup half of exactly-once processing (same claim, applied to messages instead of requests); double-booking prevention (same constraint, on a natural key instead of a client key); concurrent-crawler visited-sets and any claim-before-work design in a single JVM; and webhook receivers, which are the same problem with the roles reversed.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/idempotency-keys).

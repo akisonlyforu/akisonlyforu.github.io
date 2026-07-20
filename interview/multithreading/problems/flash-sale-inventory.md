@@ -145,3 +145,5 @@ The last technique, and the one production actually leans on hardest: most of th
 ### Transfers to
 
 Double-booking prevention (the same invariant with capacity 1 and a named resource); ticketing and seat holds; rate limiting under distribution (same hot-counter contention, different invariant); `LongAdder` and striped counters in a single JVM; and pessimistic locking (the short transaction around reserve and confirm is exactly that problem's shape).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/flash-sale-inventory).

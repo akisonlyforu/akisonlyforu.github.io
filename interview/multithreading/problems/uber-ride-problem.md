@@ -85,3 +85,5 @@ Key correctness points, each worth saying in the interview:
 ### Transfers to
 
 River crossing (identical), roller coaster (single composition, capacity batch), any "match players into a valid game lobby" / "batch requests by compatible type" design. The dispatcher-hat idea reappears across matchmaking systems.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/group-formation/uber-ride-problem).

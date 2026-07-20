@@ -180,3 +180,5 @@ The senior answer to part 6 of the task:
 ### Transfers to
 
 `dining-philosophers` (the same cycle with five threads and the same three fixes, build side), any two-resource operation (seat + payment, inventory + reservation, parent + child node in a tree with hand-over-hand locking), and every distributed-systems analogue where two services take each other's locks in opposite order. The Coffman-plus-named-fix structure is reusable verbatim for any deadlock question in any round.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/debugging-and-code-review/lock-order-inversion-review).

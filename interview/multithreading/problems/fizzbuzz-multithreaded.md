@@ -77,3 +77,5 @@ A "director" style also works: number thread owns the counter and releases the r
 ### Transfers to
 
 Any "N workers, data decides whose turn" problem; also the gateway to guarded-state problems where predicates guard actions rather than turns.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/ordering/fizzbuzz-multithreaded).

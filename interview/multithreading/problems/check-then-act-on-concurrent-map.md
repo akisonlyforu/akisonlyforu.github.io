@@ -160,3 +160,5 @@ And state the residual honestly: the fixes give per-process exactly-once and per
 ### Transfers to
 
 `lost-update-hunt` (the same disease one level down, on a plain field), `make-a-class-thread-safe` (the compound-operation trap from the build side), the web-crawler's atomic URL claiming (`visited.add(u)`'s boolean *is* the claim, claimed before the fetch), every memoizing cache and every "register once" / "initialize once per key" path in a service. The alien-call-under-lock lesson transfers straight to `lock-order-inversion-review`'s audit-listener defect, same rule, one written by you, one hidden inside a library.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/debugging-and-code-review/check-then-act-on-concurrent-map).

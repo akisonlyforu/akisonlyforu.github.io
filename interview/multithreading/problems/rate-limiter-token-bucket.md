@@ -86,3 +86,5 @@ The whole read-derive-consume must be atomic, otherwise two threads both derive 
 ### Transfers to
 
 Expiring cache (same lazy time-derivation), delayed scheduler (time-ordered waiting), connection-pool checkout with timeout, and all "X per second" LLD asks.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/time-based/rate-limiter-token-bucket).

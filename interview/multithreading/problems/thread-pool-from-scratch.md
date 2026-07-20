@@ -78,3 +78,5 @@ A restaurant kitchen: submit = tickets on the rail (your bounded blocking queue)
 ### Transfers to
 
 All executor conceptual questions (#10, #11, #26), web crawler (uses a pool), and "design a job processor" LLD questions.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/thread-pool-from-scratch).

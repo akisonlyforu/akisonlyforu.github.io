@@ -105,3 +105,5 @@ If the product doesn't need a total order, only a coarse ranking ("top 1%", "you
 ### Transfers to
 
 [lock-striping-and-concurrent-hashmap](/interview/multithreading/problems/lock-striping-and-concurrent-hashmap/) (the store is exactly this, striped by player); [thread-safe-lru-cache](/interview/multithreading/problems/thread-safe-lru-cache/) (the sibling two-structures-kept-consistent problem, map plus an ordered list, same atomic-move discipline); [copy-on-write-snapshot-registry](/interview/multithreading/problems/copy-on-write-snapshot-registry/) (the stale-tolerant read path, snapshot published by one volatile swap); [striped-counter-longadder](/interview/multithreading/problems/striped-counter-longadder/) (the per-bucket counts of the approximate variant); and [concurrent-stock-exchange](/interview/multithreading/problems/concurrent-stock-exchange/) (an ordered book that must stay consistent with the account state, the same coupled-structures invariant at higher stakes).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/thread-safe-leaderboard).

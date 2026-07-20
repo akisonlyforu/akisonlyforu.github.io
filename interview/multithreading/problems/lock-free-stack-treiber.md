@@ -162,3 +162,5 @@ Loses when:
 ### Transfers to
 
 `lock-free-or-bounded-queue` (the same CAS discipline, but with two ends and therefore a genuinely harder multi-step update); `striped-counter-longadder` (which is what you do when the single CAS target becomes the bottleneck, this problem's scaling limitation is that problem's premise); the CAS-on-immutable-snapshot idiom used for multi-field state anywhere; the lazy-derivation designs in the time-based family, where a compare-and-set on a (value, timestamp) pair replaces a lock; and any interview conversation about optimistic concurrency control, of which this is the in-memory instance.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/concurrent-data-structures/lock-free-stack-treiber).

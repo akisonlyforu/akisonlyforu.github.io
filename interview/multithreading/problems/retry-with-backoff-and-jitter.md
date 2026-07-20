@@ -137,3 +137,5 @@ Beyond that, cap retries as a *fraction of traffic* rather than per-request: a *
 ### Transfers to
 
 Every client of every network dependency: HTTP/gRPC clients, database and message-broker reconnection, S3 and object-store operations, distributed lock acquisition, polling loops, and lock-contention backoff (`tryLock` with randomised backoff is this same idea attacking livelock rather than a thundering herd, same cure, same reason). The decorrelation insight transfers to any situation where independent actors are accidentally in step: cache expiry (add jitter to TTLs or every entry expires at once), cron schedules across a fleet, health-check intervals, and metric flush timers.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/time-based/retry-with-backoff-and-jitter).

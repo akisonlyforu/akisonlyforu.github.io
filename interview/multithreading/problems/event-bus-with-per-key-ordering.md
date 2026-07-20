@@ -150,3 +150,5 @@ Kafka gives per-partition ordering and a consumer group gives one consumer per p
 ### Transfers to
 
 Kafka/Kinesis consumer design, actor systems, per-account ledger and payment processing, CDC pipelines, per-connection protocol handlers, and any "these must stay in order, those may not" requirement. The striping mechanic itself, map a key deterministically onto one of N serial resources, is the same tool as lock striping and per-partition state, and it transfers anywhere the constraint is "serial within a group, parallel across groups."
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/task-lifecycle/event-bus-with-per-key-ordering).

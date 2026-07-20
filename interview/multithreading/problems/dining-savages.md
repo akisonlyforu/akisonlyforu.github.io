@@ -77,3 +77,5 @@ Only the mutex-holder can observe servings == 0 → exactly one emptyPot.release
 ### Transfers to
 
 Token-bucket rate limiter (07), refill-on-miss caches, and any "one waiter plays a special coordinating role" structure (also appears in barbershop).
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/dining-savages).

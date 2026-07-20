@@ -123,3 +123,5 @@ Also worth naming: sum of all `k_d` deliberately exceeds the pool size. You are 
 ### Transfers to
 
 Per-tenant and per-customer quotas (noisy-neighbour isolation), admission control at any tier, capping concurrent expensive operations (report generation, exports, image processing), limiting concurrent writers to a shared external system, and the "at most k of these at once" clause that appears inside half of all LLD designs. The mechanic is the plainest multiplex there is; what transfers is the *argument*, blast-radius bounding, fail-fast over queueing, and the discipline of releasing in `finally`.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/bulkhead-isolation).

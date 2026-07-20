@@ -89,3 +89,5 @@ In v1, readers arriving while a writer WAITS still get in (they see readers ≥ 
 ### Transfers to
 
 Read-heavy cache (07), search/insert/delete, unisex bathroom (categories as "reader groups"), traffic-light parallel crossing, and conceptual #14/#15.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/asymmetric-access/reader-writer-lock).

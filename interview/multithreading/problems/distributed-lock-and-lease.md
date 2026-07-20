@@ -149,3 +149,5 @@ Delivering this list unprompted is the strongest available signal on this questi
 ### Transfers to
 
 Leader election and shard ownership; the IN_PROGRESS lease on an idempotency record (same TTL, same takeover race); reservation TTLs in inventory and booking; partition-rebalance epochs in stream processing; consumer-group generation IDs; and, running backwards, family 2's mutex, this problem is the clearest demonstration of what the single-JVM primitive was quietly giving you for free.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/distributed-lock-and-lease).

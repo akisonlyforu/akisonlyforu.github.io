@@ -75,3 +75,5 @@ Phase 1: entry open, exit closed; nobody proceeds until N arrive. Flip: exit ope
 ### Transfers to
 
 H2O, Uber Ride, roller coaster: all reuse a barrier across groups. This mechanism is the single most important thing in Type D.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/group-formation/reusable-barrier).

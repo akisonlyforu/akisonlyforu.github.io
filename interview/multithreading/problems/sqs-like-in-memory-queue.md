@@ -93,3 +93,5 @@ Walk the interviewer through the unavoidable interleaving: consumer A receives m
 ### Transfers to
 
 [Bounded blocking queue](/interview/multithreading/problems/bounded-blocking-queue/) (the visible-message core, this problem minus time). [Delayed task scheduler](/interview/multithreading/problems/delayed-task-scheduler/) (the exact same expiry/`DelayQueue`/timer-wheel machinery, here driving visibility instead of task firing). [Read-heavy cache with expiry](/interview/multithreading/problems/read-heavy-cache-with-expiry/) (the same "sweep entries whose deadline passed" concern). [Exactly-once processing](/interview/multithreading/problems/exactly-once-processing/) and [idempotency keys](/interview/multithreading/problems/idempotency-keys/) (why this is only at-least-once, and where the real fix lives). Recognise the shape: a producer-consumer queue is the trunk; add a clock and you get half the distributed-systems interview.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/bounded-resource/sqs-like-in-memory-queue).

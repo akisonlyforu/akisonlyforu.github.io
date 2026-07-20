@@ -77,3 +77,5 @@ DCL: check null without lock → lock → re-check → construct → assign. Wit
 ### Transfers to
 
 Every "lazy init" or "cache the expensive object" question; conceptual questions #5 (happens-before) and #27 (safe publication). Also `computeIfAbsent`, same check-then-act race, solved by the map instead.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/guarded-state/thread-safe-singleton).

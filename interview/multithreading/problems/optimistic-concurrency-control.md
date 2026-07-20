@@ -116,3 +116,5 @@ That row count is the entire mechanism. It is the boolean that `compareAndSet` r
 ### Transfers to
 
 Fencing tokens (the same conditional write, guarding a lock); conditional writes in object stores and key-value stores (if-match, compare-and-swap on an item version); event-version dedup in stream consumers; HTTP ETags and if-match; single-JVM CAS loops on immutable snapshots, including the token bucket's `(tokens, timestamp)` pair, which is the same "read snapshot, compute successor, swap atomically" shape.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/distributed-concurrency/optimistic-concurrency-control).

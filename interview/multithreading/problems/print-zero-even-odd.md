@@ -74,3 +74,5 @@ One permit total across three semaphores (verify: every acquire pairs with exact
 ### Transfers to
 
 FizzBuzz Multithreaded (LC 1195), identical shape, 4 doors, router decides among fizz/buzz/fizzbuzz/number based on divisibility.
+
+Full Java solution: [on GitHub](https://github.com/akisonlyforu/Multi-Threading-Problems/tree/main/src/ordering/print-zero-even-odd).
