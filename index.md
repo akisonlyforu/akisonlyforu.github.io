@@ -7,9 +7,9 @@ description: Practical backend engineering deep dives on distributed systems, da
 
 # 👋 Hi there <br/>
 
-### I solve problems & build things for Internet. 
+### I break backend systems on purpose, then write down what I learned.
 
-By profession, I identify myself as a autonomous Backend engineer with good problem-solving, system-designing and coding skills, knowledge of distributed systems, cloud platforms and has flexibility to learn new things to build products with complete ownership
+Backend engineer (full stack AI Vibecoder). I spend my time in the unglamorous middle of distributed systems: the races, the memory that won't come back, the query that got slow for reasons nobody logged. When something bites me, I reproduce it on a laptop, measure it, and write the post I wish I'd read first.
 
 
 <div class="feature-tiles">
