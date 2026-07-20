@@ -1,0 +1,3 @@
+scenario,n,p50_ms,p99_ms,p999_ms,max_ms,mean_ms
+control_steady,3206,2.303,7.407,9.894,13.931,2.616
+control_readonly_sync,3278,2.318,7.582,10.494,12.959,2.641

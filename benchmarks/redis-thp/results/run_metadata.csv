@@ -1,0 +1,21 @@
+key,value
+redis_version,7.4.0
+mem_allocator,jemalloc-5.3.0
+image,redis:7.4.0@sha256:6725a7dc7a44a6486b9d0a5172b10ccaf0c2ea600df87c0b93450d0e7769297f
+dataset_keys,800000
+value_bytes,400
+seed,20260720
+used_memory_human_after_load,394.72M
+used_memory_bytes_after_load,413896224
+thp_enabled_container_view,[always] madvise never
+thp_enabled_macos_host_path,"not present on this host (macOS has no such sysfs path; Redis runs inside Docker Desktop's LinuxKit VM, not directly on macOS)"
+probe_ops_per_sec_steady,68.3
+bulk_writer_threads,6
+bulk_batch_size,80
+bulk_ops_cumulative_all_phases,736080
+steady_window_s,25.0
+sync_tail_window_s,4.0
+disk_sync_duration_s,1.950
+diskless_sync_duration_s,1.519
+timestamp_utc,2026-07-20T09:33:30Z
+docker_desktop_note,"Redis runs inside Docker Desktop's LinuxKit VM on macOS; THP state is whatever that VM's kernel has, observed above, not chosen by us; THP on/off A-vs-B comparison from HANDOFF.md was out of scope here (needs a Linux host with writable /sys/kernel/mm/transparent_hugepage)."

@@ -1,0 +1,6 @@
+scenario,n,p50_ms,p99_ms,p999_ms,max_ms,mean_ms
+steady,1708,11.220,36.187,46.300,52.759,13.698
+disk_sync,721,11.502,43.091,54.479,58.688,13.920
+diskless_sync,705,11.347,36.137,44.203,48.583,13.516
+disk_sync_fork_child_alive_only,85,7.400,34.498,34.884,34.927,12.104
+diskless_sync_fork_child_alive_only,72,12.168,37.128,37.148,37.150,13.173

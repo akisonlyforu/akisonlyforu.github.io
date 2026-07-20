@@ -1,0 +1,35 @@
+networks:
+  redisthp-net:
+    name: redisthp-net
+
+services:
+  primary:
+    image: redis:7.4.0@sha256:6725a7dc7a44a6486b9d0a5172b10ccaf0c2ea600df87c0b93450d0e7769297f
+    container_name: redisthp-primary
+    cap_add:
+      - SYS_PTRACE   # lets us read our own /proc/1/smaps_rollup from `docker exec` (AnonHugePages)
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --latency-monitor-threshold
+      - "20"
+      - --repl-diskless-sync-delay
+      - "0"
+    networks:
+      - redisthp-net
+    ports:
+      - "127.0.0.1:6396:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+# NOTE: replicas are NOT declared here. benchmark.py spins up a *fresh* replica
+# container per arm via `docker run --network redisthp-net ...` and tears it down
+# after capturing that arm's evidence, so every arm gets a guaranteed FULLRESYNC
+# (a fresh container has no dataset and no replication history with the primary).
+# REPLICA_PORT (default 6397) is the host port each ephemeral replica publishes to.

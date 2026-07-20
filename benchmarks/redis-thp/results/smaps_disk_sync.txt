@@ -1,0 +1,26 @@
+# peak AnonHugePages observed during disk_sync sync window: 0 kB
+# raw /proc/1/smaps_rollup at that peak sample, untouched:
+
+aaaab9e00000-ffffe6928000 ---p 00000000 00:00 0                          [rollup]
+Rss:              422352 kB
+Pss:              217907 kB
+Pss_Dirty:        214864 kB
+Pss_Anon:         214864 kB
+Pss_File:           3043 kB
+Pss_Shmem:             0 kB
+Shared_Clean:       7284 kB
+Shared_Dirty:     400240 kB
+Private_Clean:        84 kB
+Private_Dirty:     14744 kB
+Referenced:       422352 kB
+Anonymous:        414984 kB
+KSM:                   0 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB

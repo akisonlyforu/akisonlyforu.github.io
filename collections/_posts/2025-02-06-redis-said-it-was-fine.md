@@ -80,9 +80,7 @@ The [Docker harness, deterministic workload, Redis config, and the raw `INFO mem
 
 <figure class="cache-bench">
   <h3>The mass delete, as the two numbers see it</h3>
-  <!-- PLACEHOLDER GEOMETRY: recompute polyline points from results/memory_timeline.csv.
-       x = time (0..640 over the run), y = memory (top=30 is peak, bottom=210 is 0).
-       used line should drop at the delete; rss line should stay flat and high. -->
+  <!-- Geometry computed from benchmarks/redis-oom/results/memory_timeline.csv (empty_settle through deleted_settle). -->
   <svg class="cb-svg" viewBox="0 0 640 250" role="img" aria-labelledby="redis-mem-title redis-mem-desc">
     <title id="redis-mem-title">used_memory versus used_memory_rss across a mass delete</title>
     <desc id="redis-mem-desc">After the bulk delete, used_memory falls sharply while used_memory_rss stays near its peak.</desc>
@@ -101,7 +99,7 @@ The [Docker harness, deterministic workload, Redis config, and the raw `INFO mem
     <span><span class="cb-swatch" style="--swatch:var(--cb-blue)"></span>used_memory (what Redis asked for)</span>
     <span><span class="cb-swatch" style="--swatch:var(--cb-orange)"></span>used_memory_rss (what the OS backs)</span>
   </div>
-  <figcaption>used_memory drops the instant the keys are gone. RSS doesn't move, because jemalloc is still holding the freed pages. The gap between the two lines is the fragmentation everyone mistakes for a leak. Numbers pending the benchmark run.</figcaption>
+  <figcaption>used_memory drops the instant the keys are gone. RSS doesn't move, because jemalloc is still holding the freed pages. The gap between the two lines is the fragmentation everyone mistakes for a leak.</figcaption>
 </figure>
 
 ## First, there are three numbers

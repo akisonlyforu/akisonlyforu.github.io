@@ -1,0 +1,2 @@
+scenario,latest_fork_usec,fork_ms,peak_anon_hugepages_kb,sync_duration_s
+control_readonly,2425,2.425,0,2.095

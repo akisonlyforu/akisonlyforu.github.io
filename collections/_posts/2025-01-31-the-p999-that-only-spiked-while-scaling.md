@@ -1,37 +1,22 @@
 ---
 layout:     post
 title:      The p99.9 That Only Spiked While We Were Scaling Up
-date:       2025-01-31
-published:  false
-description:    p50 and p99 flat and healthy, p99.9 jumping to 400ms, but only for the fifteen minutes after autoscaling added a node. The trail went fork → smaps → Transparent Huge Pages, and the textbook fix was one I couldn't use.
+date:       2026-07-20
+description:    p50 and p99 stay flat while p99.9 rises during a replica's full sync. I built the harness to measure it for real, went looking for the classic Transparent Huge Pages explanation, and it genuinely wasn't there.
 categories: redis latency thp linux operations
 ---
-<!--
-  DRAFT — published:false until real numbers land. Pending benchmarks/redis-thp (Gemini handoff).
-  Flip published:false (remove the line) and delete this comment once every [[BENCH:*]] token is
-  replaced with a measured value from benchmarks/redis-thp/results/. Token → source map lives in
-  benchmarks/redis-thp/HANDOFF.md (section 3).
 
-  Tokens in this file:
-    [[BENCH:redis_version]] [[BENCH:kernel]]
-    [[BENCH:dataset_keys]] [[BENCH:dataset_bytes]] [[BENCH:ops_rate]]
-    [[BENCH:p50_steady]] [[BENCH:p99_steady]] [[BENCH:p999_steady]]
-    [[BENCH:p50_sync]] [[BENCH:p99_sync]] [[BENCH:p999_sync_thp_on]]
-    [[BENCH:fork_ms]] [[BENCH:latency_doctor]] [[BENCH:anon_hugepages]]
-    [[BENCH:p999_sync_thp_off]] [[BENCH:p999_diskless]]
-    [[BENCH:sync_duration_thp_on]] [[BENCH:sync_duration_thp_off]]
-    [[BENCH:failed_shape_note]]
-  Figure bar --value widths and the timeline polyline points are placeholders too; recompute from
-  results/latency_percentiles.csv and results/latency_timeline.csv once they exist.
--->
+If you've ever had a p50 and p99 that stay flat and boring while your p99.9 quietly jumps, and it only happens for a few minutes right after autoscaling adds a node, this is for you. It's one of those failures that hides in exactly the percentile nobody's dashboard defaults to, and correlates with the one event nobody thinks of as a request.
 
-If you've ever had a p50 and p99 that stay flat and boring while your p99.9 quietly jumps to 400ms, and it only happens for a few minutes right after autoscaling adds a node, this is for you. It's one of those failures that hides in exactly the percentile nobody's dashboard defaults to, and correlates with the one event nobody thinks of as a request.
+I wanted to reproduce this locally because the first time I met it I chased the wrong thing for most of a day. A checkout service on a Redis cluster, healthy averages, and every time the fleet scaled out the 99.9th percentile spiked and healed itself a few minutes later. Average latency never twitched. If you were only watching p50 you'd swear nothing happened.
 
-I wanted to reproduce this locally because the first time I met it I chased the wrong thing for most of a day. A checkout service on a Redis cluster, healthy averages, and every time the fleet scaled out the 99.9th percentile spiked and then healed itself in fifteen minutes. Average latency never twitched. If you were only watching p50 you'd swear nothing happened.
+The shape that didn't reproduce is the useful negative here: a read-only workload against the same trigger, same fresh-replica full sync, same everything except the primary never writes. p99.9 barely moved, 9.894ms steady against 10.494ms during the sync, because copy-on-write only costs you anything when the *parent* writes to a page the child still holds a reference to. Read-only traffic never dirties a page, so there's nothing to copy. That shape is in the repo under `attempts/read-only-control/` instead of deleted, because a version of this post where every workload spiked would be a lie by omission.
 
-[[BENCH:failed_shape_note]] The shapes that didn't reproduce the spike are in the repo too, because the interesting part of this one is the constraint at the end, and pretending it reproduced on the first try would skip the honest part.
+The full harness, the deterministic workload, and every raw capture are [on GitHub](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/redis-thp). I ran this on my Mac, Docker Desktop, not a Linux box I actually control, and that turned out to be exactly the constraint the second half of this post is about: the standard fix for the dramatic version of this bug needs root on the host kernel, and Docker Desktop won't give you that, so I could only measure the part of the mechanism that doesn't need it. Redis 7.4.0, jemalloc 5.3.0.
 
-The [harness, workload, the smaps captures, and the raw LATENCY output are in the repo](https://github.com/akisonlyforu/akisonlyforu.github.io/tree/master/benchmarks/redis-thp). These are numbers from a Linux box I control, the mechanism transfers, the absolute milliseconds do not, and the whole point of the post is a fix that wouldn't be available to me if I didn't control that box. Redis [[BENCH:redis_version]], kernel [[BENCH:kernel]].
+## The problem
+
+A p50 and p99 that never move while p99.9 rises during a replica's full sync, invisible to any SLO written against the percentiles everyone actually watches, and easy to misdiagnose as the fork itself when the fork call is cheap. The textbook explanation is Transparent Huge Pages turning ordinary copy-on-write faults into ones 512 times larger, and the textbook fix needs host-kernel access most people running on a managed box, or a Mac, don't have. Below is what's actually measurable without that access, and what happened when I went looking for the huge-page story and it wasn't there.
 
 <style>
 .cache-bench {
@@ -94,111 +79,91 @@ The [harness, workload, the smaps captures, and the raw LATENCY output are in th
 </style>
 
 <figure class="cache-bench">
-  <h3>The spike only lived in one percentile</h3>
-  <!-- PLACEHOLDER GEOMETRY: recompute polyline points from results/latency_timeline.csv.
-       x = time (90..600), y = latency (top=30 peak, bottom=210 zero). p50 line stays flat low;
-       p999 line jumps at the scale-out marker and decays back. -->
-  <svg class="cb-svg" viewBox="0 0 640 250" role="img" aria-labelledby="thp-tl-title thp-tl-desc">
-    <title id="thp-tl-title">p50 versus p99.9 latency across an autoscale event</title>
-    <desc id="thp-tl-desc">p50 stays flat and low; p99.9 spikes at the scale-out marker then decays back over about fifteen minutes.</desc>
-    <line class="grid" x1="80" y1="210" x2="600" y2="210" />
-    <line class="grid" x1="80" y1="120" x2="600" y2="120" />
-    <line class="grid" x1="80" y1="30"  x2="600" y2="30" />
-    <text x="26" y="214">0</text>
-    <text x="10" y="124">200ms</text>
-    <text x="10" y="34">400ms</text>
-    <polyline class="p50"  points="90,196 300,196 360,194 600,196" />
-    <polyline class="p999" points="90,190 300,188 315,34 380,70 470,150 600,186" />
-    <text x="300" y="24">node added</text>
-    <line class="grid" x1="312" y1="30" x2="312" y2="210" style="stroke-dasharray:3 3" />
-  </svg>
-  <div class="cb-legend">
-    <span><span class="cb-swatch" style="--swatch:var(--cb-blue)"></span>p50</span>
-    <span><span class="cb-swatch" style="--swatch:var(--cb-orange)"></span>p99.9</span>
+  <h3>The full sync moves one percentile, not both</h3>
+  <div class="cb-panels">
+    <div>
+      <p class="cb-panel-title">p50 (ms)</p>
+      <div class="cb-bar-row"><span>steady</span><span class="cb-track"><span class="cb-fill" style="--value:98%;--bar:var(--cb-blue)"></span></span><span class="cb-value">11.22</span></div>
+      <div class="cb-bar-row"><span>disk sync</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-blue)"></span></span><span class="cb-value">11.50</span></div>
+      <div class="cb-bar-row"><span>diskless sync</span><span class="cb-track"><span class="cb-fill" style="--value:99%;--bar:var(--cb-blue)"></span></span><span class="cb-value">11.35</span></div>
+    </div>
+    <div>
+      <p class="cb-panel-title">p99.9 (ms)</p>
+      <div class="cb-bar-row"><span>steady</span><span class="cb-track"><span class="cb-fill" style="--value:85%;--bar:var(--cb-orange)"></span></span><span class="cb-value">46.30</span></div>
+      <div class="cb-bar-row"><span>disk sync</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">54.48</span></div>
+      <div class="cb-bar-row"><span>diskless sync</span><span class="cb-track"><span class="cb-fill" style="--value:81%;--bar:var(--cb-orange)"></span></span><span class="cb-value">44.20</span></div>
+    </div>
   </div>
-  <figcaption>Same primary, same command mix. p50 never notices the scale-out. p99.9 spikes when the new replica pulls its snapshot and heals as the sync finishes. Geometry pending the benchmark run.</figcaption>
+  <figcaption>Same primary, same write load, three scenarios. p50 doesn't move by anything worth mentioning. p99.9 rises about 8ms during a disk-based full sync and sits back at baseline, even slightly under it, once the sync is diskless. Measured on Redis 7.4.0, n=705-1708 samples per scenario, results in benchmarks/redis-thp/results/.</figcaption>
 </figure>
 
-## What the spike actually looked like
+## What the numbers actually were
 
-Steady state first, so the spike has something to be measured against. On the loaded primary, serving [[BENCH:ops_rate]] ops/sec against [[BENCH:dataset_keys]] keys ([[BENCH:dataset_bytes]]):
+800,000 keys, 400 bytes each, seeded so the run is reproducible (`used_memory_human` after load: 394.72M). Write load stayed on throughout: one probe connection issuing sequential `SET`s and timing true round-trip latency (about 68 ops/sec on that connection alone), plus six bulk-writer connections pipelining batches of 80 to keep real additional write pressure on the primary, independent of the probe's own pacing.
 
-```
-p50    [[BENCH:p50_steady]]
-p99    [[BENCH:p99_steady]]
-p99.9  [[BENCH:p999_steady]]
-```
-
-Then a node joins and pulls a full sync. The same window:
+Steady state, no replica attached, n=1708 samples:
 
 ```
-p50    [[BENCH:p50_sync]]
-p99    [[BENCH:p99_sync]]
-p99.9  [[BENCH:p999_sync_thp_on]]
+p50    11.220ms
+p99    36.187ms
+p99.9  46.300ms
 ```
 
-p50 and p99 shrug. p99.9 goes to [[BENCH:p999_sync_thp_on]]. If your SLO is written against p99, this is invisible, and it's also exactly the 1-in-1000 checkout that a real customer is sitting in front of.
-
-## The trail that pointed at fork, and then past it
-
-Redis has good tooling for this and it took me straight to a plausible-but-wrong answer. `LATENCY HISTORY` and `LATENCY DOCTOR` on the primary both fingered fork:
+Then a fresh replica attaches and pulls a full sync over disk (`repl-diskless-sync no`), same write load running the whole time, n=721:
 
 ```
-[[BENCH:latency_doctor]]
+p50    11.502ms
+p99    43.091ms
+p99.9  54.479ms
 ```
 
-Fork. Fine. A new replica syncs by asking the primary to `BGSAVE`, which forks a child to write the snapshot while the parent keeps serving. Forking a process with a large heap is the classic Redis latency source, so the story writes itself.
+p50 moved 0.28ms. p99 moved about 7ms. p99.9 moved about 8.2ms, a 1.18x lift over steady. That's real and it's reproducible, and I'm not going to dress it up as more than it is: it's nowhere near the "quietly jumps to 400ms" shape the production incident that sent me down this hole actually had.
 
-Except when I actually measured the fork call, it was [[BENCH:fork_ms]]. Nowhere near the spike. The fork itself was cheap. That's the moment where you either declare victory on the wrong diagnosis, or you keep pulling.
+## The trail that pointed at fork, and Redis's own tooling shrugged
 
-So I looked at what the process memory was actually made of, straight from `/proc/<pid>/smaps`:
+The classic story blames `fork()`. A new replica syncs by asking the primary to `BGSAVE`, which forks a child to write the snapshot while the parent keeps serving, and forking a process with a large heap is a well-known Redis latency source. So I measured it, `INFO stats`, `latest_fork_usec`:
 
 ```
-AnonHugePages:   [[BENCH:anon_hugepages]]
+disk_sync      1707 usec  (1.707ms)
+diskless_sync  2030 usec  (2.030ms)
 ```
 
-There it is. The heap was dominated by anonymous huge pages, which means Transparent Huge Pages was on and Redis's memory was backed by 2MB pages instead of 4KB ones. And that changes everything about what happens *after* the fork.
+Cheap, both arms. Whatever's costing the 8ms isn't the fork call itself, that's over in about two milliseconds regardless of which sync mode you use.
 
-## Why THP turns a cheap fork into a 400ms tail
+I also asked Redis to tell on itself:
 
-The fork is cheap because of copy-on-write, the parent and child share the same physical pages until one of them writes. The cost isn't paid at fork time. It's paid later, one page fault at a time, every time the still-serving parent writes to a shared page and the kernel has to copy it so the child's snapshot stays consistent.
+```
+=== LATENCY DOCTOR ===
+Dave, no latency spike was observed during the lifetime of this Redis instance, not in
+the slightest bit. I honestly think you ought to sit down calmly, take a stress pill,
+and think things over.
 
-With normal 4KB pages, each of those copy-on-write faults copies 4KB. Annoying, cheap, over in microseconds. With Transparent Huge Pages on, the shared pages are 2MB, so every single copy-on-write fault copies 2MB instead of 4KB. That's 512 times the work per fault. A checkout write that touches one key can now stall behind a 2MB page copy, and it happens over and over for the entire duration of the snapshot the new replica is pulling.
-
-So the spike isn't really the fork at all, it's the copy-on-write faults that come after it, each one amplified 512x because THP made the pages 512x bigger. It only shows up during a full sync because that's the one time the primary keeps a forked child alive long enough to eat a storm of those faults while it's still serving traffic, and it heals in fifteen minutes because that's how long the sync takes, after which there's no child left to copy pages for.
-
-<figure class="cache-bench">
-  <h3>Same sync, three memory configurations</h3>
-  <div class="cb-bar-row"><span>THP on (disk sync)</span><span class="cb-track"><span class="cb-fill" style="--value:100%;--bar:var(--cb-orange)"></span></span><span class="cb-value">[[BENCH:p999_sync_thp_on]]</span></div>
-  <div class="cb-bar-row"><span>THP never (disk sync)</span><span class="cb-track"><span class="cb-fill" style="--value:22%;--bar:var(--cb-green)"></span></span><span class="cb-value">[[BENCH:p999_sync_thp_off]]</span></div>
-  <div class="cb-bar-row"><span>THP on + diskless</span><span class="cb-track"><span class="cb-fill" style="--value:30%;--bar:var(--cb-blue)"></span></span><span class="cb-value">[[BENCH:p999_diskless]]</span></div>
-  <figcaption>p99.9 on the primary during a replica full-sync. Turning THP off fixes it directly. Diskless replication softens it without host access by streaming the snapshot instead of forking to disk. Bar widths are placeholders until results/latency_percentiles.csv is filled.</figcaption>
-</figure>
-
-## The textbook fix, and why I couldn't use it
-
-Every article about this ends the same way, and it's correct:
-
-```bash
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
+=== LATENCY HISTORY fork ===
+[]
 ```
 
-Turn THP off, the page faults go back to 4KB, the tail flattens. When I ran that on the box I control, the same sync's p99.9 dropped to [[BENCH:p999_sync_thp_off]]. Done.
+That's the actual output, unedited, from every arm, including the one with the measured 8ms lift. `LATENCY DOCTOR`'s default threshold is tuned for the dramatic version of this bug, hundreds of milliseconds, not single digits. If you're relying on Redis's own latency monitor to flag this for you at this scale, it won't, and you have to go look at your own percentiles directly to see it at all.
 
-Here's the catch that no bare-metal post has to deal with: on a managed Redis cluster you don't own the host. There's no shell on the node, no `/sys/kernel/mm/` to write to, and the provider isn't going to flip THP for you. So the standard fix, the one every article ends on, is just off the table for a lot of people, and you're left needing an answer that lives inside Redis config and your own scheduling instead.
+## The huge-page story, and the honest finding that it wasn't the story here
+
+The textbook mechanism for why this gets dramatic is Transparent Huge Pages. Copy-on-write is what makes the fork cheap in the first place, the parent and child share physical pages until one of them writes, and the cost is deferred to the first write after the fork, one page fault at a time. With normal 4KB pages that fault copies 4KB. With THP backing the heap, the shared unit is a 2MB page, so the same single write can trigger copying 2MB instead of 4, roughly 512 times the work, and that's the mechanism behind a fork that measures in milliseconds turning into a tail that measures in hundreds of them.
+
+I went looking for that in this harness, and it genuinely wasn't there. `/proc/1/smaps_rollup` at the peak of every scenario, disk_sync, diskless_sync, and the read-only control alike, all reported the same line:
+
+```
+AnonHugePages:         0 kB
+```
+
+Zero, every time, after loading roughly 400MB and idling well past `khugepaged`'s scan interval. The container's own view of `/sys/kernel/mm/transparent_hugepage/enabled` reports `[always] madvise never`, which looks like THP is on, but whatever's promoting pages elsewhere in Docker Desktop's LinuxKit VM (its own `/proc/meminfo` showed other processes accumulating huge pages over the same window) never reached this jemalloc-backed heap. THP was not backing Redis's memory in this environment, at all, for the entire run.
+
+That's plausibly why the 8ms is 8ms and not 400ms: what's left once you take huge-page amplification out of the picture is plain 4KB-page copy-on-write under write pressure, plus whatever the `disk_sync` child pays for actually writing the RDB file to disk before the transfer starts. Both are real costs, neither is multiplied by 512. This harness can't cleanly separate those two from each other, disk I/O and ordinary copy-on-write both disappear together the moment you switch to `diskless_sync`, but it can tell you which lever to pull regardless of which one it is.
 
 ## What you do when you can't touch the host
 
-- **`repl-diskless-sync yes`.** This is the big one. Instead of the child forking and writing the RDB to disk while the parent keeps dirtying shared pages for the whole write, the primary streams the snapshot straight to the replica socket. The fork is shorter-lived and the window where COW faults pile up shrinks with it. In the harness, flipping this on with THP still on brought the same sync's p99.9 to [[BENCH:p999_diskless]], and the sync finished in [[BENCH:sync_duration_thp_on]] rather than dragging. It doesn't remove the 512x amplification, it shrinks the window you pay it in.
-- **Schedule scale-out off-peak, and size so it's rare.** If a full sync is going to cost a tail spike you can't fully kill, the move is to not take one during peak checkout. Pre-scale ahead of known load, set autoscaling thresholds with hysteresis so the fleet isn't adding and removing nodes near the edge, and run enough headroom that full syncs are an occasional event rather than a traffic-shaped drumbeat.
-- **Alert on p99.9, correlated with scale events.** The reason this took me a day the first time is that nobody was looking at the percentile it lived in. Put p99.9 on the board next to a scale-out annotation, and the spike lining up with the node joining is most of the way to the answer.
+- **`repl-diskless-sync yes`.** This is the actionable one, and it doesn't care whether THP is in play. Instead of forking, writing the RDB to disk, and then transferring the file, the primary streams the snapshot straight to the replica's socket. In this harness that meant a shorter-lived fork (1.088s vs 1.129s), a faster sync (1.519s vs 1.950s attach-to-link-up), and a p99.9 that landed statistically flat against the steady baseline instead of 8ms above it. You don't need root to set this. It's a Redis config value.
+- **Don't trust `LATENCY DOCTOR` to catch this for you.** It's tuned for the dramatic version. Put p99.9 on a dashboard next to your scale-out events and look for the correlation yourself, because the built-in tooling will tell you, cheerfully, that nothing happened.
+- **If you can check `AnonHugePages`, check it before you blame THP.** It's one read of `/proc/<pid>/smaps_rollup`. If it comes back zero, you're chasing the wrong 512x, and the honest next step is plain fork-and-disk-I/O cost, not a kernel setting.
 
-## How to prove it's THP and not fork
+## The takeaway
 
-This is the habit that pulled me off the wrong answer, so it's the one I'd actually keep:
-
-- Measure the fork call itself. Redis exposes `latest_fork_usec` in `INFO stats`. If that number is small and your spike is large, the fork is not your problem, something after the fork is.
-- Read `/proc/<pid>/smaps` (or `smaps_rollup`) and look at `AnonHugePages`. If it's a large share of RSS, THP is backing your heap and every COW fault is a 2MB copy.
-- Confirm the host setting: `cat /sys/kernel/mm/transparent_hugepage/enabled`. `[always]` is the smoking gun. On a managed service you may not even be able to read it, which is itself the tell that the textbook fix is off the table.
-
-The fork ends up being a red herring, and what you can actually do about the real cause comes down to whether you own the kernel. If you do, you turn THP off and move on. If you're on a managed cluster you can't, so you shrink the window instead with diskless replication and you stop taking full syncs in the middle of peak checkout. It's the same root cause both times, but the box you're running on decides which half of the fix is even available to you.
+I went in expecting to measure the classic story and instead measured the boring one. Forking is cheap everywhere. The tail lift is real, but modest, because nothing here was amplifying it. And Redis never once flagged it on its own, I had to go pull the percentiles myself to see it at all. If you're on bare metal or a Linux box you actually own, go check `AnonHugePages` yourself, you might be looking at the 512x version I couldn't reproduce here. If you're not, `repl-diskless-sync yes` doesn't ask what your kernel is doing before it helps.
