@@ -25,3 +25,6 @@ vendor/
 .handoff-*.md
 _to_delete/
 .agents/
+
+# Private content studio (separate repo)
+content-studio/

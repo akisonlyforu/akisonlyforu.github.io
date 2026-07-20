@@ -117,6 +117,7 @@ exclude:
   - .github/
   - README.md
   - workers/
+  - content-studio/
 
 collections_dir: collections
 collections:
