@@ -1,0 +1,22 @@
+key,value
+timestamp_utc,2026-07-19T20:18:36.732165+00:00
+java_version,"openjdk version ""21.0.11"" 2026-04-21 LTS | OpenJDK Runtime Environment Temurin-21.0.11+10 (build 21.0.11+10-LTS) | OpenJDK 64-Bit Server VM Temurin-21.0.11+10 (build 21.0.11+10-LTS, mixed mode, sharing)"
+base_image,eclipse-temurin:21-jdk
+base_image_digest,sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+image_ref,eclipse-temurin:21-jdk@sha256:da9d3a4f7650db39b918fc5a2c3da76556fb8cc8e5f3767cdea0bb409286951a
+host_os,Darwin
+host_os_release,24.6.0
+host_arch,arm64
+leak_xmx,256m
+healthy_xmx,256m
+gcoverhead_xmx,80m
+gcoverhead_collector,Parallel (-XX:+UseParallelGC)
+metaspace_xmx,256m
+metaspace_max,64m
+leak_collector,G1 (JDK 21 default)
+metaspace_collector,G1 (JDK 21 default)
+alloc_block_kb,32
+alloc_sleep_ms,3
+healthy_iterations,8000
+gcoverhead_fill_pct,80
+gcoverhead_node_bytes,512

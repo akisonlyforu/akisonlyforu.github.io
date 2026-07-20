@@ -1,0 +1,3 @@
+mode=gcoverhead pid=1
+gcoverhead: ring slots=126156 nodeBytes=512 target=61 MB of max 77 MB
+gcoverhead: ring filled, heapUsed=73 MB, t=0.0s -- entering steady overwrite

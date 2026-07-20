@@ -1,0 +1,5 @@
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+	at Main.gcOverhead(Main.java:172)
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+	at Main.gcOverhead(Main.java:172)
+	at Main.main(Main.java:60)
