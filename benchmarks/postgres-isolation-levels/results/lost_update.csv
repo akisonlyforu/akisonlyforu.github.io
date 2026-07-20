@@ -1,0 +1,5 @@
+isolation_level,pattern,workers,iterations_per_worker,expected_increments,final_balance,lost_updates,silent_lost_updates,serialization_failures,other_errors,wall_seconds,throughput_txn_per_s
+READ COMMITTED,SELECT then UPDATE (read-modify-write),8,50,400,64,336,336,0,0,0.225,1776.4
+REPEATABLE READ,SELECT then UPDATE (read-modify-write),8,50,400,81,319,0,319,0,0.11,3643.0
+SERIALIZABLE,SELECT then UPDATE (read-modify-write),8,50,400,84,316,0,316,0,0.115,3477.7
+READ COMMITTED,atomic UPDATE ... = balance + 1,8,50,400,400,0,0,0,0,0.124,3224.8

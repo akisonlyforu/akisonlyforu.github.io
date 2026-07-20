@@ -1,0 +1,17 @@
+key,value
+postgres_version,17.10
+postgres_version_full,"PostgreSQL 17.10 (Debian 17.10-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"
+image,postgres:17
+image_digest,sha256:a426e44bac0b759c95894d68e1a0ac03ecc20b619f498a91aae373bf06d8508d
+port,55446
+a_workers,8
+a_iterations_per_worker,50
+c_trials,200
+d_concurrency,2|4|8|16
+d_keyspaces,8|128
+d_txns_per_worker,100
+d_max_attempts,5
+seed,1234
+docker_version,"Docker version 28.3.2, build 578ccf6"
+python_version,3.9.6
+run_utc,2026-07-20T14:40:56.281640+00:00

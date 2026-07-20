@@ -1,0 +1,29 @@
+services:
+  pg:
+    image: postgres:17@sha256:a426e44bac0b759c95894d68e1a0ac03ecc20b619f498a91aae373bf06d8508d
+    environment:
+      POSTGRES_USER: bench
+      POSTGRES_DB: isobench
+      # loopback-only publish; trust keeps the harness connection string trivial
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command:
+      - postgres
+      - -c
+      - max_connections=200
+      # default_transaction_isolation stays at read committed on purpose --
+      # every experiment sets its own level per session, nothing is inherited.
+      - -c
+      - default_transaction_isolation=read committed
+      - -c
+      - fsync=off
+      - -c
+      - synchronous_commit=off
+      - -c
+      - full_page_writes=off
+    ports:
+      - "127.0.0.1:55446:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bench -d isobench"]
+      interval: 1s
+      timeout: 3s
+      retries: 60

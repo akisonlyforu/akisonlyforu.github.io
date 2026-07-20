@@ -1,0 +1,59 @@
+seed=1234  pg=127.0.0.1:55446/isobench
+  postgres: PostgreSQL 17.10 (Debian 17.10-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit 
+
+==========================================================================
+EXPERIMENT A  lost update: read-modify-write, NO retries
+==========================================================================
+  8 workers x 50 iterations = 400 intended increments
+  READ COMMITTED   naive   final=64   lost=336  silent=336  40001=0      0.23s   1776.4 txn/s
+  REPEATABLE READ  naive   final=81   lost=319  silent=0    40001=319    0.11s   3643.0 txn/s
+  SERIALIZABLE     naive   final=84   lost=316  silent=0    40001=316    0.12s   3477.7 txn/s
+  READ COMMITTED   atomic  final=400  lost=0    silent=0    40001=0      0.12s   3224.8 txn/s
+  -> wrote results/lost_update.csv
+
+==========================================================================
+EXPERIMENT B  non-repeatable read + phantom inside one transaction
+==========================================================================
+  READ COMMITTED   val 100 -> 999   count 10 -> 11   non-repeatable=True  phantom=True
+  REPEATABLE READ  val 100 -> 100   count 10 -> 10   non-repeatable=False  phantom=False
+  -> wrote results/read_stability.csv
+
+==========================================================================
+EXPERIMENT C  write skew: two doctors, 'at least one must stay on call'
+==========================================================================
+  REPEATABLE READ  trials=200  invariant violated (0 on call)=200 (100.0%)  40001 aborts=0
+  SERIALIZABLE     trials=200  invariant violated (0 on call)=0 (0.0%)  40001 aborts=200
+  -> wrote results/write_skew.csv
+
+==========================================================================
+EXPERIMENT D  cost of serializable: retry-on-40001 workload
+==========================================================================
+  each worker: 100 read-modify-write txns, up to 5 attempts each
+  level             keys  wrk  commit    att  retry%  giveup     txn/s   p50ms    p99ms
+  READ COMMITTED       8    2     200    200     0.0       0    2313.9    0.75     2.04
+  REPEATABLE READ      8    2     200    213     6.1       0    2051.1    0.75     3.06
+  SERIALIZABLE         8    2     200    211     5.2       0    2253.0    0.74     2.76
+  READ COMMITTED       8    4     400    400     0.0       0    2974.5    1.05     2.69
+  REPEATABLE READ      8    4     399    477    16.4       1    2337.1    1.27     4.77
+  SERIALIZABLE         8    4     400    490    18.4       0    2142.6    1.41     7.89
+  READ COMMITTED       8    8     800    800     0.0       0    3871.2    1.93     4.85
+  REPEATABLE READ      8    8     785   1199    34.5      15    2561.0    2.08     9.79
+  SERIALIZABLE         8    8     784   1188    34.0      16    2460.1    2.15     9.87
+  READ COMMITTED       8   16    1600   1600     0.0       0    5654.2    2.55     5.08
+  REPEATABLE READ      8   16    1512   3063    50.6      88    2785.1    3.04    14.37
+  SERIALIZABLE         8   16    1517   3010    49.6      83    2910.1    2.97    14.18
+  READ COMMITTED     128    2     200    200     0.0       0    1969.5    0.87     2.03
+  REPEATABLE READ    128    2     200    203     1.5       0    2144.9    0.83     1.90
+  SERIALIZABLE       128    2     200    203     1.5       0    2064.0    0.81     2.16
+  READ COMMITTED     128    4     400    400     0.0       0    3027.1    1.05     2.50
+  REPEATABLE READ    128    4     400    405     1.2       0    2824.7    1.15     2.77
+  SERIALIZABLE       128    4     400    404     1.0       0    2661.2    1.25     3.16
+  READ COMMITTED     128    8     800    800     0.0       0    3766.1    1.99     3.72
+  REPEATABLE READ    128    8     800    827     3.3       0    3440.4    2.11     5.64
+  SERIALIZABLE       128    8     800    821     2.6       0    3988.4    1.74     4.17
+  READ COMMITTED     128   16    1600   1600     0.0       0    6116.0    2.38     4.63
+  REPEATABLE READ    128   16    1600   1708     6.3       0    4989.1    2.80     7.59
+  SERIALIZABLE       128   16    1600   1700     5.9       0    5476.1    2.48     6.43
+  -> wrote results/serializable_cost.csv
+
+  done. artifacts in results/

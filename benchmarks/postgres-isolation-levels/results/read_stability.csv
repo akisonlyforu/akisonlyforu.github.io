@@ -1,0 +1,3 @@
+isolation_level,first_read_val,second_read_val,value_changed,first_count,second_count,phantom_appeared
+READ COMMITTED,100,999,True,10,11,True
+REPEATABLE READ,100,100,False,10,10,False

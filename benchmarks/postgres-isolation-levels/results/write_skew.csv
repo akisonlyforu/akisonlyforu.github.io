@@ -1,0 +1,3 @@
+isolation_level,trials,zero_on_call_trials,zero_on_call_pct,serialization_failures,other_errors,transactions,wall_seconds
+REPEATABLE READ,200,200,100.0,0,0,400,0.258
+SERIALIZABLE,200,0,0.0,200,0,400,0.279
