@@ -132,5 +132,7 @@ collections:
 substack_home_url: https://akisonlyforu.substack.com
 
 # AdSense Settings (set to true once approved)
-adsense_enabled: true
+# Disabled 2026-07-26: Auto Ads pulled ~280 KB across two origins on every page
+# while rendering nothing. Flip back to true to re-enable.
+adsense_enabled: false
 adsense_publisher_id: "ca-pub-6123691612469211"

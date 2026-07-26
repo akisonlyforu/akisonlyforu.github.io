@@ -1,11 +1,11 @@
 {% if site.show_post_stats and page.post_stats != false %}
 <div class="post-stats" id="post-stats">
   <button type="button" id="vote-up" class="vote-button" aria-label="Upvote this post" title="Upvote this post">
-    <i class="fas fa-arrow-up"></i>
+    {% include icon.html name="arrow-up" %}
     <span id="vote-up-count">0</span>
   </button>
   <button type="button" id="vote-down" class="vote-button" aria-label="Downvote this post" title="Downvote this post">
-    <i class="fas fa-arrow-down"></i>
+    {% include icon.html name="arrow-down" %}
     <span id="vote-down-count">0</span>
   </button>
 </div>

@@ -19,7 +19,7 @@
             title="Follow me on GitHub"
             aria-label="GitHub"
           >
-            <i class="fab fa-github"></i>
+            {% include icon.html name="github" %}
           </a>
           <a
             target="_blank"
@@ -28,7 +28,7 @@
             title="Follow me on Twitter"
             aria-label="Twitter"
           >
-            <i class="fab fa-twitter"></i>
+            {% include icon.html name="twitter" %}
           </a>
           <a
             target="_blank"
@@ -37,7 +37,7 @@
             title="Connect with me on LinkedIn"
             aria-label="LinkedIn"
           >
-            <i class="fab fa-linkedin"></i>
+            {% include icon.html name="linkedin" %}
           </a>
         </div>
       </div>
@@ -252,11 +252,15 @@ document.addEventListener('DOMContentLoaded', function() {
     opacity: 1;
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
 <script>
-    anchors.options.visible = 'hover';
-    anchors.options.placement = 'left';
-    anchors.add('article h2, article h3, article h4, article h5, article h6');
+    // anchor.js is deferred, so it runs after parsing but before DOMContentLoaded.
+    // Configuring it inside that event is what keeps `anchors` defined here.
+    document.addEventListener('DOMContentLoaded', function () {
+      anchors.options.visible = 'hover';
+      anchors.options.placement = 'left';
+      anchors.add('article h2, article h3, article h4, article h5, article h6');
+    });
 
     // Clicking a heading anchor copies its shareable URL to the clipboard.
     document.addEventListener('click', function (event) {

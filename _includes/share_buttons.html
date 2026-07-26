@@ -11,7 +11,7 @@
       aria-label="Share on Twitter"
       class="share-button twitter"
     >
-      <i class="fab fa-twitter"></i>
+      {% include icon.html name="twitter" %}
     </a>
 
     <!-- LinkedIn Share -->
@@ -23,7 +23,7 @@
       aria-label="Share on LinkedIn"
       class="share-button linkedin"
     >
-      <i class="fab fa-linkedin"></i>
+      {% include icon.html name="linkedin" %}
     </a>
 
     <!-- Facebook Share -->
@@ -35,7 +35,7 @@
       aria-label="Share on Facebook"
       class="share-button facebook"
     >
-      <i class="fab fa-facebook-f"></i>
+      {% include icon.html name="facebook-f" %}
     </a>
 
     <!-- Email Share -->
@@ -45,7 +45,7 @@
       aria-label="Share via Email"
       class="share-button email"
     >
-      <i class="fas fa-envelope"></i>
+      {% include icon.html name="envelope" %}
     </a>
 
     <!-- Copy Link -->
@@ -56,7 +56,7 @@
       aria-label="Copy Link"
       class="share-button copy"
     >
-      <i class="fas fa-link"></i>
+      {% include icon.html name="link" %}
     </button>
   </div>
 </div>
@@ -100,7 +100,7 @@ function fallbackCopyTextToClipboard(text) {
 function showCopyFeedback() {
   const copyButton = document.querySelector('.share-button.copy');
   const originalContent = copyButton.innerHTML;
-  copyButton.innerHTML = '<i class="fas fa-check"></i>';
+  copyButton.innerHTML = "<svg class=\"svg-icon\" viewBox=\"0 0 448 512\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z\"/></svg>";
   copyButton.style.color = '#28a745';
 
   setTimeout(() => {

@@ -1,0 +1,15 @@
+// Inline SVG icons, emitted by _includes/icon.html.
+// Named .svg-icon, not .icon: the dark-mode toggle already owns
+// .icon for its emoji <span> and a shared rule would squash it.
+// Sized in em so they scale with the surrounding text the way the old
+// Font Awesome <i> elements did. Width is left auto so each icon keeps
+// its own viewBox aspect ratio instead of being squashed to a square.
+.svg-icon {
+  display: inline-block;
+  height: 1em;
+  width: auto;
+  vertical-align: -0.125em;
+  // The share buttons are flex containers. Icons wider than 1em (the link
+  // glyph is 640x512) get shrunk to a sliver without this.
+  flex: none;
+}
