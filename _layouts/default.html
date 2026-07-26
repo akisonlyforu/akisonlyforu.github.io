@@ -14,7 +14,7 @@
   </div>
   
   {% include footer.html %}
-  <script src="{{ "/assets/js/blog-enhancements.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
+  <script defer src="{{ "/assets/js/blog-enhancements.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
   <script>
   // Global "/" shortcut to focus search
   document.addEventListener('keydown', function(e) {

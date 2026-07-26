@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     opacity: 1;
   }
 </style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
+<script defer src="{{ "/assets/js/vendor/anchor.min.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
 <script>
     // anchor.js is deferred, so it runs after parsing but before DOMContentLoaded.
     // Configuring it inside that event is what keeps `anchors` defined here.

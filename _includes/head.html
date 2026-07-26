@@ -4,7 +4,6 @@
     {% seo %}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     {% if site.google_analytics %}
@@ -72,8 +71,20 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍛</text></svg>">
 
 
-    <!-- Dark Mode Script (load early to prevent FOUC) -->
-    <script src="{{ "/assets/js/dark-mode.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
+    <!-- Theme bootstrap. Only this needs to run before first paint, so it is
+         inlined: a blocking network round-trip here cost ~560 ms. It mirrors
+         DarkModeToggle's own default (light unless a preference was stored),
+         and dark-mode.js re-applies the same theme when it loads. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('theme-preference') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script defer src="{{ "/assets/js/dark-mode.js" | prepend: site.baseurl }}?{{ site.time | date: "%Y%m%d%H%M" }}"></script>
 
     {% if site.google_analytics %}
     <!-- Enhanced Analytics Tracking -->

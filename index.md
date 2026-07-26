@@ -7,7 +7,8 @@ description: Practical backend engineering deep dives on distributed systems, da
 
 # 👋 Hi there <br/>
 
-### I break backend systems on purpose, then write down what I learned.
+## I break backend systems on purpose, then write down what I learned.
+{: .h3}
 
 Backend engineer (full stack AI Vibecoder). I spend my time in the unglamorous middle of distributed systems: the races, the memory that won't come back, the query that got slow for reasons nobody logged. When something bites me, I reproduce it on a laptop, measure it, and write the post I wish I'd read first.
 
