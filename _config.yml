@@ -118,6 +118,16 @@ exclude:
   - README.md
   - workers/
   - content-studio/
+  # Internal docs and benchmark scratch notes. These were building as real
+  # pages, returning 200 with robots:all, and taking up 54 of the 288 URLs in
+  # the sitemap — handoff notes, tuning notes, and repo documentation with no
+  # search intent behind them. The files stay in the repo, so the GitHub links
+  # in the posts (github.com/.../tree/master/benchmarks/...) still resolve;
+  # they just stop being published as pages on the site.
+  - CLAUDE.md
+  - DEVELOPMENT.md
+  - RECAPTCHA_SETUP.md
+  - benchmarks/
 
 collections_dir: collections
 collections:
