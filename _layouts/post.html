@@ -84,36 +84,36 @@ layout: default
   assign commonTags = commonTags | append: tagmarkup %} {% endif %} {% endif %}
   {% endfor %} {% if sameTagCount >= minCommonTags %}
   <div>
-    <h4>
+    <h3 class="h4">
       <a class="dark-gray" href="{{ site.baseurl }}{{ post.url }}"
         >{{ post.title }}</a
       >
       <span class="post-meta" style="display: inline-block"
         >({{ post.date | date: site.date_format }})</span
       >
-    </h4>
+    </h3>
   </div>
   {% assign maxRelatedCounter = maxRelatedCounter | plus: 1 %} {% if
   maxRelatedCounter >= maxRelated %} {% break %} {% endif %} {% endif %} {%
   endfor %} {% if maxRelatedCounter == 0 %} {% if page.next.url %}
   <div>
-    <h4>
+    <h3 class="h4">
       <a class="dark-gray" href="{{page.next.url}}">{{page.next.title}}</a>
       <span class="post-meta" style="display: inline-block"
         >({{ page.next.date | date: site.date_format }})</span
       >
-    </h4>
+    </h3>
   </div>
   {% endif %} {% if page.previous.url %}
   <div>
-    <h4>
+    <h3 class="h4">
       <a class="dark-gray" href="{{page.previous.url}}"
         >{{page.previous.title}}</a
       >
       <span class="post-meta" style="display: inline-block"
         >({{ page.previous.date | date: site.date_format }})</span
       >
-    </h4>
+    </h3>
   </div>
   {% endif %} {% endif %}
 </div>

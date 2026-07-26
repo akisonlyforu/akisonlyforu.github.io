@@ -1,6 +1,9 @@
 {% if site.show_sharing_icons %}
 <div class="share-buttons">
-  <h4 class="share-title">Share this post</h4>
+  <!-- h2, not h4: this labels a top-level section after the article, and
+       an h4 here skipped a level whenever the post ended on an h2.
+       .share-title sets its own font-size, so nothing moves visually. -->
+  <h2 class="share-title">Share this post</h2>
   <div class="share-links">
     <!-- Twitter Share -->
     <a
