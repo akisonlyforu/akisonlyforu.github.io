@@ -7,7 +7,9 @@ _site
 _config.gh-pages.yml
 
 Gemfile.lock
-vendor/
+# Root-anchored: this is bundler's vendor dir. Unanchored it also swallowed
+# assets/js/vendor/, which holds self-hosted third-party scripts we do ship.
+/vendor/
 .bundle\/config
 
 ##############
