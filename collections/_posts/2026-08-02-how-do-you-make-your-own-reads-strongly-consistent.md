@@ -236,11 +236,11 @@ That last one is not an oversight, it drops straight out of the mechanism, becau
 
 ## Does this break CAP
 
-Strong consistency alongside four nines of availability sounds like someone beat the theorem. It doesn't, because the word availability is doing two different jobs in that sentence.
+Strong consistency alongside four nines of availability sounds like Amazon has beaten the theorem. They haven't, because the word availability is doing two different jobs in that sentence.
 
-CAP availability is absolute, meaning every non-failing node returns a non-error response, always, and that's a 100% requirement with no budget attached. 99.99% is an SLA, roughly 52 minutes a year where you're allowed to be down, and that gap is the room a CP system lives in. S3's metadata path is CP and it pays for that out of its error budget.
+CAP availability is absolute, meaning every non-failing node returns a non-error response, always, and that's a 100% requirement with no budget attached. 99.99% is a design target, roughly 52 minutes a year where you're allowed to be down, and that gap is the room a CP system lives in. S3's metadata path is CP and it pays for that out of its error budget.
 
-The 2020 change genuinely moved it along that axis. The old cache was designed to keep answering during impairment, which is an AP choice, made on purpose. Strong consistency means giving it up.
+The old cache was designed to keep answering when the infrastructure underneath it was unavailable, which is an AP choice, made on purpose. Strong consistency means giving it up.
 
 Where the cost shows up is worth being specific about.
 
