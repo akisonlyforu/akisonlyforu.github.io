@@ -262,13 +262,58 @@ Then the witness, which is small. A map from key to current version, in memory, 
 
 Then get the direction right, because this is where people go wrong. The instinct is to have the writer push invalidations to every cache that might be holding the key, which means fan-out that grows with your fleet and a decision to make when one of those caches doesn't answer, and both available answers are bad. Have the writer tell one place and have the readers ask. Reads are already your frequent path, so you're adding a cheap lookup to something you were doing anyway instead of adding an unbounded broadcast to your writes.
 
-Make it fail closed, which comes down to one rule: if the witness has never heard of your key, it says stale. Not unknown, not assume-fresh, stale. A restarted witness with an empty map then degrades into everyone reading the real store for a while, which is slow and correct, and that is exactly what lets you kill and replace it without ceremony.
+Make it fail closed, which comes down to one rule: if the witness has never heard of your key, it says stale. A restarted witness with an empty map then degrades into everyone reading the real store for a while, which is slow and correct, and that is exactly what lets you kill and replace it without ceremony.
 
 Two things to budget for. Writes now depend on the witness being reachable, because you can't acknowledge a write whose version nobody recorded, so that's where your availability cost lands. And the whole thing should live inside one failure domain, one region or one cluster or whatever your unit is, because the moment a cross-region link can sit between a reader and its witness you've taken a partition risk that buys you nothing.
 
 What you don't get is anything across keys. Per-key ordering gives you per-key guarantees and that is the end of it. If you need more, you're not building a witness, you're building a commit log with a manifest.
 
 And the honest version for most people is that you don't build the witness at all, you do what everyone did before 2020 and put a small strongly consistent store in front, Postgres or etcd or DynamoDB, holding key and version. Then the decision is how much you trust it. Netflix's s3mper kept S3 authoritative and used DynamoDB only to notice that a listing looked short, at which point the job waited and listed again until the missing files turned up, so the worst case was a slow job. S3Guard made DynamoDB authoritative and answered existence questions itself, tombstones included, without asking S3 at all, which is faster and stronger right up until the table drifts, and then you get new datasets missing from listings, deletes that look like they never happened, and objects silently overwritten.
+
+<figure class="cache-bench">
+  <h3>How much you trust the second index</h3>
+  <svg class="cb-svg" viewBox="0 0 640 250" role="img" aria-labelledby="trust-title trust-desc">
+    <title id="trust-title">An advisory second index compared with an authoritative one</title>
+    <desc id="trust-desc">An advisory index only detects that an S3 listing looks short, so the job waits and lists again and S3 remains the source of truth. An authoritative index answers listing questions itself without consulting S3, which is faster until the index drifts and starts hiding datasets and deletes.</desc>
+    <defs>
+      <marker id="ah-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" class="ahead" />
+      </marker>
+    </defs>
+    <text class="tb" x="26" y="18">advisory, the way s3mper did it</text>
+    <rect class="node" x="40" y="36" width="120" height="34" rx="6" />
+    <text class="t" x="100" y="58" text-anchor="middle">reader LISTs</text>
+    <path class="arrow" d="M100,70 V84" marker-end="url(#ah-e)" />
+    <rect class="node" x="40" y="88" width="120" height="34" rx="6" />
+    <text class="t" x="100" y="110" text-anchor="middle">S3 says 38</text>
+    <path class="arrow" d="M160,105 H172" marker-end="url(#ah-e)" />
+    <rect class="node-key" x="176" y="88" width="118" height="34" rx="6" />
+    <text class="t" x="235" y="110" text-anchor="middle">index says 40</text>
+    <path class="arrow" d="M235,122 V146" marker-end="url(#ah-e)" />
+    <rect class="node-ok" x="40" y="150" width="254" height="34" rx="6" />
+    <text class="t" x="167" y="172" text-anchor="middle">short, so wait and list again</text>
+    <path class="arrow" d="M40,167 H26 V110 H34" marker-end="url(#ah-e)" />
+    <text class="cap" x="40" y="208">S3 stays the source of truth, so the</text>
+    <text class="cap" x="40" y="224">worst case is a slow job</text>
+    <line class="grid" x1="318" y1="8" x2="318" y2="232" />
+    <text class="tb" x="340" y="18">authoritative, the way S3Guard did it</text>
+    <rect class="node" x="340" y="36" width="130" height="34" rx="6" />
+    <text class="t" x="405" y="58" text-anchor="middle">reader LISTs</text>
+    <path class="arrow" d="M405,70 V84" marker-end="url(#ah-e)" />
+    <rect class="node-key" x="340" y="88" width="170" height="34" rx="6" />
+    <text class="t" x="425" y="110" text-anchor="middle">index answers directly</text>
+    <text class="cap" x="577" y="80" text-anchor="middle">not consulted</text>
+    <path class="arrow dash" d="M510,105 H528" />
+    <rect class="node dash" x="532" y="88" width="92" height="34" rx="6" />
+    <text class="t" x="578" y="110" text-anchor="middle">S3</text>
+    <path class="arrow" d="M425,122 V146" marker-end="url(#ah-e)" />
+    <rect class="node-bad" x="340" y="150" width="284" height="34" rx="6" />
+    <text class="t" x="482" y="172" text-anchor="middle">drift, and the index hides deletes</text>
+    <text class="cap" x="340" y="208">faster and stronger, right up until</text>
+    <text class="cap" x="340" y="224">the table stops matching the bucket</text>
+  </svg>
+  <figcaption>Both keep a second index. The difference is whether a wrong index can only cost you time, or can also answer for the bucket.</figcaption>
+</figure>
 
 Start advisory. You can tighten it later, and slow is a much easier thing to explain than wrong.
 
