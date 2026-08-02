@@ -2,7 +2,7 @@
 layout:     post
 title:      How Do You Actually Log Someone Out Of A JWT
 date:       2026-08-02
-description:    You can't revoke the token itself, exp is the only thing it says about its own lifetime. What actually logging someone out takes, what goes in Redis and why it is never the token, how big the denylist really gets, and how to check it without a network hop per request.
+description:    You can't revoke a JWT. exp is all it says about its own lifetime, so you revoke the session instead and check it without a Redis call per request.
 categories: jwt auth redis distributed-systems dotnet
 ---
 
